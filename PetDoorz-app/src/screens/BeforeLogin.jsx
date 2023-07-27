@@ -1,13 +1,17 @@
 import { StatusBar } from 'expo-status-bar'
-import { Button, StyleSheet, Text, View } from 'react-native'
+import { SafeAreaView, StyleSheet, Text, View } from 'react-native'
+import { Button } from 'react-native-paper'
 
 export default function BeforeLogin() {
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <Text>Before Login!</Text>
-      <Button title='Login' onPress={() => console.log("hello world")}>Click Me</Button>
-      <StatusBar style="auto" />
-    </View>
+      <View style={{ flexDirection: 'row' }}>
+        <Button mode='contained' onPress={() => console.log("hello world")}>Customer</Button>
+        <Button mode='contained' onPress={() => console.log("hello world")}>Admin</Button>
+        <StatusBar style="auto" />
+      </View>
+    </SafeAreaView>
   );
 }
 

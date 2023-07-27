@@ -4,10 +4,11 @@ import { NavigationContainer, DefaultTheme } from '@react-navigation/native'
 import AdminTab from './src/navigators/admin/AdminTab'
 import { useState } from 'react';
 import LoginRegisterStack from './src/navigators/LoginRegisterStack';
+import CustomerTab from './src/navigators/customer/CustomerTab';
 
 export default function App() {
   const [isAdmin, setIsAdmin] = useState(false)
-  const [isCustomer, setIsCustomer] = useState(false)
+  const [isCustomer, setIsCustomer] = useState(true)
 
   return (
     <NavigationContainer>
@@ -15,7 +16,7 @@ export default function App() {
         isAdmin ? (
           <AdminTab />
         ) : isCustomer ? (
-          <LoginRegisterStack />
+          <CustomerTab />
         ) : (
           <LoginRegisterStack />
         )
