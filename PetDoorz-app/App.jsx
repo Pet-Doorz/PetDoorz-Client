@@ -8,7 +8,7 @@ import CustomerTab from './src/navigators/customer/CustomerTab';
 
 export default function App() {
   const [isAdmin, setIsAdmin] = useState(false)
-  const [isCustomer, setIsCustomer] = useState(true)
+  const [isCustomer, setIsCustomer] = useState(false)
 
   return (
     <NavigationContainer>

@@ -8,7 +8,7 @@ const Stack = createNativeStackNavigator()
 export default function LoginRegisterStack() {
     return (
         <Stack.Navigator>
-            <Stack.Screen name="Before Login"  component={BeforeLogin} options={{ headerShown: false }} />
+            {/* <Stack.Screen name="Before Login"  component={BeforeLogin} options={{ headerShown: false }} /> */}
             <Stack.Screen name="Admin Login"  component={LoginAdmin} options={{ headerShown: false }} />
             <Stack.Screen name="Admin Register"  component={RegisterAdmin} options={{ headerShown: false }} />
         </Stack.Navigator>
