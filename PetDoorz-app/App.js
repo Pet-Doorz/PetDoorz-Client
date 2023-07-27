@@ -1,12 +1,26 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { StatusBar } from 'expo-status-bar'
+import { StyleSheet, Text, View } from 'react-native'
+import { NavigationContainer, DefaultTheme } from '@react-navigation/native'
+import AdminTab from './src/navigators/admin/AdminTab'
+import { useState } from 'react';
+import LoginRegisterStack from './src/navigators/LoginRegisterStack';
 
 export default function App() {
+  const [isAdmin, setIsAdmin] = useState(false)
+  const [isCustomer, setIsCustomer] = useState(false)
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <NavigationContainer>
+      {
+        isAdmin ? (
+          <AdminTab />
+        ) : isCustomer ? (
+          <LoginRegisterStack />
+        ) : (
+          <LoginRegisterStack />
+        )
+      }
+    </NavigationContainer>
   );
 }
 
