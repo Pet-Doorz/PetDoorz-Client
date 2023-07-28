@@ -2,12 +2,13 @@ import { StatusBar } from 'expo-status-bar'
 import { SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native'
 import { Button } from 'react-native-paper';
 
-export default function UserSettingCustomer() {
+export default function UserSettingCustomer({ navigation }) {
   return (
     <SafeAreaView style={ styles.container }>
       <ScrollView>
         <View>
             <Text>User Setting Customer</Text>
+            <Button mode='contained' onPress={() => navigation.navigate('Customer Chat')}>Chats</Button>
         </View>
       </ScrollView>
     </SafeAreaView>

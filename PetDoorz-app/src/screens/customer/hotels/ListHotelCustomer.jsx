@@ -30,7 +30,7 @@ export default function ListHotelCustomer() {
       onChange: (_, selectedDate) => setCheckout(selectedDate),
       mode: 'date',
       is24Hour: true,
-      minimumDate: new Date()
+      minimumDate: date
     });
   }
 
@@ -53,7 +53,7 @@ export default function ListHotelCustomer() {
           </View>
 
           <View style={{ marginTop: 20, marginBottom: 20, flexDirection: 'row' }}>
-            <TextInput style={{ flex: 1 }} label={'Total Pet '} mode='outlined' />
+            <TextInput style={{ flex: 1 }} label={'Total Pet '} mode='outlined' keyboardType='numeric' />
           </View>
 
           <Button mode='contained'>Find</Button>
@@ -66,7 +66,7 @@ export default function ListHotelCustomer() {
           {
             hotels.map((e) => {
               return (
-                <View style={{ height: 80, backgroundColor: '#6B51AA', marginBottom: 10, padding: 10, flexDirection: 'row' }}>
+                <View key={e.id} style={{ height: 80, backgroundColor: '#6B51AA', marginBottom: 10, padding: 10, flexDirection: 'row' }}>
                   <View style={{ flex: 1 }}>
                     <Text style={{ fontSize: 16, fontWeight: '500', color: 'white' }}>{e.name}</Text>
                     <Text style={{ fontSize: 13, color: 'white', marginTop: 10 }}>{e.address}</Text>
