@@ -1,10 +1,11 @@
 import { StatusBar } from 'expo-status-bar'
-import { SafeAreaView, StyleSheet, Text, View } from 'react-native'
+import { SafeAreaView, StyleSheet, Text, View, Image } from 'react-native'
 import { Button } from 'react-native-paper'
 import * as Location from 'expo-location'
 import { useEffect, useState } from 'react'
+import logo from '../../assets/logo.png'
 
-export default function BeforeLogin() {
+export default function BeforeLogin({ navigation }) {
   const [location, setLocation] = useState(null)
   const [errorMsg, setErrorMsg] = useState(null)
 
@@ -31,11 +32,10 @@ export default function BeforeLogin() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text>Before Login!</Text>
-      <Text>{text}</Text>
+      <Image source={logo} style={{ width: 200, height: 250, objectFit: 'contain' }} />
       <View style={{ flexDirection: 'row' }}>
-        <Button mode='contained' onPress={() => console.log(location.coords.latitude, location.coords.longitude)}>Customer</Button>
-        <Button mode='contained' onPress={() => console.log(errorMsg)}>Admin</Button>
+        <Button mode='contained' onPress={() => navigation.navigate('Customer Login')} style={{ marginEnd: 20 }} theme={{ colors: { primary: '#48034F' } }}>Customer</Button>
+        <Button mode='contained' onPress={() => navigation.navigate('Admin Login')} theme={{ colors: { primary: '#48034F' } }}>Admin</Button>
         <StatusBar style="auto" />
       </View>
     </SafeAreaView>
@@ -48,5 +48,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
+    marginBottom: 30
   },
 });

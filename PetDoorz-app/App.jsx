@@ -7,24 +7,15 @@ import LoginRegisterStack from './src/navigators/LoginRegisterStack'
 import CustomerTab from './src/navigators/customer/CustomerTab'
 import { Provider } from 'react-redux'
 import store from './src/store'
+import MainNavigator from './src/navigators/MainNavigator';
 
 export default function App() {
-  const [isAdmin, setIsAdmin] = useState(false)
+  const [isAdmin, setIsAdmin] = useState(true)
   const [isCustomer, setIsCustomer] = useState(false)
 
   return (
     <Provider store={store}>
-      <NavigationContainer>
-        {
-          isAdmin ? (
-            <AdminTab />
-          ) : isCustomer ? (
-            <CustomerTab />
-          ) : (
-            <LoginRegisterStack />
-          )
-        }
-      </NavigationContainer>
+      <MainNavigator />
     </Provider>
   );
 }

@@ -1,17 +1,51 @@
 import { StatusBar } from 'expo-status-bar'
-import { StyleSheet, Text, View } from 'react-native'
-import { useSelector } from 'react-redux';
+import { useState } from 'react'
+import { Image, SafeAreaView, StyleSheet, Text, View } from 'react-native'
+import { Button, TextInput } from 'react-native-paper'
+import logo from '../../../assets/logo.png'
+import { useDispatch } from 'react-redux'
+import { SET_ROLE } from '../../store/actions/actionUser'
 
-export default function LoginAdmin() {
-  const hotel = useSelector((state) => state.hotel.data)
+export default function LoginAdmin({ navigation }) {
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [nullEmPass, setNullEmPass] = useState(false)
 
-  console.log(hotel)
+  const dispatch = useDispatch()
+
+  const handleLogin = () => {
+    if (!email || !password) {
+      setNullEmPass(true)
+    } else {
+      dispatch(SET_ROLE('admin'))
+    }
+  }
+
+  const [eye, setEye] = useState(false)
+
+  const handleEye = () => {
+    if (eye) {
+      setEye(false)
+    } else {
+      setEye(true)
+    }
+  }
 
   return (
-    <View style={styles.container}>
-      <Text>Login admin!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <SafeAreaView style={styles.container}>
+      <View style={styles.container}>
+        <Image source={logo} style={{ width: 100, height: 150, objectFit: 'contain' }} />
+        <Text style={{ fontSize: 20, marginBottom: 10 }}>Hotel Login</Text>
+        {
+          nullEmPass ? <Text style={{ color: '#D2001A', fontSize: 15, marginBottom: 10 }}>Invalid email/password</Text> : ''
+        }
+        <TextInput label='Email' style={styles.textInput} onChangeText={email => setEmail(email)}></TextInput>
+        <TextInput label='Password' secureTextEntry={eye ? false : true} onChangeText={password => setPassword(password)} style={styles.textInput} right={<TextInput.Icon icon="eye" onPress={handleEye} />}></TextInput>
+        <Button mode='contained' theme={{ colors: { primary: '#48034F' } }} onPress={handleLogin}>Login</Button>
+        <Button style={{ marginTop: 5 }} onPress={() => navigation.navigate('Admin Register')}>Signup</Button>
+        <StatusBar style="auto" />
+      </View>
+    </SafeAreaView>
   );
 }
 
@@ -20,6 +54,10 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'center'
   },
+  textInput: {
+    width: 250,
+    marginBottom: 20
+  }
 });

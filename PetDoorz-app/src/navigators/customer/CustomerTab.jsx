@@ -7,7 +7,7 @@ const Tab = createBottomTabNavigator();
 export default function CustomerTab() {
     return (
         <Tab.Navigator>
-            <Tab.Screen name="Home Tab" component={HomeCustomerStack} />
+            <Tab.Screen name="Customer Tab" component={HomeCustomerStack} />
         </Tab.Navigator>
     )
 }

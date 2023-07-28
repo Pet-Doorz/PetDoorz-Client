@@ -1,7 +1,6 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { FontAwesome } from '@expo/vector-icons';
 import AdminStack from './HomeAdminStack';
-
 const Tab = createBottomTabNavigator();
 
 export default function AdminTab() {
