@@ -4,8 +4,11 @@ import { Button } from 'react-native-paper'
 import * as Location from 'expo-location'
 import { useEffect, useState } from 'react'
 import logo from '../../assets/logo.png'
+import { useDispatch } from 'react-redux'
+import { SET_LOCATION } from '../store/actions/actionUser'
 
 export default function BeforeLogin({ navigation }) {
+  const dispatch = useDispatch()
   const [location, setLocation] = useState(null)
   const [errorMsg, setErrorMsg] = useState(null)
 
@@ -19,8 +22,18 @@ export default function BeforeLogin({ navigation }) {
 
       let location = await Location.getCurrentPositionAsync({})
       setLocation(location)
-    })();
-  }, []);
+    })()
+  }, [])
+
+  useEffect(() => {
+    if (location) {
+      const { latitude, longitude } = location.coords
+      dispatch(SET_LOCATION({
+        latitude,
+        longitude
+      }))
+    }
+  }, [location])
 
 
   let text = 'Waiting..';
@@ -47,7 +60,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
     alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 30
+    justifyContent: 'center'
   },
 });
