@@ -5,6 +5,7 @@ import { useDispatch } from 'react-redux'
 import logo from '../../../assets/logo.png'
 import { Button, TextInput } from 'react-native-paper'
 import { SET_ROLE } from '../../store/actions/actionUser'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 export default function LoginCustomer({ navigation }) {
   const [email, setEmail] = useState('')
@@ -13,10 +14,11 @@ export default function LoginCustomer({ navigation }) {
 
   const dispatch = useDispatch()
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     if (!email || !password) {
       setNullEmPass(true)
     } else {
+      await AsyncStorage.setItem('customer_access_token', 'dummy') // setItem (save ke local storage)
       dispatch(SET_ROLE('customer'))
     }
   }
