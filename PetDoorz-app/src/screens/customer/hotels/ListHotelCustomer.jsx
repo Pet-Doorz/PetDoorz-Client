@@ -1,12 +1,12 @@
 import { StatusBar } from 'expo-status-bar'
-import { useState } from 'react';
-import { SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native'
+import { useState } from 'react'
+import { SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { Button, TextInput } from 'react-native-paper'
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker'
 import { useSelector } from 'react-redux'
 import { FontAwesome } from '@expo/vector-icons'
 
-export default function ListHotelCustomer() {
+export default function ListHotelCustomer({ navigation }) {
   const date = new Date() // dapetin tanggal
 
   const [checkin, setCheckin] = useState(date) // ini buat tanggal
@@ -32,6 +32,12 @@ export default function ListHotelCustomer() {
       is24Hour: true,
       minimumDate: date
     });
+  }
+
+  const handleDetailScreen = (name) => {
+    navigation.navigate('Hotel Detail', {
+      name: 'Test'
+    })
   }
 
 
@@ -65,17 +71,21 @@ export default function ListHotelCustomer() {
 
           {
             hotels.map((e) => {
+              const { name } = e
               return (
-                <View key={e.id} style={{ height: 80, backgroundColor: '#6B51AA', marginBottom: 10, padding: 10, flexDirection: 'row' }}>
-                  <View style={{ flex: 1 }}>
-                    <Text style={{ fontSize: 16, fontWeight: '500', color: 'white' }}>{e.name}</Text>
-                    <Text style={{ fontSize: 13, color: 'white', marginTop: 10 }}>{e.address}</Text>
+                <TouchableOpacity key={e.id} onPress={(name) => handleDetailScreen(name)} activeOpacity={0.9}>
+                  <View style={{ height: 80, backgroundColor: '#6B51AA', marginBottom: 10, padding: 10, flexDirection: 'row' }}>
+                    <View style={{ flex: 1 }}>
+                      <Text style={{ fontSize: 16, fontWeight: '500', color: 'white' }}>{e.name}</Text>
+                      <Text style={{ fontSize: 13, color: 'white', marginTop: 10 }}>{e.address}</Text>
+                    </View>
+                    <View style={{ flexDirection: 'row', marginTop: 17 }}>
+                      <FontAwesome name="star" size={24} color="yellow" />
+                      <Text style={{ fontSize: 16, fontWeight: '500', color: 'white' }}> 4 / 5</Text>
+                    </View>
                   </View>
-                  <View style={{ flexDirection: 'row', marginTop: 17 }}>
-                    <FontAwesome name="star" size={24} color="yellow" />
-                    <Text style={{ fontSize: 16, fontWeight: '500', color: 'white' }}> 4 / 5</Text>
-                  </View>
-                </View>
+
+                </TouchableOpacity>
               )
             })
           }
