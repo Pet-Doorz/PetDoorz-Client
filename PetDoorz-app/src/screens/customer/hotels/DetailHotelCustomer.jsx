@@ -1,6 +1,8 @@
 import { StatusBar } from 'expo-status-bar'
-import { ScrollView, StyleSheet, Text, View } from 'react-native'
+import { ScrollView, StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native'
 import MapView, { Marker } from 'react-native-maps'
+import ImageView from "react-native-image-viewing"
+import { useState } from 'react'
 
 export default function DetailHotelCustomer() {
     const location = {
@@ -28,14 +30,49 @@ export default function DetailHotelCustomer() {
         "status": "active"
     }
 
+    const images = [
+        {
+            uri: "https://images.unsplash.com/photo-1571501679680-de32f1e7aad4",
+        },
+        {
+            uri: "https://images.unsplash.com/photo-1573273787173-0eb81a833b34",
+        },
+        {
+            uri: "https://images.unsplash.com/photo-1569569970363-df7b6160d111",
+        },
+    ]
+
+    const [visible, setIsVisible] = useState(false)
+    const [imageIndex, setImageIndex] = useState(0)
+
+    const onSelect = (index) => {
+        setImageIndex(index)
+        setIsVisible(true)
+    }
+
     return (
         <ScrollView style={styles.container}>
             <View style={{}}>
+                <ImageView
+                    images={images}
+                    imageIndex={imageIndex}
+                    visible={visible}
+                    onRequestClose={() => setIsVisible(false)}
+                />
                 <MapView
                     style={styles.map}
                     region={location}
                 >
                 </MapView>
+                <View style={{ flexDirection: 'row' }}>
+                    {
+                        images.map((e, i) => {
+                            return <TouchableOpacity key={i} activeOpacity={0.8} onPress={() => onSelect(i)}>
+                                <Image source={e} style={{ width: 100, height: 100 }} />
+                            </TouchableOpacity>
+                        })
+                    }
+                </View>
             </View>
             <Text style={styles.title}>{hotel.name}</Text>
             <View style={{ marginTop: 15, height: 100, backgroundColor: 'gray' }}>
