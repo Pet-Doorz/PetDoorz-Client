@@ -34,21 +34,27 @@ export default function DetailHotelCustomer() {
 
     const images = [
         {
+            id: 1,
             uri: "https://images.unsplash.com/photo-1571501679680-de32f1e7aad4",
         },
         {
+            id: 2,
             uri: "https://images.unsplash.com/photo-1573273787173-0eb81a833b34",
         },
         {
+            id: 3,
             uri: "https://images.unsplash.com/photo-1569569970363-df7b6160d111",
         },
         {
+            id: 4,
             uri: "https://images.unsplash.com/photo-1571501679680-de32f1e7aad4",
         },
         {
+            id: 5,
             uri: "https://images.unsplash.com/photo-1573273787173-0eb81a833b34",
         },
         {
+            id: 6,
             uri: "https://images.unsplash.com/photo-1569569970363-df7b6160d111",
         },
     ]
@@ -108,9 +114,11 @@ export default function DetailHotelCustomer() {
                     <View style={{ flexDirection: 'row', gap: 15 }}>
                         {
                             images.map((e, i) => { // ini galerinya, yang bisa trigger imageviewnya
-                                return <TouchableOpacity key={i} activeOpacity={0.8} onPress={() => onSelect(i)}>
-                                    <Image source={e} style={{ width: 100, height: 100 }} />
-                                </TouchableOpacity>
+                                return (
+                                    <TouchableOpacity key={e.id} activeOpacity={0.8} onPress={() => onSelect(i)}>
+                                        <Image source={e} style={{ width: 100, height: 100 }} />
+                                    </TouchableOpacity>
+                                )
                             })
                         }
                     </View>
