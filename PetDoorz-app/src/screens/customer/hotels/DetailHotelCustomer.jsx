@@ -6,14 +6,17 @@ import { useState } from 'react'
 import { FontAwesome } from '@expo/vector-icons'
 import { Button } from 'react-native-paper'
 
-export default function DetailHotelCustomer() {
+export default function DetailHotelCustomer({ navigation }) {
+    const handleBookScreen = () => {
+        navigation.navigate('Hotel Book')
+    }
+
     const location = {
         latitude: -6.147642181387086,
         longitude: 106.71119003020036,
         latitudeDelta: 0.015,
         longitudeDelta: 0.0121,
     }
-
 
     const hotel = {
         "id": 1,
@@ -105,6 +108,9 @@ export default function DetailHotelCustomer() {
                     style={styles.map}
                     region={location}
                 >
+                    <Marker draggable
+                        coordinate={location}
+                    />
                 </MapView>
             </View>
 
@@ -182,7 +188,7 @@ export default function DetailHotelCustomer() {
 
             {/* Button buat jadwal, chat */}
             <View style={{ flexDirection: 'row', paddingBottom: 50, marginTop: 12, gap: 10 }}>
-                <Button mode='contained' theme={{ colors: { primary: '#48034F' } }}>Book Now</Button>
+                <Button mode='contained' theme={{ colors: { primary: '#48034F' } }} onPress={handleBookScreen}>Book Now</Button>
                 <Button mode='contained' theme={{ colors: { primary: '#48034F' } }}>Chat</Button>
             </View>
             <StatusBar style="auto" />

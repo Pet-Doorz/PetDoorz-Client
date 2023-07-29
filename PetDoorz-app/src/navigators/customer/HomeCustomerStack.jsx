@@ -6,7 +6,7 @@ const Stack = createNativeStackNavigator()
 export default function HomeCustomerStack() {
     return (
         <Stack.Navigator>
-            <Stack.Screen name="Home Admin" component={HomeCustomer} options={{ headerShown: false }} />
+            <Stack.Screen name="Home Customer" component={HomeCustomer} options={{ headerShown: false }} />
         </Stack.Navigator>
     )
 }
