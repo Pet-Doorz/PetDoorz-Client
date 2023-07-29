@@ -2,8 +2,18 @@ import { StatusBar } from 'expo-status-bar'
 import { SafeAreaView, ScrollView, StyleSheet, Text, TouchableHighlight, TouchableOpacity, View } from 'react-native'
 import { Button } from 'react-native-paper';
 import { FontAwesome } from '@expo/vector-icons';
+import { useDispatch } from 'react-redux'
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { SET_ROLE } from '../../../store/actions/actionUser';
 
 export default function UserSettingCustomer({ navigation }) {
+  const dispatch = useDispatch()
+
+  const handleLogout = async () => {
+    await AsyncStorage.clear()
+    dispatch(SET_ROLE(''))
+  }
+
   return (
     <SafeAreaView>
       <ScrollView contentContainerStyle={{ alignItems: 'center' }}>
@@ -39,7 +49,7 @@ export default function UserSettingCustomer({ navigation }) {
             <Text style={styles.menuTitle}>Chats</Text>
             <View style={styles.horizontalMarker}></View>
           </TouchableOpacity>
-          <TouchableOpacity activeOpacity={0.8}>
+          <TouchableOpacity activeOpacity={0.8} onPress={handleLogout}>
             <Text style={styles.menuTitle}>Logout</Text>
           </TouchableOpacity>
 
