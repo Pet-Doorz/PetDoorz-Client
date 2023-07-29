@@ -6,6 +6,11 @@ import { Button, Checkbox } from 'react-native-paper';
 export default function BookHotelCustomer() {
     const [groom, setGroom] = useState(false)
     const [vaccine, setVaccine] = useState(false)
+    const [selectedId, setSelectedId] = useState()
+
+    const handleRoomId = (id) => {
+        setSelectedId(id)
+    }
 
     return (
         <ScrollView contentContainerStyle={{ alignItems: 'center' }}>
@@ -31,8 +36,10 @@ export default function BookHotelCustomer() {
                 {/* Choose Room, roomcard bisa jadi component */}
                 <View>
                     <Text style={styles.bookTextContent}>Choose room :</Text>
-                    {/* Room card */}
-                    <TouchableOpacity style={styles.roomCard} activeOpacity={0.87}>
+                    {/* Room card, dapetnya id aja kali */}
+                    <TouchableOpacity style={[styles.roomCard, selectedId === 0 ? card.active : '' ]} activeOpacity={0.87}
+                        onPress={() => handleRoomId(0)}
+                    >
                         <View>
                             <Text style={card.title}>Reguler Room</Text>
                             <Text style={card.textContent}>Available: 3</Text>
@@ -43,7 +50,9 @@ export default function BookHotelCustomer() {
                     </TouchableOpacity>
 
                     {/* Room card */}
-                    <TouchableOpacity style={styles.roomCard} activeOpacity={0.87}>
+                    <TouchableOpacity style={[styles.roomCard, selectedId === 1 ? card.active : '' ]} activeOpacity={0.87}
+                        onPress={() => handleRoomId(1)}
+                    >
                         <View>
                             <Text style={card.title}>VIP Room</Text>
                             <Text style={card.textContent}>Available: 3</Text>
@@ -179,5 +188,6 @@ const card = StyleSheet.create({
     total: {
         fontSize: 20,
         fontWeight: 'bold'
-    }
+    },
+    active: { borderWidth: 2 }
 })
