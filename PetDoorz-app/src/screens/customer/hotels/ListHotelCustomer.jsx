@@ -49,20 +49,20 @@ export default function ListHotelCustomer({ navigation }) {
 
           <Text>Check In</Text>
           <View style={{ flexDirection: 'row', gap: 10, marginBottom: 20 }}>
-            <TextInput disabled style={{ flex: 1, height: 45 }}>{checkin.toLocaleDateString('checkin')}</TextInput>
-            <Button mode='contained' style={{ height: 45 }} onPress={handleCheckinDate} >Pick Date</Button>
+            <TextInput disabled mode='outlined' style={{ flex: 1, height: 45 }}>{checkin.toLocaleDateString('checkin')}</TextInput>
+            <Button mode='contained' style={{ height: 45, borderRadius: 8, marginTop: 7 }} onPress={handleCheckinDate} theme={{ colors: { primary: '#48034F' } }} >Pick Date</Button>
           </View>
           <Text>Check Out</Text>
           <View style={{ flexDirection: 'row', gap: 10 }}>
-            <TextInput disabled style={{ flex: 1, height: 45 }}>{checkout.toLocaleDateString()}</TextInput>
-            <Button mode='contained' style={{ height: 45 }} onPress={handleCheckoutDate}>Pick Date</Button>
+            <TextInput disabled mode='outlined' style={{ flex: 1, height: 45 }}>{checkout.toLocaleDateString()}</TextInput>
+            <Button mode='contained' style={{ height: 45, borderRadius: 8, marginTop: 7 }} onPress={handleCheckoutDate} theme={{ colors: { primary: '#48034F' } }}>Pick Date</Button>
           </View>
 
           <View style={{ marginTop: 20, marginBottom: 20, flexDirection: 'row' }}>
             <TextInput style={{ flex: 1 }} label={'Total Pet '} mode='outlined' keyboardType='numeric' />
           </View>
 
-          <Button mode='contained'>Find</Button>
+          <Button mode='contained' style={{ height: 45, borderRadius: 8 }} theme={{ colors: { primary: '#48034F' } }}>Find</Button>
         </View>
 
 
@@ -71,13 +71,13 @@ export default function ListHotelCustomer({ navigation }) {
 
           {
             hotels.map((e) => {
-              const { name } = e
               return (
                 <TouchableOpacity key={e.id} onPress={(name) => handleDetailScreen(name)} activeOpacity={0.9}>
-                  <View style={{ height: 80, backgroundColor: '#6B51AA', marginBottom: 10, padding: 10, flexDirection: 'row' }}>
+                  <View style={[styles.hotel, styles.shadowProp]}>
                     <View style={{ flex: 1 }}>
                       <Text style={{ fontSize: 16, fontWeight: '500', color: 'white' }}>{e.name}</Text>
-                      <Text style={{ fontSize: 13, color: 'white', marginTop: 10 }}>{e.address}</Text>
+                      <Text style={{ fontSize: 13, color: 'white', marginTop: 5 }}>{e.address}</Text>
+                      <Text style={{ fontSize: 13, color: 'white', fontWeight: '200' }}>Distance: 4.8km</Text>
                     </View>
                     <View style={{ flexDirection: 'row', marginTop: 17 }}>
                       <FontAwesome name="star" size={24} color="yellow" />
@@ -111,5 +111,9 @@ const styles = StyleSheet.create({
     borderRadius: 18
   },
   grid: { paddingHorizontal: 15, marginTop: 20 },
-  title: { fontSize: 20, fontWeight: 'bold', marginBottom: 20 }
+  title: { fontSize: 20, fontWeight: 'bold', marginBottom: 20 },
+  hotel: { height: 80, backgroundColor: '#48034F', marginBottom: 10, padding: 10, flexDirection: 'row' },
+  shadowProp: {
+    elevation: 3
+  },
 })

@@ -3,6 +3,8 @@ import { ScrollView, StyleSheet, Text, View, Image, TouchableOpacity } from 'rea
 import MapView, { Marker } from 'react-native-maps'
 import ImageView from "react-native-image-viewing"
 import { useState } from 'react'
+import { FontAwesome } from '@expo/vector-icons'
+import { Button } from 'react-native-paper'
 
 export default function DetailHotelCustomer() {
     const location = {
@@ -40,6 +42,38 @@ export default function DetailHotelCustomer() {
         {
             uri: "https://images.unsplash.com/photo-1569569970363-df7b6160d111",
         },
+        {
+            uri: "https://images.unsplash.com/photo-1571501679680-de32f1e7aad4",
+        },
+        {
+            uri: "https://images.unsplash.com/photo-1573273787173-0eb81a833b34",
+        },
+        {
+            uri: "https://images.unsplash.com/photo-1569569970363-df7b6160d111",
+        },
+    ]
+
+    const reviews = [
+        {
+            name: 'Juan Alfonsus',
+            comment: 'Keren bangettttt',
+            rating: 1
+        },
+        {
+            name: 'Ringo Gaurangga',
+            comment: 'Keren bangettttt',
+            rating: 4
+        },
+        {
+            name: 'Raymond Fransisco',
+            comment: 'Keren bangettttt',
+            rating: 4
+        },
+        {
+            name: 'Mike Leonardo',
+            comment: 'Keren bangettttt',
+            rating: 5
+        },
     ]
 
     const [visible, setIsVisible] = useState(false)
@@ -52,9 +86,11 @@ export default function DetailHotelCustomer() {
 
     return (
         <ScrollView style={styles.container}>
-            <View style={{}}>
-                <ImageView
-                    images={images}
+            {/* Ini view map */}
+            <View>
+                <Text style={styles.title}>{hotel.name}</Text>
+                <ImageView // ini tuh cuman modal doang, jadi harus ditrigger, triggernya lewat touchable opacity dibawah
+                    images={images} // harus array of object dengan key uri
                     imageIndex={imageIndex}
                     visible={visible}
                     onRequestClose={() => setIsVisible(false)}
@@ -64,19 +100,82 @@ export default function DetailHotelCustomer() {
                     region={location}
                 >
                 </MapView>
-                <View style={{ flexDirection: 'row' }}>
-                    {
-                        images.map((e, i) => {
-                            return <TouchableOpacity key={i} activeOpacity={0.8} onPress={() => onSelect(i)}>
-                                <Image source={e} style={{ width: 100, height: 100 }} />
-                            </TouchableOpacity>
-                        })
-                    }
-                </View>
             </View>
-            <Text style={styles.title}>{hotel.name}</Text>
-            <View style={{ marginTop: 15, height: 100, backgroundColor: 'gray' }}>
-                <Text>Tes</Text>
+
+            {/* Ini view galery */}
+            <View style={{ marginTop: 20 }}>
+                <ScrollView horizontal={true}>
+                    <View style={{ flexDirection: 'row', gap: 15 }}>
+                        {
+                            images.map((e, i) => { // ini galerinya, yang bisa trigger imageviewnya
+                                return <TouchableOpacity key={i} activeOpacity={0.8} onPress={() => onSelect(i)}>
+                                    <Image source={e} style={{ width: 100, height: 100 }} />
+                                </TouchableOpacity>
+                            })
+                        }
+                    </View>
+                </ScrollView>
+            </View>
+            {/* Garis horizontal */}
+            <View
+                style={{
+                    borderBottomColor: 'black',
+                    borderBottomWidth: StyleSheet.hairlineWidth,
+                    marginTop: 12,
+                    elevation: 2
+                }}
+            />
+
+            {/* Box description, review dll */}
+            <View style={styles.perContent}>
+                <Text style={styles.cardTitle}>Latest Review</Text>
+                <ScrollView horizontal={true}>
+                    <View style={{ flexDirection: 'row', gap: 15 }}>
+                        {
+                            reviews.map((e, i) => {
+                                return (
+                                    <TouchableOpacity key={i} style={[styles.card, styles.shadowProp]}>
+                                        <View>
+                                            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                                                <Text>Rating</Text>
+                                                <View style={{ flexDirection: 'row' }}>
+                                                    <Text style={{ fontSize: 16 }}> 4 / 5</Text>
+                                                    <FontAwesome name="star" size={24} color="yellow" />
+                                                </View>
+                                            </View>
+                                            <View style={{ marginTop: 10, gap: 5 }}>
+                                                <Text>{e.name}</Text>
+                                                <Text style={{ fontSize: 12, fontWeight: '300' }}>{e.comment}</Text>
+                                            </View>
+                                        </View>
+                                    </TouchableOpacity>
+                                )
+                            })
+                        }
+                    </View>
+                </ScrollView>
+            </View>
+
+            {/* Garis horizontal */}
+            <View
+                style={{
+                    borderBottomColor: 'black',
+                    borderBottomWidth: StyleSheet.hairlineWidth,
+                    marginTop: 12,
+                    elevation: 2
+                }}
+            />
+
+            {/* Hotel Description */}
+            <View style={styles.perContent}>
+                <Text style={styles.cardTitle}>Description</Text>
+                <Text>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quasi atque distinctio esse odio animi! Corrupti, explicabo. Fugit reprehenderit reiciendis autem?</Text>
+            </View>
+
+            {/* Button buat jadwal, chat */}
+            <View style={{ flexDirection: 'row', paddingBottom: 50, marginTop: 12, gap: 10 }}>
+                <Button mode='contained' theme={{ colors: { primary: '#48034F' } }}>Book Now</Button>
+                <Button mode='contained' theme={{ colors: { primary: '#48034F' } }}>Chat</Button>
             </View>
             <StatusBar style="auto" />
         </ScrollView>
@@ -87,11 +186,27 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#fff',
-        paddingHorizontal: 15
+        paddingHorizontal: 15,
     },
     map: {
         width: '100%',
         height: 250
     },
-    title: { fontSize: 20, fontWeight: 'bold', marginTop: 20 }
+    title: { fontSize: 25, fontWeight: 'bold', marginBottom: 12 },
+    shadowProp: {
+        elevation: 5,
+    },
+    card: {
+        backgroundColor: 'white',
+        borderRadius: 8,
+        paddingVertical: 10,
+        paddingHorizontal: 10,
+        marginVertical: 10,
+        width: 200
+    },
+    cardTitle: {
+        fontSize: 20,
+        fontWeight: '500'
+    },
+    perContent: { padding: 2, marginTop: 6 }
 });
