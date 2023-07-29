@@ -6,7 +6,7 @@ const Tab = createBottomTabNavigator();
 export default function AdminTab() {
     return (
         <Tab.Navigator>
-            <Tab.Screen name="Home Tab" component={AdminStack} />
+            <Tab.Screen name="Home Tab" component={AdminStack} options={{ headerTitle: 'Pet Doorz' }} />
             <Tab.Screen name="Admin Tab" component={AdminStack} />
         </Tab.Navigator>
     )

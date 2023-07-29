@@ -24,7 +24,8 @@
     "react-native-paper": "^5.9.1",
     "react-redux": "^8.1.1",
     "redux": "^4.2.1",
-    "redux-thunk": "^2.4.2"
+    "redux-thunk": "^2.4.2",
+    "@react-native-picker/picker": "2.4.10"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"
