@@ -3,13 +3,19 @@ import { useState } from 'react';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { Button, Checkbox } from 'react-native-paper';
 
-export default function BookHotelCustomer() {
+export default function BookHotelCustomer({ navigation }) {
     const [groom, setGroom] = useState(false)
     const [vaccine, setVaccine] = useState(false)
     const [selectedId, setSelectedId] = useState()
 
     const handleRoomId = (id) => {
         setSelectedId(id)
+    }
+
+    const handlePaymentScreen = () => {
+        navigation.navigate('Payment Gateway', {
+            url: 'https://app.sandbox.midtrans.com/snap/v3/redirection/87e8fb5d-9a9d-4fca-a600-9808d685bdfb' // passing url disini
+        })
     }
 
     return (
@@ -109,7 +115,7 @@ export default function BookHotelCustomer() {
                     </View>
                 </View>
 
-                <Button mode='contained' style={{ marginTop: 15 }} theme={{ colors: { primary: 'gray' } }}>Book</Button>
+                <Button mode='contained' style={{ marginTop: 15 }} theme={{ colors: { primary: 'gray' } }} onPress={handlePaymentScreen}>Book</Button>
                 <StatusBar style="auto" />
             </View>
         </ScrollView>

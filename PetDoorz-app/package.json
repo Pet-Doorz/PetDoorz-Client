@@ -11,6 +11,7 @@
   "dependencies": {
     "@react-native-async-storage/async-storage": "1.18.2",
     "@react-native-community/datetimepicker": "7.2.0",
+    "@react-native-picker/picker": "2.4.10",
     "@react-navigation/bottom-tabs": "^6.5.8",
     "@react-navigation/native-stack": "^6.9.13",
     "@talkjs/expo": "^0.6.0",
@@ -22,10 +23,10 @@
     "react-native-image-viewing": "^0.2.2",
     "react-native-maps": "^1.7.1",
     "react-native-paper": "^5.9.1",
+    "react-native-webview": "13.2.2",
     "react-redux": "^8.1.1",
     "redux": "^4.2.1",
-    "redux-thunk": "^2.4.2",
-    "@react-native-picker/picker": "2.4.10"
+    "redux-thunk": "^2.4.2"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"
