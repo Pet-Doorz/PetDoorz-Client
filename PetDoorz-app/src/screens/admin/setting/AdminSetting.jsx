@@ -100,7 +100,7 @@ export default function AdminSetting({ navigation }) {
                             <Text style={styles.menuTitle}>Bookings</Text>
                             <View style={styles.horizontalMarker}></View>
                         </TouchableOpacity>
-                        <TouchableOpacity activeOpacity={0.8}>
+                        <TouchableOpacity activeOpacity={0.8} onPress={() => navigation.navigate('Admin Chat List Stack')}>
                             <Text style={styles.menuTitle}>Chats</Text>
                             <View style={styles.horizontalMarker}></View>
                         </TouchableOpacity>
