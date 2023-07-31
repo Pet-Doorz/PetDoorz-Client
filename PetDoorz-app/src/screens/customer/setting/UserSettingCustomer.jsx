@@ -37,7 +37,7 @@ export default function UserSettingCustomer({ navigation }) {
             <Text style={styles.menuTitle}>Settings</Text>
             <View style={styles.horizontalMarker}></View>
           </TouchableOpacity>
-          <TouchableOpacity activeOpacity={0.8}>
+          <TouchableOpacity activeOpacity={0.8} onPress={() => navigation.navigate('Customer Books')}>
             <Text style={styles.menuTitle}>Bookings</Text>
             <View style={styles.horizontalMarker}></View>
           </TouchableOpacity>
