@@ -1,10 +1,26 @@
-import { View, Text, ScrollView, StyleSheet } from "react-native";
-import { Button } from "react-native-paper";
+import { View, Text, ScrollView, StyleSheet, Image, TouchableOpacity } from "react-native"
+import { Button } from "react-native-paper"
+import ImageView from "react-native-image-viewing"
+import { useState } from "react"
 
 
 export default function BookDetail() {
+    const status = 'process' // didapat dari status detail
+    const [visible, setIsVisible] = useState(false) // bikin foto jadi keliatan
+    const images = [
+        {
+            uri: 'https://images.unsplash.com/photo-1558788353-f76d92427f16?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8ZG9nJTIwcG9ydHJhaXR8ZW58MHx8MHx8fDA%3D&w=1000&q=80'
+        }
+    ]
+
     return (
         <ScrollView>
+            <ImageView // ini tuh cuman modal doang, jadi harus ditrigger, triggernya lewat touchable opacity dibawah
+                images={images} // harus array of object dengan key uri
+                imageIndex={0}
+                visible={visible}
+                onRequestClose={() => setIsVisible(false)}
+            />
             <View style={styles.container}>
                 <View style={styles.card}>
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -44,8 +60,10 @@ export default function BookDetail() {
                     {/* Ini buat update status, sama upload foto */}
                     <View style={{ alignItems: 'center', gap: 5 }}>
                         <Text>Pet Photo</Text>
-                        <Text>Upload Your Photo</Text>
-                        <Button mode="contained" style={{ borderRadius: 10 }} theme={{ colors: {primary: '#48034F'} }}>Process</Button>
+                        <TouchableOpacity activeOpacity={0.8} onPress={() => setIsVisible(true)}>
+                            <Image style={{ width: 100, height: 100 }} source={{ uri: 'https://images.unsplash.com/photo-1558788353-f76d92427f16?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8ZG9nJTIwcG9ydHJhaXR8ZW58MHx8MHx8fDA%3D&w=1000&q=80' }} />
+                        </TouchableOpacity>
+                        <Button mode="contained" disabled={status === 'process' ? false : true} style={{ borderRadius: 10 }} theme={{ colors: { primary: '#48034F' } }}>Done</Button>
                     </View>
                 </View>
             </View>
