@@ -1,12 +1,12 @@
 import { StatusBar } from 'expo-status-bar'
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import { Button } from 'react-native-paper'
-import { MaterialIcons } from '@expo/vector-icons'
+import { ActivityIndicator, Button } from 'react-native-paper'
 import { useDispatch, useSelector } from 'react-redux'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { detailAdmin } from '../../../store/actions/actionAdmin'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import RoomCard from '../../../components/admin/RoomCard'
+import ServiceCard from '../../../components/admin/ServiceCard'
 
 
 export default function HomeAdmin({ navigation }) {
@@ -14,11 +14,19 @@ export default function HomeAdmin({ navigation }) {
 
   const detail = useSelector((state) => state.admin.detailAdmin)
 
+  const [loading, setLoading] = useState(true)
+
   useEffect(() => {
     (
       async () => {
         const access_token = await AsyncStorage.getItem('admin_access_token')
         dispatch(detailAdmin(access_token))
+          .then((_) => {
+            setLoading(false)
+          })
+          .catch((err) => {
+            console.log(err)
+          })
       }
     )()
   }, [])
@@ -34,6 +42,12 @@ export default function HomeAdmin({ navigation }) {
 
   const handleAddServiceFormScreen = () => {
     navigation.navigate('Add Service Admin')
+  }
+
+  if (loading) {
+    return <View style={{ justifyContent: 'center', flex: 1 }}>
+      <ActivityIndicator size={'large'}></ActivityIndicator>
+    </View>
   }
 
 
@@ -53,6 +67,7 @@ export default function HomeAdmin({ navigation }) {
           }
         </View>
 
+        {/* Card service */}
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 12 }}>
           <Text style={styles.title}>Services List</Text>
           <Button mode='contained' theme={{ colors: { primary: 'gray' } }} style={{ borderRadius: 5 }} onPress={handleAddServiceFormScreen}>Add Service</Button>
@@ -60,18 +75,11 @@ export default function HomeAdmin({ navigation }) {
 
         <View style={{ marginTop: 12 }}>
           {/* Card room, nanti dibuat component sendiri */}
-          <TouchableOpacity activeOpacity={0.85}>
-            <View style={[styles.card, styles.shadowProp]}>
-              <View style={{ flex: 1 }}>
-                {/* Card content */}
-                <Text style={{ fontSize: 16, fontWeight: '500', color: 'white' }}>Grooming</Text>
-                <Text style={{ fontSize: 13, color: 'white', marginTop: 5 }}>Price: Rp. 50.000</Text>
-              </View>
-              <View style={{ flexDirection: 'row', marginTop: 17 }}>
-                <MaterialIcons name="keyboard-arrow-right" size={30} color="white" />
-              </View>
-            </View>
-          </TouchableOpacity>
+          {
+            detail.Services.map((e) => {
+              return <ServiceCard key={e.id} service={e} />
+            })
+          }
         </View>
 
         <StatusBar style="auto" />
