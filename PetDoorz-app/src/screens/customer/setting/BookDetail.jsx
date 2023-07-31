@@ -63,6 +63,7 @@ export default function BookDetail() {
                         <TouchableOpacity activeOpacity={0.8} onPress={() => setIsVisible(true)}>
                             <Image style={{ width: 100, height: 100 }} source={{ uri: 'https://images.unsplash.com/photo-1558788353-f76d92427f16?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8ZG9nJTIwcG9ydHJhaXR8ZW58MHx8MHx8fDA%3D&w=1000&q=80' }} />
                         </TouchableOpacity>
+                        {/* dialog untuk done */}
                         <Button mode="contained" disabled={status === 'process' ? false : true} style={{ borderRadius: 10 }} theme={{ colors: { primary: '#48034F' } }}>Done</Button>
                     </View>
                 </View>
