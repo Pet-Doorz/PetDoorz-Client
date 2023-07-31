@@ -22,6 +22,7 @@ export default function LoginCustomer({ navigation }) {
       dispatch(loginCustomer({ email, password }))
         .then(async ({ access_token }) => {
           await AsyncStorage.setItem('customer_access_token', access_token) // setItem (save ke local storage)
+          await AsyncStorage.setItem('customer_email', email)
           return dispatch(SET_ROLE('customer'))
         })
         .catch((err) => {
