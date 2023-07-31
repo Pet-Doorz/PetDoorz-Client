@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import {
   Text,
   View,
@@ -9,56 +9,95 @@ import {
 } from "react-native";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useFocusEffect } from "@react-navigation/native";
+
 const baseUrl = `https://api.talkjs.com/v1/t15249fa/users`;
 export default function ChatListCustomer({ navigation }) {
-  const [customerData, setCustomerData] = useState({
-    email: "",
-  });
+  const [customerData, setCustomerData] = useState("");
+  const [chatHistory, setChatHistory] = useState([]);
 
   async function getCustomer() {
     try {
       const { data } = await axios({
         method: "get",
-        url: `${baseUrl}/${customerData.email}/conversations`,
+        url: `${baseUrl}/test@customer.com/conversations`,
         headers: {
           Authorization: `Bearer sk_test_BpApDeqY7UA6zWRbSRR6SrwzGdEDOE4h`,
         },
       });
-      console.log(data);
+      setChatHistory(data.data);
+      console.log(chatHistory);
     } catch (error) {
       console.log(error);
     }
   }
 
-  useEffect(() => {
-    getCustomer()
-      .then((res) => console.log(res))
-      .catch((err) => console.log(err));
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      AsyncStorage.getItem("customer_email")
+        .then((result) => {
+          const emailCust = result;
+          console.log(emailCust, "<--- customer email dari list");
+          setCustomerData(emailCust);
+          getCustomer();
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }, [])
+  );
 
   return (
     <ScrollView>
       <View style={styles.container}>
         <Text style={styles.title}>Chat List</Text>
 
-        {/* Chat List */}
-        <TouchableOpacity
-          activeOpacity={0.8}
-          onPress={() => navigation.navigate("Customer Chat")}
-        >
-          <View style={{ flexDirection: "row", gap: 10, marginBottom: 20 }}>
-            <Image
-              source={{
-                uri: "https://i.scdn.co/image/ab6761610000517492c8095c788abfd2de4a90ee",
-              }}
-              style={styles.imageRound}
-            />
-            <View>
-              <Text style={styles.chatName}>Leonardo Ringo</Text>
-              <Text>...</Text>
+        {chatHistory.length <= 0 && (
+          <TouchableOpacity
+            activeOpacity={0.8}
+            onPress={() => navigation.navigate("Customer Chat")}
+          >
+            <View style={{ flexDirection: "row", gap: 10, marginBottom: 20 }}>
+              <View>
+                <Text style={styles.chatName}>No Chat History</Text>
+              </View>
             </View>
-          </View>
-        </TouchableOpacity>
+          </TouchableOpacity>
+        )}
+        {!chatHistory.length <= 0 &&
+          chatHistory.map((chat) => {
+            return (
+              <TouchableOpacity
+                key={chat.id}
+                activeOpacity={0.8}
+                onPress={() =>
+                  navigation.navigate("Customer Chat", {
+                    data: chat.lastMessage.senderId,
+                    photo: chat.photoUrl,
+                  })
+                }
+              >
+                <View
+                  style={{ flexDirection: "row", gap: 10, marginBottom: 20 }}
+                >
+                  <Image
+                    source={{
+                      uri:
+                        chat.photoUrl ||
+                        "https://i.scdn.co/image/ab6761610000517492c8095c788abfd2de4a90ee",
+                    }}
+                    style={styles.imageRound}
+                  />
+                  <View>
+                    <Text style={styles.chatName}>
+                      {chat.lastMessage.senderId}
+                    </Text>
+                    <Text>{chat.lastMessage.text}...</Text>
+                  </View>
+                </View>
+              </TouchableOpacity>
+            );
+          })}
       </View>
     </ScrollView>
   );
