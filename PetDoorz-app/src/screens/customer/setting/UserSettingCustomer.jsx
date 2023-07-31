@@ -45,7 +45,7 @@ export default function UserSettingCustomer({ navigation }) {
             <Text style={styles.menuTitle}>Favorites</Text>
             <View style={styles.horizontalMarker}></View>
           </TouchableOpacity>
-          <TouchableOpacity activeOpacity={0.8} onPress={() => navigation.navigate('Customer Chat')}>
+          <TouchableOpacity activeOpacity={0.8} onPress={() => navigation.navigate('Customer Chat List')}>
             <Text style={styles.menuTitle}>Chats</Text>
             <View style={styles.horizontalMarker}></View>
           </TouchableOpacity>
