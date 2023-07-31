@@ -26,24 +26,26 @@ export default function ChatListCustomer({ navigation }) {
         },
       });
       setChatHistory(data.data);
-      console.log(chatHistory);
     } catch (error) {
       console.log(error);
     }
   }
 
+  useEffect(() => {
+    AsyncStorage.getItem("customer_email")
+      .then((result) => {
+        const emailCust = result;
+        setCustomerData(emailCust);
+        getCustomer();
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
+
   useFocusEffect(
     useCallback(() => {
-      AsyncStorage.getItem("customer_email")
-        .then((result) => {
-          const emailCust = result;
-          console.log(emailCust, "<--- customer email dari list");
-          setCustomerData(emailCust);
-          getCustomer();
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+      getCustomer();
     }, [])
   );
 
