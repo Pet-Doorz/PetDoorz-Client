@@ -17,6 +17,7 @@ export default function userReducer(state = initialState, action) {
       };
 
     case SET_USER_LOCATION:
+      console.log("masuk before login", action.payload);
       return {
         ...state,
         location: action.payload,
