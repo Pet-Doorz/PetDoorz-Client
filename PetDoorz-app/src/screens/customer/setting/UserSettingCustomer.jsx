@@ -1,17 +1,18 @@
 import { StatusBar } from 'expo-status-bar'
 import { SafeAreaView, ScrollView, StyleSheet, Text, TouchableHighlight, TouchableOpacity, View, Image } from 'react-native'
-import { Button } from 'react-native-paper';
+import { ActivityIndicator, Button } from 'react-native-paper';
 import { FontAwesome } from '@expo/vector-icons';
 import { useDispatch, useSelector } from 'react-redux'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { SET_ROLE } from '../../../store/actions/actionUser';
 import { useFocusEffect } from '@react-navigation/native'
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { detailCustomer } from '../../../store/actions/actionCustomer';
 
 export default function UserSettingCustomer({ navigation }) {
   const dispatch = useDispatch()
   const detail = useSelector((state) => state.customer.detailCustomer)
+  const [loading, setLoading] = useState(true)
 
   const currency = () => {
     return new Intl.NumberFormat('id-Id', { style: 'currency', currency: 'IDR' }).format(detail.balance)
@@ -28,6 +29,7 @@ export default function UserSettingCustomer({ navigation }) {
       AsyncStorage.getItem('customer_access_token')
         .then((result) => {
           dispatch(detailCustomer(result))
+          setLoading(false)
         })
         .catch((err) => {
           console.log(err)
@@ -36,26 +38,36 @@ export default function UserSettingCustomer({ navigation }) {
     }, [])
   )
 
+  if (loading) {
+    return <View style={{ justifyContent: 'center', flex: 1 }}>
+      <ActivityIndicator size={'large'}></ActivityIndicator>
+    </View>
+  }
+
   return (
     <SafeAreaView>
       <ScrollView contentContainerStyle={{ alignItems: 'center' }}>
         {/* Card container, header */}
         <View style={[card.container, card.shadowProp]}>
-          <View style={{ flexDirection: 'row', gap: 15 }}>
-            <Image source={{ uri: 'https://i.scdn.co/image/ab6761610000517492c8095c788abfd2de4a90ee' }} style={styles.imageRound} />
-            <View style={{ flexDirection: 'column' }}>
+          <View style={{ flexDirection: 'row', gap: 15, alignItems: 'center', marginTop: 10 }}>
+            <View style={{ flex: 1 }}>
+              <Image source={{ uri: 'https://freewaysocial.com/wp-content/uploads/2020/02/why-good-facebook-profile-picture-matters-1024x656.png' }} style={styles.imageRound} />
+            </View>
+            <View style={{ flex: 3 }}>
               <Text style={card.title}>{detail.fullName}</Text>
 
-
-              <View style={{ flexDirection: 'row', marginTop: 8 }}>
+              <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: '100%', marginTop: 8 }}>
                 <Text style={card.balance}>Balance</Text>
-                <Text style={card.balance}>{currency()}</Text>
-                <TouchableHighlight style={{ height: 23, width: 23, backgroundColor: 'gray', alignItems: 'center', justifyContent: 'center' }}>
-                  <FontAwesome name="plus" size={20} color="white" />
-                </TouchableHighlight>
+                <View style={{ flexDirection: 'row' }}>
+                  <Text style={card.balance}>{currency()}</Text>
+                  <TouchableHighlight style={{ height: 23, width: 23, backgroundColor: 'gray', alignItems: 'center', justifyContent: 'center' }}
+                    onPress={() => navigation.navigate('Customer Add Balance')}
+                  >
+                    <FontAwesome name="plus" size={20} color="white" />
+                  </TouchableHighlight>
+                </View>
               </View>
 
-              
             </View>
           </View>
 
@@ -82,9 +94,6 @@ export default function UserSettingCustomer({ navigation }) {
           <TouchableOpacity activeOpacity={0.8} onPress={handleLogout}>
             <Text style={styles.menuTitle}>Logout</Text>
           </TouchableOpacity>
-
-          {/* tombol logout bingung */}
-          <Button mode='contained' style={{ marginTop: 12 }} onPress={() => console.log('logout')}>Logout</Button>
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -100,9 +109,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
     marginTop: 12,
     marginBottom: 12
-  },
-  menuRow: {
-
   },
   horizontalMarker: {
     borderBottomColor: 'black',
