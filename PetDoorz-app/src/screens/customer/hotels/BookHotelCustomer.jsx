@@ -79,7 +79,7 @@ export default function BookHotelCustomer({ navigation }) {
                                 onPress={() => {
                                     setGroom(!groom);
                                 }}
-                                color='gray'
+                                color='#48034F'
                             />
                             <Text>Grooming</Text>
                         </View>
@@ -98,7 +98,7 @@ export default function BookHotelCustomer({ navigation }) {
                                 onPress={() => {
                                     setVaccine(!vaccine);
                                 }}
-                                color='gray'
+                                color='#48034F'
                             />
                             <Text>Vaccine</Text>
                         </View>
@@ -115,7 +115,7 @@ export default function BookHotelCustomer({ navigation }) {
                     </View>
                 </View>
 
-                <Button mode='contained' style={{ marginTop: 15 }} theme={{ colors: { primary: 'gray' } }} onPress={handlePaymentScreen}>Book</Button>
+                <Button mode='contained' style={{ marginTop: 15 }} theme={{ colors: { primary: '#48034F' } }} onPress={handlePaymentScreen}>Book</Button>
                 <StatusBar style="auto" />
             </View>
         </ScrollView>
@@ -195,5 +195,5 @@ const card = StyleSheet.create({
         fontSize: 20,
         fontWeight: 'bold'
     },
-    active: { borderWidth: 2 }
+    active: { backgroundColor: '#48034F' }
 })
