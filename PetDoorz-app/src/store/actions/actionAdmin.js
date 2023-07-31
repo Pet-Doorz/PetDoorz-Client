@@ -1,6 +1,14 @@
 import axios from "axios"
+import { SET_ADMIN_DATA } from "./actionType"
 
-const baseUrl = 'https://c08b-2a09-bac5-3a01-18c8-00-278-58.ngrok-free.app/hotels'
+const baseUrl = 'https://67f6-111-94-95-220.ngrok-free.app/hotels'
+
+const SET_DETAIL_ADMIN = (payload) => {
+    return {
+        type: SET_ADMIN_DATA,
+        payload
+    }
+}
 
 export const loginAdmin = (payload) => {
     return async () => {
@@ -16,6 +24,22 @@ export const loginAdmin = (payload) => {
             });
 
             return data;
+        } catch (error) {
+            throw error.response.data.message;
+        }
+    }
+}
+
+export const detailAdmin = (access_token) => {
+    return async (dispatch) => {
+        try {
+            const { data } = await axios({
+                method: "get",
+                url: baseUrl + '/detail',
+                headers: { access_token },
+            });
+
+            dispatch(SET_DETAIL_ADMIN(data));
         } catch (error) {
             throw error.response.data.message;
         }
