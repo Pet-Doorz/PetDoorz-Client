@@ -2,24 +2,45 @@ import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View } from "react-native";
 import { useSelector } from "react-redux";
 import * as TalkRn from "@talkjs/expo";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useCallback, useEffect, useState } from "react";
+import { useFocusEffect } from "@react-navigation/native";
 
-export default function ChatCustomer(props) {
+export default function ChatCustomer({ route }) {
   const role = useSelector((state) => state.user.role);
+  const senderId = route.params?.data;
+  const photo = route.params?.photo;
+  const senderPhoto = route.params?.senderPhoto;
+  const [customerEmail, setCustomerEmail] = useState("");
+  let custEmail;
+
+  useFocusEffect(
+    useCallback(() => {
+      AsyncStorage.getItem("customer_email")
+        .then((result) => {
+          const custEmail = result;
+          setCustomerEmail(custEmail);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }, [])
+  );
 
   const me = {
-    id: "customer11223344",
-    name: "Alice",
-    email: "alice@example.com",
-    photoUrl: "https://talkjs.com/images/avatar-1.jpg",
+    id: `${customerEmail}`,
+    name: `${customerEmail}`,
+    email: `${customerEmail}`,
+    photoUrl: photo || "https://talkjs.com/images/avatar-1.jpg",
     welcomeMessage: "Hey there! How are you? :-)",
     role: "default",
   };
 
   const other = {
-    id: "112233",
-    name: "Admin1",
-    email: "henrymill@example.com",
-    photoUrl: "henry.jpeg",
+    id: `${senderId}`,
+    name: `${senderId}`,
+    email: `${senderId}` + "@example.com",
+    photoUrl: senderPhoto || "henry.jpeg",
     welcomeMessage: "Hello!",
     role: "customer",
   };
