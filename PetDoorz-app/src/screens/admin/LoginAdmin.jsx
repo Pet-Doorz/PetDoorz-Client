@@ -6,6 +6,7 @@ import logo from '../../../assets/logo.png'
 import { useDispatch } from 'react-redux'
 import { SET_ROLE } from '../../store/actions/actionUser'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import { loginAdmin } from '../../store/actions/actionAdmin'
 
 export default function LoginAdmin({ navigation }) {
   const [email, setEmail] = useState('')
@@ -18,8 +19,15 @@ export default function LoginAdmin({ navigation }) {
     if (!email || !password) {
       setNullEmPass(true)
     } else {
-      await AsyncStorage.setItem('admin_access_token', 'dummy') // setItem (save ke local storage)
-      dispatch(SET_ROLE('admin'))
+      dispatch(loginAdmin({ email, password }))
+        .then(async ({ access_token }) => {
+          await AsyncStorage.setItem('admin_access_token', access_token) // setItem (save ke local storage)
+          await AsyncStorage.setItem('admin_email', email)
+          dispatch(SET_ROLE('admin'))
+        })
+        .catch((err) => {
+          console.log(err)
+        });
     }
   }
 

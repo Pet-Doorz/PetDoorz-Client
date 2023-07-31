@@ -1,15 +1,39 @@
 import { StatusBar } from 'expo-status-bar'
-import { SafeAreaView, ScrollView, StyleSheet, Text, TouchableHighlight, TouchableOpacity, View } from 'react-native'
-import { Button, Dialog, Portal, PaperProvider } from 'react-native-paper'
+import { SafeAreaView, ScrollView, StyleSheet, Text, TouchableHighlight, TouchableOpacity, View, Image } from 'react-native'
+import { Button, Dialog, Portal, PaperProvider, ActivityIndicator } from 'react-native-paper'
 import { FontAwesome } from '@expo/vector-icons'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { SET_ROLE } from '../../../store/actions/actionUser'
-import { useEffect, useState } from 'react'
+import { useState, useCallback } from 'react'
+import { useFocusEffect } from '@react-navigation/native'
+import { detailAdmin } from '../../../store/actions/actionAdmin'
 
 
 export default function AdminSetting({ navigation }) {
     const dispatch = useDispatch()
+    const [loading, setLoading] = useState(true)
+
+    const detail = useSelector((state) => state.admin.detailAdmin)
+
+    const currency = () => {
+        return new Intl.NumberFormat('id-Id', { style: 'currency', currency: 'IDR' }).format(detail.balance)
+    }
+
+    useFocusEffect(
+        useCallback(() => {
+            setLoading(true)
+            AsyncStorage.getItem('admin_access_token')
+                .then((result) => {
+                    dispatch(detailAdmin(result))
+                    setLoading(false)
+                })
+                .catch((err) => {
+                    console.log(err)
+                })
+
+        }, [])
+    )
 
     const handleLogout = async () => {
         await AsyncStorage.clear()
@@ -38,6 +62,12 @@ export default function AdminSetting({ navigation }) {
         // Logic handleStatus Hotel
         console.log('Active hotel!')
         setVisible(false)
+    }
+
+    if (loading) {
+        return <View style={{ justifyContent: 'center', flex: 1 }}>
+            <ActivityIndicator size={'large'}></ActivityIndicator>
+        </View>
     }
 
     return (
@@ -74,20 +104,26 @@ export default function AdminSetting({ navigation }) {
 
                     {/* Card container, header */}
                     <View style={[card.container, card.shadowProp]}>
-                        <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 10, alignItems: 'center' }}>
-                                <Text style={card.title}>Juan Pet Hotel</Text>
-                                {/* Tombol ini muncul harusnya dinamis dari data yg didapat */}
-                                <Button style={ styles.buttonActive } theme={{ colors: { primary: 'gray' } }} mode='contained' onPress={() => showDialog('status')}>Active</Button>
-                        </View>
-                        <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 8 }}>
-                            <Text style={card.balance}>Balance</Text>
-                            <View style={{ flexDirection: 'row', gap: 10 }}>
-                                <Text style={card.balance}>Rp. 2.500.000</Text>
-                                <TouchableHighlight style={{ height: 23, width: 23, backgroundColor: 'gray', alignItems: 'center', justifyContent: 'center' }}>
-                                    <FontAwesome name="minus" size={20} color="white" />
-                                </TouchableHighlight>
+                        <View style={{ flexDirection: 'row', gap: 15, alignItems: 'center', marginTop: 10 }}>
+                            <View style={{ flex: 1 }}>
+                                <Image source={{ uri: 'https://freewaysocial.com/wp-content/uploads/2020/02/why-good-facebook-profile-picture-matters-1024x656.png' }} style={styles.imageRound} />
+                            </View>
+                            <View style={{ flex: 3 }}>
+                                <Text style={card.title}>{detail.name}</Text>
+
+                                <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: '100%', marginTop: 8 }}>
+                                    <Text style={card.balance}>Balance</Text>
+                                    <View style={{ flexDirection: 'row', gap: 10 }}>
+                                        <Text style={card.balance}>{currency()}</Text>
+                                        <TouchableHighlight style={{ height: 23, width: 23, backgroundColor: 'gray', alignItems: 'center', justifyContent: 'center' }}>
+                                            <FontAwesome name="minus" size={20} color="white" />
+                                        </TouchableHighlight>
+                                    </View>
+                                </View>
+
                             </View>
                         </View>
+
                     </View>
 
                     {/* Card container, body */}
@@ -136,7 +172,12 @@ const styles = StyleSheet.create({
     },
     buttonActive: {
         borderRadius: 5,
-    }
+    },
+    imageRound: {
+        width: 68,
+        height: 68,
+        borderRadius: 100
+    },
 })
 
 const card = StyleSheet.create({
