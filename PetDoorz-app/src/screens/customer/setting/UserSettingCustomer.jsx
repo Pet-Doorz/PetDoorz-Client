@@ -1,34 +1,64 @@
 import { StatusBar } from 'expo-status-bar'
-import { SafeAreaView, ScrollView, StyleSheet, Text, TouchableHighlight, TouchableOpacity, View } from 'react-native'
+import { SafeAreaView, ScrollView, StyleSheet, Text, TouchableHighlight, TouchableOpacity, View, Image } from 'react-native'
 import { Button } from 'react-native-paper';
 import { FontAwesome } from '@expo/vector-icons';
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { SET_ROLE } from '../../../store/actions/actionUser';
+import { useFocusEffect } from '@react-navigation/native'
+import { useCallback, useEffect } from 'react';
+import { detailCustomer } from '../../../store/actions/actionCustomer';
 
 export default function UserSettingCustomer({ navigation }) {
   const dispatch = useDispatch()
+  const detail = useSelector((state) => state.customer.detailCustomer)
+
+  const currency = () => {
+    return new Intl.NumberFormat('id-Id', { style: 'currency', currency: 'IDR' }).format(detail.balance)
+  }
 
   const handleLogout = async () => {
     await AsyncStorage.clear()
     dispatch(SET_ROLE(''))
   }
 
+  useFocusEffect(
+    useCallback(() => {
+
+      AsyncStorage.getItem('customer_access_token')
+        .then((result) => {
+          dispatch(detailCustomer(result))
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+
+    }, [])
+  )
+
   return (
     <SafeAreaView>
       <ScrollView contentContainerStyle={{ alignItems: 'center' }}>
         {/* Card container, header */}
         <View style={[card.container, card.shadowProp]}>
-          <Text style={card.title}>Ringola Botakz</Text>
-          <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 8 }}>
-            <Text style={card.balance}>Balance</Text>
-            <View style={{ flexDirection: 'row', gap: 10 }}>
-              <Text style={card.balance}>Rp. 300.000</Text>
-              <TouchableHighlight style={{ height: 23, width: 23, backgroundColor: 'gray', alignItems: 'center', justifyContent: 'center' }}>
-                <FontAwesome name="plus" size={20} color="white" />
-              </TouchableHighlight>
+          <View style={{ flexDirection: 'row', gap: 15 }}>
+            <Image source={{ uri: 'https://i.scdn.co/image/ab6761610000517492c8095c788abfd2de4a90ee' }} style={styles.imageRound} />
+            <View style={{ flexDirection: 'column' }}>
+              <Text style={card.title}>{detail.fullName}</Text>
+
+
+              <View style={{ flexDirection: 'row', marginTop: 8 }}>
+                <Text style={card.balance}>Balance</Text>
+                <Text style={card.balance}>{currency()}</Text>
+                <TouchableHighlight style={{ height: 23, width: 23, backgroundColor: 'gray', alignItems: 'center', justifyContent: 'center' }}>
+                  <FontAwesome name="plus" size={20} color="white" />
+                </TouchableHighlight>
+              </View>
+
+              
             </View>
           </View>
+
         </View>
 
         {/* Card container, body */}
@@ -81,6 +111,11 @@ const styles = StyleSheet.create({
     elevation: 2,
     opacity: 0.4
   },
+  imageRound: {
+    width: 68,
+    height: 68,
+    borderRadius: 100
+  },
 })
 
 const card = StyleSheet.create({
@@ -102,6 +137,7 @@ const card = StyleSheet.create({
   },
   balance: {
     fontSize: 16,
-    fontWeight: '500'
+    fontWeight: '500',
+    marginEnd: 20
   }
 })

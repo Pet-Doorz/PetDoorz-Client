@@ -1,4 +1,4 @@
-import { SET_CUSTOMER_DATA } from "../actions/actionType";
+import { SET_CUSTOMER_DATA, SET_DETAIL_DATA } from "../actions/actionType";
 import axios from 'axios'
 
 export const SET_ROLE = (payload) => {
@@ -8,13 +8,20 @@ export const SET_ROLE = (payload) => {
   };
 };
 
+const SET_DETAIL = (payload) => {
+  return {
+    type: SET_DETAIL_DATA,
+    payload
+  }
+}
+
 const baseUrl = 'https://c08b-2a09-bac5-3a01-18c8-00-278-58.ngrok-free.app/customers'
 
 export const loginCustomer = (payload) => {
   return async () => {
     try {
       const { email, password } = payload
-      let { data } = await axios({
+      const { data } = await axios({
         method: 'post',
         url: baseUrl + '/login',
         data: {
@@ -25,6 +32,23 @@ export const loginCustomer = (payload) => {
 
       return data
     } catch (error) {
+      throw (error.response.data.message)
+    }
+  }
+}
+
+export const detailCustomer = (access_token) => {
+  return async (dispatch) => {
+    try {
+      const { data } = await axios({
+        method: 'get',
+        url: baseUrl,
+        headers: {access_token}
+      })
+
+      dispatch(SET_DETAIL(data))
+    } catch (error) {
+      console.log(error.response.data.message)
       throw (error.response.data.message)
     }
   }
