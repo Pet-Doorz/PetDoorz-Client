@@ -6,6 +6,7 @@ import logo from '../../../assets/logo.png'
 import { Button, TextInput } from 'react-native-paper'
 import { SET_ROLE } from '../../store/actions/actionUser'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import { loginCustomer } from '../../store/actions/actionCustomer'
 
 export default function LoginCustomer({ navigation }) {
   const [email, setEmail] = useState('')
@@ -18,8 +19,14 @@ export default function LoginCustomer({ navigation }) {
     if (!email || !password) {
       setNullEmPass(true)
     } else {
-      await AsyncStorage.setItem('customer_access_token', 'dummy') // setItem (save ke local storage)
-      dispatch(SET_ROLE('customer'))
+      dispatch(loginCustomer({ email, password }))
+        .then(async ({ access_token }) => {
+          await AsyncStorage.setItem('customer_access_token', access_token) // setItem (save ke local storage)
+          return dispatch(SET_ROLE('customer'))
+        })
+        .catch((err) => {
+          console.log(err)
+        })
     }
   }
 
