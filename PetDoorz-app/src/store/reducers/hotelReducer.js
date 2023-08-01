@@ -1,7 +1,8 @@
-import { SET_HOTEL_DATA } from "../actions/actionType";
+import { SET_ALL_HOTEL, SET_HOTEL_DATA } from "../actions/actionType";
 
 const initialState = {
   data: [],
+  allHotel: []
   //   {
   //     id: 1,
   //     email: "alpha@mail.com",
@@ -64,6 +65,12 @@ export default function hotelReducer(state = initialState, action) {
         ...state,
         data: action.payload,
       };
+
+    case SET_ALL_HOTEL:
+      return {
+        ...state,
+        allHotel: action.payload
+      }
     default:
       return state;
   }

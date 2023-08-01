@@ -1,8 +1,8 @@
 import axios from "axios"
-import { SET_ADMIN_DATA } from "./actionType"
+import { BASE_URL, SET_ADMIN_DATA } from "./actionType"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 
-const baseUrl = 'https://7b70-2001-448a-4001-b897-ade7-5f21-563a-6a1a.ngrok-free.app/hotels'
+const baseUrl = BASE_URL + '/hotels'
 
 const SET_DETAIL_ADMIN = (payload) => {
     return {
