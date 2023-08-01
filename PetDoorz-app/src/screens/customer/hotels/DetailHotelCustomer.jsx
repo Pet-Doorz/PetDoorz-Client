@@ -2,57 +2,39 @@ import { StatusBar } from 'expo-status-bar'
 import { ScrollView, StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native'
 import MapView, { Marker } from 'react-native-maps'
 import ImageView from "react-native-image-viewing"
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { ActivityIndicator, Button } from 'react-native-paper'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 import ReviewCard from '../../../components/customer/ReviewCard'
-import { getAllHotel } from '../../../store/actions/actionHotel'
 
 export default function DetailHotelCustomer({ navigation, route }) {
     const { id } = route.params
-    const dispatch = useDispatch()
-    const hotels = useSelector((state) => state.hotel.allHotel)
-    const [detail, setDetail] = useState({})
+    const data = useSelector((state) => state.hotel.data)
+    const [hotel] = data.filter((e) => e.id === id)
     const [visible, setIsVisible] = useState(false)
     const [imageIndex, setImageIndex] = useState(0)
-    const [loading, setLoading] = useState(true)
 
-    useEffect(() => {
-        // const [detail] = hotels.filter((e) => e.id === id)
-        dispatch(getAllHotel())
-            .then((_) => {
-
-            })
-            .catch((err) => {
-                console.log(err)
-            })
-            .finally((_) => {
-                setLoading(false)
-            })
-        const [detail] = hotels.filter((e) => e.id === id)
-        setDetail(detail)
-    }, [id])
+    console.log(hotel.images)
 
     // loading dulu sebelum dapet detail
-    if (loading) {
+    if (!hotel.location) {
         return <View style={{ justifyContent: 'center', flex: 1 }}>
             <ActivityIndicator size={'large'}></ActivityIndicator>
         </View>
     }
 
     const handleBookScreen = () => {
-        console.log(id)
-        navigation.navigate('Hotel Book')
+        navigation.navigate('Hotel Book', {id})
     }
 
     const location = {
-        latitude: detail.location.coordinates[0],
-        longitude: detail.location.coordinates[1],
+        latitude: hotel.location.coordinates[0],
+        longitude: hotel.location.coordinates[1],
         latitudeDelta: 0.015,
         longitudeDelta: 0.0121,
     }
 
-    const newImages = detail.Images.map((e) => {
+    const newImages = hotel.images.map((e) => {
         const { id, imageUrl } = e
         return {
             id,
@@ -70,7 +52,7 @@ export default function DetailHotelCustomer({ navigation, route }) {
         <ScrollView style={styles.container}>
             {/* Ini view map */}
             <View>
-                <Text style={styles.title}>{detail.name}</Text>
+                <Text style={styles.title}>{hotel.name}</Text>
                 <ImageView // ini tuh cuman modal doang, jadi harus ditrigger, triggernya lewat touchable opacity dibawah
                     images={newImages} // harus array of object dengan key uri
                     imageIndex={imageIndex}
@@ -93,6 +75,7 @@ export default function DetailHotelCustomer({ navigation, route }) {
                     <View style={{ flexDirection: 'row', gap: 15 }}>
                         {
                             newImages.map((e, i) => { // ini galerinya, yang bisa trigger imageviewnya
+                                console.log(e)
                                 return (
                                     <TouchableOpacity key={e.id} activeOpacity={0.8} onPress={() => onSelect(i)}>
                                         <Image source={e} style={{ width: 100, height: 100 }} />
@@ -119,7 +102,7 @@ export default function DetailHotelCustomer({ navigation, route }) {
                 <ScrollView horizontal={true}>
                     <View style={{ flexDirection: 'row', gap: 15 }}>
                         {
-                            detail.Reviews.map((e, i) => {
+                            hotel.reviews.map((e, i) => {
                                 return (
                                     <ReviewCard key={i} review={e} />
                                 )
@@ -142,7 +125,7 @@ export default function DetailHotelCustomer({ navigation, route }) {
             {/* Hotel Description */}
             <View style={styles.perContent}>
                 <Text style={styles.cardTitle}>Description</Text>
-                <Text>{detail.description}</Text>
+                <Text>{hotel.description}</Text>
             </View>
 
             {/* Button buat jadwal, chat */}

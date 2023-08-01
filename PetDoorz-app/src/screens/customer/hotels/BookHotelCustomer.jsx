@@ -1,124 +1,150 @@
 import { StatusBar } from 'expo-status-bar'
 import { useState } from 'react';
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import { Button, Checkbox } from 'react-native-paper';
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View, Image } from 'react-native'
+import { Button, Checkbox, Modal, PaperProvider, Portal } from 'react-native-paper';
+import RoomCard from '../../../components/customer/RoomCard';
+import { useSelector } from 'react-redux';
 
-export default function BookHotelCustomer({ navigation }) {
+export default function BookHotelCustomer({ navigation, route }) {
+    const { id } = route.params
     const [groom, setGroom] = useState(false)
     const [vaccine, setVaccine] = useState(false)
-    const [selectedId, setSelectedId] = useState()
+    // total2an
+    const [pet, setPet] = useState(3) // dapet dari local storage
+    const [total, setTotal] = useState(0)
+    const [selectedId, setSelectedId] = useState() // room id
+    const data = useSelector((state) => state.hotel.data)
+    const [hotel] = data.filter((e) => e.id === id)
+    
 
+
+    // keperluan modal
+    const [visible, setVisible] = useState(false);
+
+    const [desc, setDesc] = useState({
+        description: '',
+        imageUrl: ''
+    })
+
+    const showModal = (id) => {
+        setVisible(true)
+        const [desc] = hotel.detailRoom.filter(e => e.id === id)
+        console.log(desc)
+        setDesc({
+            description: desc.description,
+            imageUrl: desc.imageUrl
+        })
+    };
+    const hideModal = () => setVisible(false);
+    const containerStyle = { backgroundColor: 'white', padding: 20, alignItems: 'center' };
+
+
+    // hadnle tomobl book
+    const handleBook = () => {
+        const [roomPrice] = hotel.detailRoom.filter((e) => e.id === selectedId)
+
+        console.log(pet * roomPrice.price)
+    }
     const handleRoomId = (id) => {
         setSelectedId(id)
-    }
-
-    const handlePaymentScreen = () => {
-        navigation.navigate('Payment Gateway', {
-            url: 'https://app.sandbox.midtrans.com/snap/v3/redirection/87e8fb5d-9a9d-4fca-a600-9808d685bdfb' // passing url disini
-        })
+        const [roomPrice] = hotel.detailRoom.filter((e) => e.id === id)
+        let tempTotal = roomPrice.price * pet
+        setTotal(tempTotal)
     }
 
     return (
-        <ScrollView contentContainerStyle={{ alignItems: 'center' }}>
-            {/* Diatasnya card */}
-            <View style={[styles.card, styles.shadowProp]}>
-                {/* Title card / nama hotel */}
-                <Text style={styles.bookTitle}>Alpha Pet Hotel</Text>
-                <View style={styles.horizontalMarker} />
-                {/* Printilan */}
-                <View style={styles.bookRow}>
-                    <Text style={styles.bookTextContent}>Date Checkin</Text>
-                    <Text style={styles.bookTextContent}>27 / 8 / 2023</Text>
-                </View>
-                <View style={styles.bookRow}>
-                    <Text style={styles.bookTextContent}>Date Checkout</Text>
-                    <Text style={styles.bookTextContent}>28 / 8 / 2023</Text>
-                </View>
-                <View style={styles.bookRow}>
-                    <Text style={styles.bookTextContent}>Total Pet</Text>
-                    <Text style={styles.bookTextContent}>3</Text>
-                </View>
+        <PaperProvider>
+            {/* Modal */}
+            <Portal>
+                <Modal visible={visible} onDismiss={hideModal} contentContainerStyle={containerStyle}>
+                    <Image source={{ uri: desc.imageUrl }} style={{ width: 200, height: 200 }}></Image>
+                    <Text>{desc.description}</Text>
+                </Modal>
+            </Portal>
+            <ScrollView contentContainerStyle={{ alignItems: 'center' }}>
+                {/* Diatasnya card */}
+                <View style={[styles.card, styles.shadowProp]}>
+                    {/* Title card / nama hotel */}
+                    <Text style={styles.bookTitle}>Alpha Pet Hotel</Text>
+                    <View style={styles.horizontalMarker} />
+                    {/* Printilan */}
+                    <View style={styles.bookRow}>
+                        <Text style={styles.bookTextContent}>Date Checkin</Text>
+                        <Text style={styles.bookTextContent}>27 / 8 / 2023</Text>
+                    </View>
+                    <View style={styles.bookRow}>
+                        <Text style={styles.bookTextContent}>Date Checkout</Text>
+                        <Text style={styles.bookTextContent}>28 / 8 / 2023</Text>
+                    </View>
+                    <View style={styles.bookRow}>
+                        <Text style={styles.bookTextContent}>Total Pet</Text>
+                        <Text style={styles.bookTextContent}>3</Text>
+                    </View>
 
-                {/* Choose Room, roomcard bisa jadi component */}
-                <View>
-                    <Text style={styles.bookTextContent}>Choose room :</Text>
-                    {/* Room card, dapetnya id aja kali */}
-                    <TouchableOpacity style={[styles.roomCard, selectedId === 0 ? card.active : '' ]} activeOpacity={0.87}
-                        onPress={() => handleRoomId(0)}
-                    >
-                        <View>
-                            <Text style={card.title}>Reguler Room</Text>
-                            <Text style={card.textContent}>Available: 3</Text>
-                        </View>
-                        <View>
-                            <Text style={card.priceText}>Rp. 200.000</Text>
-                        </View>
-                    </TouchableOpacity>
+                    {/* Choose Room, roomcard bisa jadi component */}
+                    <View>
+                        <Text style={styles.bookTextContent}>Choose room :</Text>
+                        {/* Room card, dapetnya id aja kali */}
 
-                    {/* Room card */}
-                    <TouchableOpacity style={[styles.roomCard, selectedId === 1 ? card.active : '' ]} activeOpacity={0.87}
-                        onPress={() => handleRoomId(1)}
-                    >
-                        <View>
-                            <Text style={card.title}>VIP Room</Text>
-                            <Text style={card.textContent}>Available: 3</Text>
-                        </View>
-                        <View>
-                            <Text style={card.priceText}>Rp. 300.000</Text>
-                        </View>
-                    </TouchableOpacity>
-                </View>
+                        {
+                            hotel.detailRoom.map((e, i) => {
+                                return <RoomCard key={i} handleRoomId={handleRoomId} id={e.id} selectedId={selectedId} room={e} showModal={showModal} />
+                            })
+                        }
+                    </View>
 
-                {/* Checkbox */}
-                <View>
-                    {/* Checkbox groom, ini nanti bisa di slicing jadi component */}
-                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                            <Checkbox
-                                status={groom ? 'checked' : 'unchecked'}
-                                onPress={() => {
-                                    setGroom(!groom);
-                                }}
-                                color='#48034F'
-                            />
-                            <Text>Grooming</Text>
+                    {/* Checkbox */}
+                    <View>
+                        {/* Checkbox groom, ini nanti bisa di slicing jadi component */}
+                        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                <Checkbox
+                                    status={groom ? 'checked' : 'unchecked'}
+                                    onPress={() => {
+                                        setGroom(!groom);
+                                    }}
+                                    color='#48034F'
+                                />
+                                <Text>Grooming</Text>
+                            </View>
+                            <View>
+                                {/* Price bisa diganti */}
+                                <Text>Rp 50.000</Text>
+                            </View>
                         </View>
-                        <View>
-                            {/* Price bisa diganti */}
-                            <Text>Rp 50.000</Text>
+
+                        {/* Checkbox groom, ini nanti bisa di slicing jadi component */}
+                        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                            {/* Checkbox vaccine */}
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                <Checkbox
+                                    status={vaccine ? 'checked' : 'unchecked'}
+                                    onPress={() => {
+                                        setVaccine(!vaccine);
+                                    }}
+                                    color='#48034F'
+                                />
+                                <Text>Vaccine</Text>
+                            </View>
+                            <View>
+                                {/* Price bisa diganti */}
+                                <Text>Rp 50.000</Text>
+                            </View>
+                        </View>
+
+                        {/* Grand Total, masi hardcode   */}
+                        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 12 }}>
+                            <Text style={card.total}>Grand Total</Text>
+                            <Text style={card.total}>Rp. {total} </Text>
                         </View>
                     </View>
 
-                    {/* Checkbox groom, ini nanti bisa di slicing jadi component */}
-                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-                        {/* Checkbox vaccine */}
-                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                            <Checkbox
-                                status={vaccine ? 'checked' : 'unchecked'}
-                                onPress={() => {
-                                    setVaccine(!vaccine);
-                                }}
-                                color='#48034F'
-                            />
-                            <Text>Vaccine</Text>
-                        </View>
-                        <View>
-                            {/* Price bisa diganti */}
-                            <Text>Rp 50.000</Text>
-                        </View>
-                    </View>
-
-                    {/* Grand Total, masi hardcode   */}
-                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 12 }}>
-                        <Text style={card.total}>Grand Total</Text>
-                        <Text style={card.total}>Rp. 350.000 </Text>
-                    </View>
+                    <Button mode='contained' style={{ marginTop: 15 }} theme={{ colors: { primary: '#48034F' } }} onPress={handleBook}>Book</Button>
+                    <StatusBar style="auto" />
                 </View>
+            </ScrollView>
 
-                <Button mode='contained' style={{ marginTop: 15 }} theme={{ colors: { primary: '#48034F' } }} onPress={handlePaymentScreen}>Book</Button>
-                <StatusBar style="auto" />
-            </View>
-        </ScrollView>
+        </PaperProvider>
     );
 }
 
