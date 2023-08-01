@@ -16,7 +16,9 @@ import {
   Portal,
 } from "react-native-paper";
 import RoomCard from "../../../components/customer/RoomCard";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { createBooking } from "../../../store/actions/actionCustomer";
 
 export default function BookHotelCustomer({ navigation, route }) {
   const { id } = route.params;
@@ -27,6 +29,8 @@ export default function BookHotelCustomer({ navigation, route }) {
   const [selectedId, setSelectedId] = useState(); // room id
   const data = useSelector((state) => state.hotel.data);
   const [hotel] = data.filter((e) => e.id === id);
+  const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
 
   const [selectedServices, setSelectedServices] = useState({
     groom: {
@@ -43,9 +47,6 @@ export default function BookHotelCustomer({ navigation, route }) {
     },
   });
   // total2an
-
-  console.log(hotel.services, " < ----- Nigga Mutta Fucka");
-
   const handleServiceCheckboxChange = (serviceName) => {
     setSelectedServices((prevServices) => ({
       ...prevServices,
@@ -111,11 +112,6 @@ export default function BookHotelCustomer({ navigation, route }) {
   };
 
   // hadnle tomobl book
-  const handleBook = () => {
-    const [roomPrice] = hotel.detailRoom.filter((e) => e.id === selectedId);
-
-    console.log(pet * roomPrice.price);
-  };
   const handleRoomId = (id) => {
     setSelectedId(id);
     const [roomPrice] = hotel.detailRoom.filter((e) => e.id === id);
@@ -131,6 +127,60 @@ export default function BookHotelCustomer({ navigation, route }) {
       name: "Vaccine",
     },
   ];
+
+  const changeDateFormat = async (inputDate) => {
+    if (!inputDate) {
+      return "";
+    }
+
+    const parts = inputDate.split("/");
+    const day = parts[0];
+    const month = parts[1];
+    const year = parts[2];
+    return `${year}-${month}-${day}`;
+  };
+
+  const handleBooking = async () => {
+    setLoading(true);
+    try {
+      const checkInDate = await AsyncStorage.getItem("checkin");
+      const checkOutDate = await AsyncStorage.getItem("checkout");
+      const token = await AsyncStorage.getItem("customer_access_token");
+
+      if (!checkInDate || !checkOutDate) {
+        throw new Error("Check-in or Check-out date not set.");
+      }
+
+      if (!token) {
+        throw new Error("Access Token is rather undefined or null.");
+      }
+
+      const selectedNames = Object.keys(selectedServices).filter(
+        (key) => selectedServices[key].selected === true
+      );
+
+      const selectedServiceIds = selectedNames.map((names) => {
+        return hotel.services.find((service) => service.name === names).id;
+      });
+
+      const bookingData = {
+        RoomId: selectedId,
+        checkIn: await changeDateFormat(checkInDate),
+        checkOut: await changeDateFormat(checkOutDate),
+        totalPet: await AsyncStorage.getItem("totalPet"),
+        grandTotal: total,
+        bookingServices: selectedServiceIds,
+        access_token: token,
+      };
+
+      dispatch(createBooking(bookingData));
+      setTimeout(() => {}, 1500);
+    } catch (error) {
+      console.error("Error occurred while booking:", error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <PaperProvider>
@@ -237,7 +287,7 @@ export default function BookHotelCustomer({ navigation, route }) {
             mode="contained"
             style={{ marginTop: 15 }}
             theme={{ colors: { primary: "#48034F" } }}
-            onPress={handleBook}
+            onPress={handleBooking}
           >
             Book
           </Button>

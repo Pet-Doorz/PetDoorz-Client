@@ -1,8 +1,13 @@
-import { SET_CUSTOMER_DATA, SET_DETAIL_DATA } from "../actions/actionType";
+import {
+  SET_BOOKING_DATA,
+  SET_CUSTOMER_DATA,
+  SET_DETAIL_DATA,
+} from "../actions/actionType";
 
 const initialState = {
   customer: {},
-  detailCustomer: {}
+  detailCustomer: {},
+  booking: {},
 };
 
 export default function userReducer(state = initialState, action) {
@@ -11,13 +16,18 @@ export default function userReducer(state = initialState, action) {
       return {
         ...state,
         customer: action.payload,
-      }
+      };
 
     case SET_DETAIL_DATA:
       return {
         ...state,
-        detailCustomer: action.payload
-      }
+        detailCustomer: action.payload,
+      };
+    case SET_BOOKING_DATA:
+      return {
+        ...state,
+        booking: action.payload,
+      };
     default:
       return state;
   }

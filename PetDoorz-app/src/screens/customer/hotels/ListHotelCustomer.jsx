@@ -22,13 +22,25 @@ export default function ListHotelCustomer({ navigation }) {
   const [location, setLocation] = useState(null);
   const [checkin, setCheckin] = useState(date); // ini buat tanggal
   const [checkout, setCheckout] = useState(date); //ini tanggal checkout
+  const [totalPet, setTotalPet] = useState("1");
   const hotels = useSelector((state) => state.hotel.data);
   const locations = useSelector((state) => state.user.location);
   const dispatch = useDispatch();
+
+  const handleTotalPetChange = (text) => {
+    setTotalPet(text);
+  };
+
   const handleCheckinDate = () => {
     DateTimePickerAndroid.open({
       value: checkin,
-      onChange: (_, selectedDate) => setCheckin(selectedDate),
+      onChange: async (_, selectedDate) => {
+        setCheckout(selectedDate);
+        await AsyncStorage.setItem(
+          "checkin",
+          selectedDate.toLocaleDateString("en-GB")
+        );
+      },
       mode: "date",
       is24Hour: true,
       minimumDate: date,
@@ -38,7 +50,13 @@ export default function ListHotelCustomer({ navigation }) {
   const handleCheckoutDate = () => {
     DateTimePickerAndroid.open({
       value: checkout,
-      onChange: (_, selectedDate) => setCheckout(selectedDate),
+      onChange: async (_, selectedDate) => {
+        setCheckout(selectedDate);
+        await AsyncStorage.setItem(
+          "checkout",
+          selectedDate.toLocaleDateString("en-GB")
+        );
+      },
       mode: "date",
       is24Hour: true,
       minimumDate: date,
@@ -48,8 +66,9 @@ export default function ListHotelCustomer({ navigation }) {
   const handleDetailScreen = (id) => {
     navigation.navigate("Hotel Detail", {
       name: "Test",
-      id
+      id,
     });
+    console.log("masuk sini");
   };
 
   const fetchFilteredHotel = async () => {
@@ -57,6 +76,7 @@ export default function ListHotelCustomer({ navigation }) {
     try {
       const long = await AsyncStorage.getItem("longitude");
       const lat = await AsyncStorage.getItem("latitude");
+      await AsyncStorage.setItem("totalPet", totalPet);
       dispatch(
         //distance, total pet masih hardcode
         getFilteredHotel({
@@ -65,7 +85,7 @@ export default function ListHotelCustomer({ navigation }) {
           lat: +long,
           checkin: checkin.toLocaleDateString("en-GB"),
           checkout: checkout.toLocaleDateString("en-GB"),
-          totalPet: 1,
+          totalPet: +totalPet,
         })
       )
         .then((_) => {})
@@ -121,6 +141,8 @@ export default function ListHotelCustomer({ navigation }) {
               style={{ flex: 1 }}
               label={"Total Pet "}
               mode="outlined"
+              value={totalPet.toString()}
+              onChangeText={handleTotalPetChange}
               keyboardType="numeric"
             />
           </View>

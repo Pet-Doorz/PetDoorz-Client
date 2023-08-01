@@ -1,4 +1,8 @@
-import { BASE_URL, SET_CUSTOMER_DATA, SET_DETAIL_DATA } from "../actions/actionType";
+import {
+  BASE_URL,
+  SET_CUSTOMER_DATA,
+  SET_DETAIL_DATA,
+} from "../actions/actionType";
 import axios from "axios";
 
 export const SET_ROLE = (payload) => {
@@ -15,7 +19,7 @@ const SET_DETAIL = (payload) => {
   };
 };
 
-const baseUrl = BASE_URL + '/customers';
+const baseUrl = BASE_URL + "/customers";
 
 export const loginCustomer = (payload) => {
   return async () => {
@@ -57,20 +61,53 @@ export const detailCustomer = (access_token) => {
 export const getMidtrans = (payload) => {
   return async () => {
     try {
-      const { access_token, amount } = payload
+      const { access_token, amount } = payload;
       const { data } = await axios({
-        method: 'post',
-        url: baseUrl + '/generate-midtrans-token',
+        method: "post",
+        url: baseUrl + "/generate-midtrans-token",
         headers: { access_token },
         data: {
-          total: amount
-        }
-      })
+          total: amount,
+        },
+      });
 
-      return data
+      return data;
     } catch (error) {
       console.log(error.response.data.message);
       throw error.response.data.message;
     }
-  }
-}
+  };
+};
+
+export const createBooking = (payload) => {
+  return async () => {
+    try {
+      const {
+        RoomId,
+        checkIn,
+        checkOut,
+        totalPet,
+        grandTotal,
+        bookingServices,
+        access_token,
+      } = payload;
+      const { data } = await axios({
+        method: "post",
+        url: BASE_URL + "/bookings",
+        headers: { access_token },
+        data: {
+          RoomId,
+          checkIn,
+          checkOut,
+          totalPet,
+          grandTotal,
+          bookingServices,
+        },
+      });
+      console.log("Success");
+      return data;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+};
