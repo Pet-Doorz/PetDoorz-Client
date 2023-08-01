@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { uploadFile } from "../../../../lib/imagekit"
 import * as ImagePicker from 'expo-image-picker';
 import { useEffect, useState } from "react";
-import { detailAdmin, editRoom } from "../../../store/actions/actionAdmin";
+import { deleteRoom, detailAdmin, editRoom } from "../../../store/actions/actionAdmin";
 
 
 export default function EditDetailRoomAdmin({ navigation, route }) {
@@ -33,9 +33,31 @@ export default function EditDetailRoomAdmin({ navigation, route }) {
                 formData.imageUrl = imageUri
             }
             dispatch(editRoom(formData, id))
+                .then((res) => {
+                    navigation.navigate('Home Admin Stack')
+                })
+                .then(() => {
+                    return dispatch(detailAdmin())
+                })
+                .catch((err) => {
+                    console.log(err)
+                })
         } catch (error) {
             console.log(error)
         }
+    }
+
+    async function handleDelete() {
+        dispatch(deleteRoom(id))
+            .then((res) => {
+                navigation.navigate('Home Admin Stack')
+            })
+            .then(() => {
+                return dispatch(detailAdmin())
+            })
+            .catch((err) => {
+                console.log(err)
+            })
     }
 
     useEffect(() => {
@@ -102,7 +124,7 @@ export default function EditDetailRoomAdmin({ navigation, route }) {
             <View style={[{ marginTop: 10, gap: 9 }, styles.card]}>
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                     <Text style={styles.title}>Edit Room</Text>
-                    <Button mode="contained" style={{ borderRadius: 5 }} theme={{ colors: { primary: '#b00808' } }} >Delete</Button>
+                    <Button mode="contained" style={{ borderRadius: 5 }} theme={{ colors: { primary: '#b00808' } }} onPress={handleDelete}>Delete</Button>
                 </View>
                 <TextInput mode="outlined" label={'Room Name'} defaultValue={room.name} onChangeText={val => setName(val)}></TextInput>
                 <TextInput mode="outlined" label={'Room Description'} defaultValue={room.description} multiline={true} numberOfLines={4} onChangeText={val => setDescription(val)}></TextInput>
