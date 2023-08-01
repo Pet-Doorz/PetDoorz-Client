@@ -2,23 +2,31 @@ import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View } from "react-native";
 import { useSelector } from "react-redux";
 import * as TalkRn from "@talkjs/expo";
+import { useEffect } from "react";
 
-export default function ChatAdmin(props) {
+export default function ChatAdmin({ route }) {
   const role = useSelector((state) => state.user.role);
+  const senderId = route.params?.data;
+  const photo = route.params?.photo;
+  const myEmail = route.params?.myEmail;
+
+  useEffect(() => {
+    console.log(senderId, myEmail);
+  }, []);
 
   const me = {
-    id: "customer11223344",
-    name: "Alice",
-    email: "alice@example.com",
-    photoUrl: "https://talkjs.com/images/avatar-1.jpg",
+    id: `${myEmail}`,
+    name: `${myEmail}`,
+    email: `${myEmail}`,
+    photoUrl: photo || "https://talkjs.com/images/avatar-1.jpg",
     welcomeMessage: "Hey there! How are you? :-)",
     role: "default",
   };
 
   const other = {
-    id: "112233",
-    name: "Admin1",
-    email: "henrymill@example.com",
+    id: `${senderId}`,
+    name: `${senderId}`,
+    email: `${senderId}@example.com`,
     photoUrl: "henry.jpeg",
     welcomeMessage: "Hello!",
     role: "customer",
