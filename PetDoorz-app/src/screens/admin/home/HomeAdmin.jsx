@@ -35,11 +35,6 @@ export default function HomeAdmin({ navigation }) {
     navigation.navigate('Add Room Admin')
   }
 
-  const handleEditFormScreen = () => {
-    // harusnya bawa semua detail roomnya atau id aja ge boleh
-    navigation.navigate('Edit Room Admin')
-  }
-
   const handleAddServiceFormScreen = () => {
     navigation.navigate('Add Service Admin')
   }
@@ -62,7 +57,7 @@ export default function HomeAdmin({ navigation }) {
           {/* Card room, nanti dibuat component sendiri */}
           {
             detail.Rooms.map((e) => {
-              return <RoomCard key={e.id} room={e} handleEditFormScreen={handleEditFormScreen} />
+              return <RoomCard key={e.id} room={e} />
             })
           }
         </View>
