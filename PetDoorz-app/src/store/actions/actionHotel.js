@@ -9,7 +9,7 @@ export const setHotelState = (payload) => {
   };
 };
 
-const baseUrl = `https://30d3-103-195-58-68.ngrok-free.app/hotels`;
+const baseUrl = `https://7b70-2001-448a-4001-b897-ade7-5f21-563a-6a1a.ngrok-free.app/hotels`;
 
 export const getFilteredHotel = (query) => {
   return async (dispatch) => {

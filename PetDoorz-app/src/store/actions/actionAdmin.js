@@ -1,7 +1,8 @@
 import axios from "axios"
 import { SET_ADMIN_DATA } from "./actionType"
+import AsyncStorage from "@react-native-async-storage/async-storage"
 
-const baseUrl = 'https://67f6-111-94-95-220.ngrok-free.app/hotels'
+const baseUrl = 'https://7b70-2001-448a-4001-b897-ade7-5f21-563a-6a1a.ngrok-free.app/hotels'
 
 const SET_DETAIL_ADMIN = (payload) => {
     return {
@@ -42,6 +43,24 @@ export const detailAdmin = (access_token) => {
             dispatch(SET_DETAIL_ADMIN(data));
         } catch (error) {
             throw error.response.data.message;
+        }
+    }
+}
+
+export const postNewRoom = (payload) => {
+    return async(dispatch) => {
+        try {
+            const access_token = await AsyncStorage.getItem('admin_access_token')
+            const { name, description, capacity, price, imageUrl } = payload
+            const { data } = await axios({
+                method: "post",
+                url: baseUrl + "/rooms",
+                headers: { access_token },
+                data: { name, description, capacity, price, imageUrl }
+            })
+            return data
+        } catch (error) {
+            throw error
         }
     }
 }

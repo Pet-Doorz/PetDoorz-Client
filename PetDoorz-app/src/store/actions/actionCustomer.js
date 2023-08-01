@@ -15,7 +15,7 @@ const SET_DETAIL = (payload) => {
   };
 };
 
-const baseUrl = "https://30d3-103-195-58-68.ngrok-free.app/customers";
+const baseUrl = "https://7b70-2001-448a-4001-b897-ade7-5f21-563a-6a1a.ngrok-free.app/customers";
 
 export const loginCustomer = (payload) => {
   return async () => {
