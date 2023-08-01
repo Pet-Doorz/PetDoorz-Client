@@ -15,6 +15,7 @@ export default function ChatCustomer({ route }) {
 
   useFocusEffect(
     useCallback(() => {
+      console.log(senderId, "<----------");
       AsyncStorage.getItem("customer_email")
         .then((result) => {
           const custEmail = result;
@@ -22,15 +23,14 @@ export default function ChatCustomer({ route }) {
         })
         .catch((err) => {
           console.log(err);
-          setCustomerEmail("");
         });
     }, [])
   );
 
   const me = {
-    id: `${customerEmail}`,
-    name: `${customerEmail}`,
-    email: `${customerEmail}`,
+    id: customerEmail ? `${customerEmail}` : "loading",
+    name: customerEmail ? `${customerEmail}` : "loading",
+    email: customerEmail ? `${customerEmail}` : "loading",
     photoUrl: photo || "https://talkjs.com/images/avatar-1.jpg",
     welcomeMessage: "Hey there! How are you? :-)",
     role: "default",

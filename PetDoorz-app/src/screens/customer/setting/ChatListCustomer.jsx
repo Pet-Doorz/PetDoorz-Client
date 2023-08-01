@@ -11,42 +11,54 @@ import {
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFocusEffect } from "@react-navigation/native";
-
+let emailCust;
 const baseUrl = `https://api.talkjs.com/v1/t15249fa/users`;
 export default function ChatListCustomer({ navigation }) {
   const [customerData, setCustomerData] = useState("");
   const [chatHistory, setChatHistory] = useState([]);
+  const [chatList, setChatList] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   async function getCustomer() {
     try {
+      emailCust = await AsyncStorage.getItem("customer_email");
       const { data } = await axios({
         method: "get",
-        url: `${baseUrl}/test@customer.com/conversations`,
+        url: `${baseUrl}/${emailCust}/conversations`,
         headers: {
           Authorization: `Bearer sk_test_BpApDeqY7UA6zWRbSRR6SrwzGdEDOE4h`,
         },
       });
-      setChatHistory(data.data);
+      const filteredData = await data.data.filter(
+        (entry) => entry.lastMessage !== null
+      );
+      setChatHistory(filteredData);
+
+      return filteredData;
     } catch (error) {
       console.log(error);
     }
   }
 
-  useEffect(() => {
-    AsyncStorage.getItem("customer_email")
-      .then((result) => {
-        const emailCust = result;
-        setCustomerData(emailCust);
-        getCustomer();
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, []);
-
   useFocusEffect(
     useCallback(() => {
-      getCustomer();
+      getCustomer()
+        .then((data) => {
+          setLoading(true);
+          const transformedData = data.map((entry) => {
+            const participantKeys = Object.keys(entry.participants);
+            const key = `message`;
+            return { [key]: participantKeys[0] };
+          });
+          return transformedData;
+        })
+        .then((res) => {
+          setChatList(res);
+          setLoading(false);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     }, [])
   );
 
@@ -56,10 +68,7 @@ export default function ChatListCustomer({ navigation }) {
         <Text style={styles.title}>Chat List</Text>
 
         {chatHistory.length <= 0 && (
-          <TouchableOpacity
-            activeOpacity={0.8}
-            onPress={() => navigation.navigate("Customer Chat")}
-          >
+          <TouchableOpacity activeOpacity={0.8}>
             <View style={{ flexDirection: "row", gap: 10, marginBottom: 20 }}>
               <View>
                 <Text style={styles.chatName}>No Chat History</Text>
@@ -68,15 +77,18 @@ export default function ChatListCustomer({ navigation }) {
           </TouchableOpacity>
         )}
         {!chatHistory.length <= 0 &&
-          chatHistory.map((chat) => {
+          chatHistory.map((chat, index) => {
             return (
               <TouchableOpacity
                 key={chat.id}
                 activeOpacity={0.8}
                 onPress={() =>
                   navigation.navigate("Customer Chat", {
-                    data: chat.lastMessage.senderId,
-                    photo: chat.photoUrl,
+                    data:
+                      chatList.length > 0
+                        ? chatList[index].message
+                        : "Loading SenderId...",
+                    photo: chat.photoUrl ? chat.photoUrl : "Loading Photo...",
                   })
                 }
               >
@@ -93,7 +105,9 @@ export default function ChatListCustomer({ navigation }) {
                   />
                   <View>
                     <Text style={styles.chatName}>
-                      {chat.lastMessage.senderId}
+                      {chatList.length > 0
+                        ? chatList[index].message
+                        : "Loading Name..."}
                     </Text>
                     <Text>{chat.lastMessage.text}...</Text>
                   </View>

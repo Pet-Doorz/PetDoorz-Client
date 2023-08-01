@@ -16,15 +16,12 @@ let emailCust;
 export default function ChatListAdmin({ navigation }) {
   const [customerData, setCustomerData] = useState("");
   const [chatHistory, setChatHistory] = useState([]);
-
-  const getEmail = async () => {
-    emailCust = await AsyncStorage.getItem("admin_email");
-    return emailCust;
-  };
+  const [chatList, setChatList] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   async function getCustomer() {
     try {
-      emailCust = await getEmail();
+      emailCust = await AsyncStorage.getItem("admin_email");
       const { data } = await axios({
         method: "get",
         url: `https://api.talkjs.com/v1/t15249fa/users/${emailCust}/conversations`,
@@ -32,26 +29,32 @@ export default function ChatListAdmin({ navigation }) {
           Authorization: `Bearer sk_test_BpApDeqY7UA6zWRbSRR6SrwzGdEDOE4h`,
         },
       });
-      return setChatHistory(data.data);
+      const filteredData = await data.data.filter(
+        (entry) => entry.lastMessage !== null
+      );
+      setChatHistory(filteredData);
+      return filteredData;
     } catch (error) {
       console.log(error);
     }
   }
 
-  useEffect(() => {
-    console.log("use Effect Jalan");
-    getCustomer()
-      .then((_) => {})
-      .catch((err) => {
-        console.log(err);
-      });
-  }, []);
-
   useFocusEffect(
     useCallback(() => {
-      console.log("use Focus Effect Jalan");
       getCustomer()
-        .then((_) => {})
+        .then((data) => {
+          setLoading(true);
+          const transformedData = data.map((entry) => {
+            const participantKeys = Object.keys(entry.participants);
+            const key = `message`;
+            return { [key]: participantKeys[0] };
+          });
+          return transformedData;
+        })
+        .then((res) => {
+          setChatList(res);
+          setLoading(false);
+        })
         .catch((err) => {
           console.log(err);
         });
@@ -64,10 +67,7 @@ export default function ChatListAdmin({ navigation }) {
         <Text style={styles.title}>Chat List</Text>
 
         {chatHistory.length <= 0 && (
-          <TouchableOpacity
-            activeOpacity={0.8}
-            onPress={() => navigation.navigate("Admin Chat")}
-          >
+          <TouchableOpacity activeOpacity={0.8}>
             <View style={{ flexDirection: "row", gap: 10, marginBottom: 20 }}>
               <View>
                 <Text style={styles.chatName}>No Chat History</Text>
@@ -76,16 +76,18 @@ export default function ChatListAdmin({ navigation }) {
           </TouchableOpacity>
         )}
         {chatHistory.length > 0 &&
-          chatHistory.map((chat) => {
+          chatHistory.map((chat, index) => {
             return (
               <TouchableOpacity
                 key={chat.id}
                 activeOpacity={0.8}
                 onPress={() =>
                   navigation.navigate("Admin Chat Stack", {
-                    data: chat.lastMessage.senderId,
-                    photo: chat.photoUrl,
-                    myEmail: emailCust,
+                    data:
+                      chatList.length > 0
+                        ? chatList[index].message
+                        : "Loading SenderId...",
+                    photo: chat.photoUrl ? chat.photoUrl : "Loading Photo...",
                   })
                 }
               >
@@ -102,9 +104,9 @@ export default function ChatListAdmin({ navigation }) {
                   />
                   <View>
                     <Text style={styles.chatName}>
-                      {chat.lastMessage
-                        ? chat.lastMessage.senderId
-                        : "No Reply"}
+                      {chatList.length > 0
+                        ? chatList[index].message
+                        : "Loading Name..."}
                     </Text>
                     <Text>
                       {chat.lastMessage ? chat.lastMessage.text : "No Reply"}

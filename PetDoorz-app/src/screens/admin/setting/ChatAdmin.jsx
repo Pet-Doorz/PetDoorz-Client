@@ -2,25 +2,38 @@ import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View } from "react-native";
 import { useSelector } from "react-redux";
 import * as TalkRn from "@talkjs/expo";
-import { useEffect } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useEffect, useState, useCallback } from "react";
+import { useFocusEffect } from "@react-navigation/native";
 
 export default function ChatAdmin({ route }) {
   const role = useSelector((state) => state.user.role);
   const senderId = route.params?.data;
   const photo = route.params?.photo;
   const myEmail = route.params?.myEmail;
+  const [customerEmail, setCustomerEmail] = useState("");
 
-  useEffect(() => {
-    console.log(senderId, myEmail);
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      console.log(senderId, "<----------");
+      AsyncStorage.getItem("admin_email")
+        .then((result) => {
+          const custEmail = result;
+          setCustomerEmail(custEmail);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }, [])
+  );
 
   const me = {
-    id: `${myEmail}`,
-    name: `${myEmail}`,
-    email: `${myEmail}`,
+    id: customerEmail ? `${customerEmail}` : "loading",
+    name: customerEmail ? `${customerEmail}` : "loading",
+    email: customerEmail ? `${customerEmail}` : "loading",
     photoUrl: photo || "https://talkjs.com/images/avatar-1.jpg",
     welcomeMessage: "Hey there! How are you? :-)",
-    role: "default",
+    role: "customer",
   };
 
   const other = {
