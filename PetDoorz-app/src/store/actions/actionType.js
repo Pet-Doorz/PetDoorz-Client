@@ -12,7 +12,4 @@ export const SET_ADMIN_DATA = "admin/setAdminDetailData";
 
 export const SET_BOOKING_DATA = "booking/setBookingData";
 
-
-export const SET_BOOKING_DATA = "booking/setBookingData";
-
-export const BASE_URL = "https://c547-103-195-58-68.ngrok-free.app";
+export const BASE_URL = "https://77ad-111-94-95-220.ngrok-free.app";
