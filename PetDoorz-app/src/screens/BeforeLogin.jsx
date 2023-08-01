@@ -22,6 +22,7 @@ export default function BeforeLogin({ navigation }) {
       }
 
       let location = await Location.getCurrentPositionAsync({});
+      
       await AsyncStorage.setItem(
         "longitude",
         location.coords.longitude.toString()

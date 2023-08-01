@@ -2,104 +2,68 @@ import { StatusBar } from 'expo-status-bar'
 import { ScrollView, StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native'
 import MapView, { Marker } from 'react-native-maps'
 import ImageView from "react-native-image-viewing"
-import { useState } from 'react'
-import { FontAwesome } from '@expo/vector-icons'
-import { Button } from 'react-native-paper'
+import { useEffect, useState } from 'react'
+import { ActivityIndicator, Button } from 'react-native-paper'
+import { useDispatch, useSelector } from 'react-redux'
+import ReviewCard from '../../../components/customer/ReviewCard'
+import { getAllHotel } from '../../../store/actions/actionHotel'
 
-export default function DetailHotelCustomer({ navigation }) {
+export default function DetailHotelCustomer({ navigation, route }) {
+    const { id } = route.params
+    const dispatch = useDispatch()
+    const hotels = useSelector((state) => state.hotel.allHotel)
+    const [detail, setDetail] = useState({})
+    const [visible, setIsVisible] = useState(false)
+    const [imageIndex, setImageIndex] = useState(0)
+
+    useEffect(() => {
+        // const [detail] = hotels.filter((e) => e.id === id)
+        dispatch(getAllHotel())
+        const [detail] = hotels.filter((e) => e.id === id)
+        setDetail(detail)
+    }, [id])
+
+    // loading dulu sebelum dapet detail
+    if (!detail.location) {
+        return <View style={{ justifyContent: 'center', flex: 1 }}>
+            <ActivityIndicator size={'large'}></ActivityIndicator>
+        </View>
+    }
+
     const handleBookScreen = () => {
         navigation.navigate('Hotel Book')
     }
 
     const location = {
-        latitude: -6.147642181387086,
-        longitude: 106.71119003020036,
+        latitude: detail.location.coordinates[0],
+        longitude: detail.location.coordinates[1],
         latitudeDelta: 0.015,
         longitudeDelta: 0.0121,
     }
 
-    const hotel = {
-        "id": 1,
-        "email": "alpha@mail.com",
-        "password": "alpha",
-        "name": "Alpha Pet Hotel",
-        "address": "Jl. Jakarta",
-        "location": {
-            "type": "Point",
-            "coordinates": [
-                -6.147642181387086,
-                106.71119003020036
-            ]
-        },
-        "logoHotel": "https://picsum.photos/400/600",
-        "status": "active"
-    }
+    const newImages = detail.Images.map((e) => {
+        const { id, imageUrl } = e
+        return {
+            id,
+            uri: imageUrl
+        }
+    })
 
-    const images = [
-        {
-            id: 1,
-            uri: "https://images.unsplash.com/photo-1571501679680-de32f1e7aad4",
-        },
-        {
-            id: 2,
-            uri: "https://images.unsplash.com/photo-1573273787173-0eb81a833b34",
-        },
-        {
-            id: 3,
-            uri: "https://images.unsplash.com/photo-1569569970363-df7b6160d111",
-        },
-        {
-            id: 4,
-            uri: "https://images.unsplash.com/photo-1571501679680-de32f1e7aad4",
-        },
-        {
-            id: 5,
-            uri: "https://images.unsplash.com/photo-1573273787173-0eb81a833b34",
-        },
-        {
-            id: 6,
-            uri: "https://images.unsplash.com/photo-1569569970363-df7b6160d111",
-        },
-    ]
-
-    const reviews = [
-        {
-            name: 'Juan Alfonsus',
-            comment: 'Keren bangettttt',
-            rating: 1
-        },
-        {
-            name: 'Ringo Gaurangga',
-            comment: 'Keren bangettttt',
-            rating: 4
-        },
-        {
-            name: 'Raymond Fransisco',
-            comment: 'Keren bangettttt',
-            rating: 4
-        },
-        {
-            name: 'Mike Leonardo',
-            comment: 'Keren bangettttt',
-            rating: 5
-        },
-    ]
-
-    const [visible, setIsVisible] = useState(false)
-    const [imageIndex, setImageIndex] = useState(0)
 
     const onSelect = (index) => {
         setImageIndex(index)
         setIsVisible(true)
     }
 
+    console.log(newImages)
+
     return (
         <ScrollView style={styles.container}>
             {/* Ini view map */}
             <View>
-                <Text style={styles.title}>{hotel.name}</Text>
+                <Text style={styles.title}>{detail.name}</Text>
                 <ImageView // ini tuh cuman modal doang, jadi harus ditrigger, triggernya lewat touchable opacity dibawah
-                    images={images} // harus array of object dengan key uri
+                    images={newImages} // harus array of object dengan key uri
                     imageIndex={imageIndex}
                     visible={visible}
                     onRequestClose={() => setIsVisible(false)}
@@ -119,9 +83,9 @@ export default function DetailHotelCustomer({ navigation }) {
                 <ScrollView horizontal={true}>
                     <View style={{ flexDirection: 'row', gap: 15 }}>
                         {
-                            images.map((e, i) => { // ini galerinya, yang bisa trigger imageviewnya
+                            newImages.map((e, i) => { // ini galerinya, yang bisa trigger imageviewnya
                                 return (
-                                    <TouchableOpacity key={e.id} activeOpacity={0.8} onPress={() => onSelect(i)}>
+                                    <TouchableOpacity key={i + 10000} activeOpacity={0.8} onPress={() => onSelect(i)}>
                                         <Image source={e} style={{ width: 100, height: 100 }} />
                                     </TouchableOpacity>
                                 )
@@ -146,23 +110,9 @@ export default function DetailHotelCustomer({ navigation }) {
                 <ScrollView horizontal={true}>
                     <View style={{ flexDirection: 'row', gap: 15 }}>
                         {
-                            reviews.map((e, i) => {
+                            detail.Reviews.map((e, i) => {
                                 return (
-                                    <TouchableOpacity key={i} style={[styles.card, styles.shadowProp]}>
-                                        <View>
-                                            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                                                <Text>Rating</Text>
-                                                <View style={{ flexDirection: 'row' }}>
-                                                    <Text style={{ fontSize: 16 }}> 4 / 5</Text>
-                                                    <FontAwesome name="star" size={24} color="yellow" />
-                                                </View>
-                                            </View>
-                                            <View style={{ marginTop: 10, gap: 5 }}>
-                                                <Text>{e.name}</Text>
-                                                <Text style={{ fontSize: 12, fontWeight: '300' }}>{e.comment}</Text>
-                                            </View>
-                                        </View>
-                                    </TouchableOpacity>
+                                    <ReviewCard key={i} review={e} />
                                 )
                             })
                         }
@@ -183,7 +133,7 @@ export default function DetailHotelCustomer({ navigation }) {
             {/* Hotel Description */}
             <View style={styles.perContent}>
                 <Text style={styles.cardTitle}>Description</Text>
-                <Text>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quasi atque distinctio esse odio animi! Corrupti, explicabo. Fugit reprehenderit reiciendis autem?</Text>
+                <Text>{detail.description}</Text>
             </View>
 
             {/* Button buat jadwal, chat */}
@@ -206,7 +156,7 @@ const styles = StyleSheet.create({
         width: '100%',
         height: 250
     },
-    title: { fontSize: 25, fontWeight: 'bold', marginBottom: 12 },
+    title: { fontSize: 25, fontWeight: 'bold', marginBottom: 12, marginTop: 12 },
     shadowProp: {
         elevation: 5,
     },

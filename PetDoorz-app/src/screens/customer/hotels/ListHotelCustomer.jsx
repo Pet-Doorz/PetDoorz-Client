@@ -45,9 +45,10 @@ export default function ListHotelCustomer({ navigation }) {
     });
   };
 
-  const handleDetailScreen = (name) => {
+  const handleDetailScreen = (id) => {
     navigation.navigate("Hotel Detail", {
       name: "Test",
+      id
     });
   };
 
@@ -142,7 +143,7 @@ export default function ListHotelCustomer({ navigation }) {
               return (
                 <TouchableOpacity
                   key={e.id}
-                  onPress={(name) => handleDetailScreen(name)}
+                  onPress={() => handleDetailScreen(e.id)}
                   activeOpacity={0.9}
                 >
                   <View style={[styles.hotel, styles.shadowProp]}>

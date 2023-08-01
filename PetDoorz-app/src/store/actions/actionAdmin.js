@@ -1,7 +1,7 @@
 import axios from "axios"
 import { SET_ADMIN_DATA } from "./actionType"
 
-const baseUrl = 'https://67f6-111-94-95-220.ngrok-free.app/hotels'
+const baseUrl = 'https://f632-111-94-95-220.ngrok-free.app/hotels'
 
 const SET_DETAIL_ADMIN = (payload) => {
     return {
