@@ -9,4 +9,7 @@ export const SET_ALL_HOTEL = "customer/setAllHotelData";
 
 export const SET_ADMIN_DATA = "admin/setAdminDetailData";
 
+
+export const SET_BOOKING_DATA = "booking/setBookingData";
+
 export const BASE_URL = "https://77ad-111-94-95-220.ngrok-free.app";
