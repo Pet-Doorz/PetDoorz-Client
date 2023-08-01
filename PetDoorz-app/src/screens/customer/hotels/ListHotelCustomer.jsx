@@ -14,6 +14,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { FontAwesome } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
 import { getFilteredHotel } from "../../../store/actions/actionHotel";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function ListHotelCustomer({ navigation }) {
   const date = new Date(); // dapetin tanggal
@@ -53,15 +54,27 @@ export default function ListHotelCustomer({ navigation }) {
   const fetchFilteredHotel = async () => {
     setLoading(true);
     try {
-      setTimeout(() => {
-        dispatch(getFilteredHotel());
-      }, 2000);
-      console.log(loading);
+      const long = await AsyncStorage.getItem("longitude");
+      const lat = await AsyncStorage.getItem("latitude");
+      dispatch(
+        //distance, total pet masih hardcode
+        getFilteredHotel({
+          distance: Infinity,
+          long: +lat,
+          lat: +long,
+          checkin: checkin.toLocaleDateString("en-GB"),
+          checkout: checkout.toLocaleDateString("en-GB"),
+          totalPet: 1,
+        })
+      )
+        .then((_) => {})
+        .catch((err) => {
+          throw err;
+        });
     } catch (error) {
       console.error("Error fetching hotels:", error);
     } finally {
       setLoading(false);
-      console.log(locations);
     }
   };
 
@@ -124,7 +137,7 @@ export default function ListHotelCustomer({ navigation }) {
         <View style={styles.grid}>
           {/* List seluruh hotelnya */}
           <Text style={styles.title}>List Hotel</Text>
-          {hotels && hotels.length > 0 ? (
+          {hotels.length > 0 ? (
             hotels.map((e) => {
               return (
                 <TouchableOpacity
@@ -146,7 +159,7 @@ export default function ListHotelCustomer({ navigation }) {
                       <Text
                         style={{ fontSize: 13, color: "white", marginTop: 5 }}
                       >
-                        {e.address}
+                        Start From: {"IDR " + e.detailRoom[0].price}
                       </Text>
                       <Text
                         style={{
@@ -155,7 +168,7 @@ export default function ListHotelCustomer({ navigation }) {
                           fontWeight: "200",
                         }}
                       >
-                        Distance: 4.8km
+                        Distance: {e.distance} Km
                       </Text>
                     </View>
                     <View style={{ flexDirection: "row", marginTop: 17 }}>

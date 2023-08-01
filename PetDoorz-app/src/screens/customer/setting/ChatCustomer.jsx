@@ -12,7 +12,6 @@ export default function ChatCustomer({ route }) {
   const photo = route.params?.photo;
   const senderPhoto = route.params?.senderPhoto;
   const [customerEmail, setCustomerEmail] = useState("");
-  let custEmail;
 
   useFocusEffect(
     useCallback(() => {
@@ -23,6 +22,7 @@ export default function ChatCustomer({ route }) {
         })
         .catch((err) => {
           console.log(err);
+          setCustomerEmail("");
         });
     }, [])
   );
@@ -39,7 +39,7 @@ export default function ChatCustomer({ route }) {
   const other = {
     id: `${senderId}`,
     name: `${senderId}`,
-    email: `${senderId}` + "@example.com",
+    email: `${senderId}@example.com`,
     photoUrl: senderPhoto || "henry.jpeg",
     welcomeMessage: "Hello!",
     role: "customer",
