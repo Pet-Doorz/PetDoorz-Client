@@ -15,22 +15,33 @@ export default function DetailHotelCustomer({ navigation, route }) {
     const [detail, setDetail] = useState({})
     const [visible, setIsVisible] = useState(false)
     const [imageIndex, setImageIndex] = useState(0)
+    const [loading, setLoading] = useState(true)
 
     useEffect(() => {
         // const [detail] = hotels.filter((e) => e.id === id)
         dispatch(getAllHotel())
+            .then((_) => {
+
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+            .finally((_) => {
+                setLoading(false)
+            })
         const [detail] = hotels.filter((e) => e.id === id)
         setDetail(detail)
     }, [id])
 
     // loading dulu sebelum dapet detail
-    if (!detail.location) {
+    if (loading) {
         return <View style={{ justifyContent: 'center', flex: 1 }}>
             <ActivityIndicator size={'large'}></ActivityIndicator>
         </View>
     }
 
     const handleBookScreen = () => {
+        console.log(id)
         navigation.navigate('Hotel Book')
     }
 
@@ -54,8 +65,6 @@ export default function DetailHotelCustomer({ navigation, route }) {
         setImageIndex(index)
         setIsVisible(true)
     }
-
-    console.log(newImages)
 
     return (
         <ScrollView style={styles.container}>
@@ -85,7 +94,7 @@ export default function DetailHotelCustomer({ navigation, route }) {
                         {
                             newImages.map((e, i) => { // ini galerinya, yang bisa trigger imageviewnya
                                 return (
-                                    <TouchableOpacity key={i + 10000} activeOpacity={0.8} onPress={() => onSelect(i)}>
+                                    <TouchableOpacity key={e.id} activeOpacity={0.8} onPress={() => onSelect(i)}>
                                         <Image source={e} style={{ width: 100, height: 100 }} />
                                     </TouchableOpacity>
                                 )

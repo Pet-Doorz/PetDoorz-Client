@@ -1,5 +1,5 @@
 import { useDispatch } from "react-redux";
-import { SET_HOTEL_DATA, SET_ALL_HOTEL } from "../actions/actionType";
+import { SET_HOTEL_DATA, SET_ALL_HOTEL, BASE_URL } from "../actions/actionType";
 import axios from "axios";
 
 export const setHotelState = (payload) => {
@@ -16,7 +16,7 @@ export const setAllHotel = (payload) => {
   }
 }
 
-const baseUrl = `https://f632-111-94-95-220.ngrok-free.app/hotels`;
+const baseUrl = BASE_URL + `/hotels`;
 
 export const getFilteredHotel = (query) => {
   return async (dispatch) => {
@@ -53,7 +53,6 @@ export const getAllHotel = () => {
           access_token: "dummy",
         },
       });
-      console.log('masuk');
       dispatch(setAllHotel(data))
     } catch (error) {
       throw error

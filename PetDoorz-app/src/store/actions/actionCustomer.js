@@ -1,4 +1,4 @@
-import { SET_CUSTOMER_DATA, SET_DETAIL_DATA } from "../actions/actionType";
+import { BASE_URL, SET_CUSTOMER_DATA, SET_DETAIL_DATA } from "../actions/actionType";
 import axios from "axios";
 
 export const SET_ROLE = (payload) => {
@@ -15,7 +15,7 @@ const SET_DETAIL = (payload) => {
   };
 };
 
-const baseUrl = "https://9436-111-94-95-220.ngrok-free.app/customers";
+const baseUrl = BASE_URL + '/customers';
 
 export const loginCustomer = (payload) => {
   return async () => {
