@@ -86,3 +86,73 @@ export const editRoom = (payload, id) => {
         }
     }
 }
+
+export const deleteRoom = (id) => {
+    return async(dispatch) => {
+        try {
+            const access_token = await AsyncStorage.getItem('admin_access_token')
+            const { data } = await axios({
+                method: "delete",
+                url: baseUrl + "/rooms/" + id,
+                headers: { access_token },
+            })
+            console.log(data)
+            return data
+        } catch (error) {
+            throw error
+        }
+    }
+}
+
+export const postNewService = (payload) => {
+    return async(dispatch) => {
+        try {
+            const access_token = await AsyncStorage.getItem('admin_access_token')
+            const { name, price } = payload
+            const { data } = await axios({
+                method: "post",
+                url: baseUrl + "/services",
+                headers: { access_token },
+                data: { name, price }
+            })
+            return data
+        } catch (error) {
+            throw error
+        }
+    }
+}
+
+export const editService = (payload, id) => {
+    return async(dispatch) => {
+        try {
+            const access_token = await AsyncStorage.getItem('admin_access_token')
+            const { name, price } = payload
+            const { data } = await axios({
+                method: "put",
+                url: baseUrl + "/services/" + id,
+                headers: { access_token },
+                data: { name, price }
+            })
+            console.log(data)
+            return data
+        } catch (error) {
+            throw error
+        }
+    }
+}
+
+export const deleteService = (id) => {
+    return async(dispatch) => {
+        try {
+            const access_token = await AsyncStorage.getItem('admin_access_token')
+            const { data } = await axios({
+                method: "delete",
+                url: baseUrl + "/services/" + id,
+                headers: { access_token }
+            })
+            return data
+        } catch (error) {
+            throw error
+        }
+    }
+}

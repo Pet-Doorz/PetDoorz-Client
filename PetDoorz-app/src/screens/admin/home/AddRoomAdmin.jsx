@@ -8,7 +8,7 @@ import { detailAdmin, postNewRoom } from "../../../store/actions/actionAdmin";
 import { uploadFile } from "../../../../lib/imagekit"
 import * as ImagePicker from 'expo-image-picker';
 
-export default function AddRoomAdmin() {
+export default function AddRoomAdmin({ navigation }) {
     const dispatch = useDispatch()
 
     const [ name, setName ] = useState("");
@@ -25,14 +25,16 @@ export default function AddRoomAdmin() {
             if (!resUpload.url) throw { name: "Upload Error" }
             formData.imageUrl = resUpload.url
             dispatch(postNewRoom(formData))
+            .then(() => {
+                dispatch(detailAdmin())
+            })
+            .then((res) => {
+                navigation.navigate('Home Admin Stack')
+            })
         } catch (error) {
             console.log(error)
         }
     }
-
-    useEffect(() => {
-        dispatch(detailAdmin())
-    }, [])
 
     // IMAGEKIT
 	async function openFileSelector() {
