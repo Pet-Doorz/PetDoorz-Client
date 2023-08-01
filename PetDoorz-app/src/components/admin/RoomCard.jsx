@@ -1,11 +1,17 @@
 import { TouchableOpacity, View, Text, StyleSheet } from "react-native"
 import { MaterialIcons } from '@expo/vector-icons'
+import { useNavigation } from '@react-navigation/native';
 
-
-export default function RoomCard({ room, handleEditFormScreen }) {
+export default function RoomCard({ room }) {
+    const navigation = useNavigation()
     const currency = (value) => {
         return new Intl.NumberFormat('id-Id', { style: 'currency', currency: 'IDR' }).format(value)
     }
+
+    const handleEditFormScreen = () => {
+        // harusnya bawa semua detail roomnya atau id aja ge boleh
+        navigation.navigate('Edit Room Admin', {id: room.id})
+      }
 
     return (
         <TouchableOpacity activeOpacity={0.85} onPress={handleEditFormScreen}>
