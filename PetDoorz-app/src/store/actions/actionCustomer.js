@@ -53,3 +53,24 @@ export const detailCustomer = (access_token) => {
     }
   };
 };
+
+export const getMidtrans = (payload) => {
+  return async () => {
+    try {
+      const { access_token, amount } = payload
+      const { data } = await axios({
+        method: 'post',
+        url: baseUrl + '/generate-midtrans-token',
+        headers: { access_token },
+        data: {
+          total: amount
+        }
+      })
+
+      return data
+    } catch (error) {
+      console.log(error.response.data.message);
+      throw error.response.data.message;
+    }
+  }
+}
