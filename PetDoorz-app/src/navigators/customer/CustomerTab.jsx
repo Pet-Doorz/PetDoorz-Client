@@ -10,10 +10,10 @@ export default function CustomerTab() {
     return (
         <Tab.Navigator screenOptions={{
             tabBarStyle: {
-                backgroundColor: '#48034F',
+                backgroundColor: '#2F0036',
             },
             tabBarActiveTintColor: '#f5c618',
-            headerStyle: { backgroundColor: '#48034F' },
+            headerStyle: { backgroundColor: '#2F0036' },
             headerTitleStyle: { color: 'white' }
         }}>
             <Tab.Screen name="Customer Tab" component={HomeCustomerStack} options={{
