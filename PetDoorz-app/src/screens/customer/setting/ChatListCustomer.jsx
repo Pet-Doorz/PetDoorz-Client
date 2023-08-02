@@ -46,10 +46,9 @@ export default function ChatListCustomer({ navigation }) {
         .then((data) => {
           setLoading(true);
           const transformedData = data.map((entry) => {
-            const participantKeys = Object.keys(entry.participants);
-            const key = `message`;
-            return { [key]: participantKeys[0] };
+            return entry.participants;
           });
+          // console.log(JSON.stringify(data, null, 4));
           return transformedData;
         })
         .then((res) => {
@@ -84,10 +83,11 @@ export default function ChatListCustomer({ navigation }) {
                 activeOpacity={0.8}
                 onPress={() =>
                   navigation.navigate("Customer Chat", {
-                    data:
-                      chatList.length > 0
-                        ? chatList[index].message
-                        : "Loading SenderId...",
+                    data: chatList[index]
+                      ? Object.keys(chatList[index])[0] != emailCust
+                        ? Object.keys(chatList[index])[0]
+                        : Object.keys(chatList[index])[1]
+                      : "loading name",
                     photo: chat.photoUrl ? chat.photoUrl : "Loading Photo...",
                   })
                 }
@@ -105,9 +105,11 @@ export default function ChatListCustomer({ navigation }) {
                   />
                   <View>
                     <Text style={styles.chatName}>
-                      {chatList.length > 0
-                        ? chatList[index].message
-                        : "Loading Name..."}
+                      {chatList[index]
+                        ? Object.keys(chatList[index])[0] != emailCust
+                          ? Object.keys(chatList[index])[0]
+                          : Object.keys(chatList[index])[1]
+                        : "loading name"}
                     </Text>
                     <Text>{chat.lastMessage.text}...</Text>
                   </View>
