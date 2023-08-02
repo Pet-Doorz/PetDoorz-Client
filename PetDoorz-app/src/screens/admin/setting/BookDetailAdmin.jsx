@@ -6,6 +6,9 @@ import { useDispatch, useSelector } from "react-redux"
 import { Button } from "react-native-paper"
 import { detailAdmin, updateStatusToProcess } from '../../../store/actions/actionAdmin'
 import AsyncStorage from "@react-native-async-storage/async-storage"
+import { uploadFile } from "../../../../lib/imagekit"
+import * as ImagePicker from 'expo-image-picker';
+import { FontAwesome } from '@expo/vector-icons'
 
 
 export default function BookDetailAdmin({ route, navigation }) {
@@ -40,11 +43,14 @@ export default function BookDetailAdmin({ route, navigation }) {
 
     const handleProcessBooking = async () => {
         const access_token = await AsyncStorage.getItem('admin_access_token')
-        dispatch(updateStatusToProcess({
-            id: booking.id,
-            petImage: petUrl,
-            access_token
-        }))
+        uploadFileToImagekit(imageFile)
+            .then((res) => {
+                return dispatch(updateStatusToProcess({
+                    id: booking.id,
+                    petImage: res.url,
+                    access_token
+                }))
+            })
             .then((result) => {
                 console.log(result)
                 alertSuccess()
@@ -58,6 +64,42 @@ export default function BookDetailAdmin({ route, navigation }) {
             })
     }
 
+    // IMAGEKIT
+    const [ imageUri, setImageUri ] = useState("");
+    const [ imageFile, setImageFile ] = useState({});
+
+    async function openCamera() {
+        try{
+			var res = await ImagePicker.launchCameraAsync({});
+            console.log(res)
+            res = {
+                name: "booking",
+                uri: res.assets[0].uri,
+                type: res.assets[0].type + "/jpg"
+            }
+            setImageUri(res.uri)
+            setImageFile(res)
+		} catch(err) {
+            console.log(err)
+			// if (DocumentPicker.isCancel(err)) {
+			// 	// User cancelled the picker, exit any dialogs or menus and move on
+			// } else {
+			// 	throw err;
+			// }
+		}
+    }
+
+	async function uploadFileToImagekit(fileData) {
+		try{
+            console.log("fileData", fileData)
+			const uploadedFile = await uploadFile(fileData);
+			return uploadedFile
+            // setUploadFileUrl(uploadedFile.url);
+		}catch(err){
+			//handle error in uploading file
+            console.log(err)
+		}
+	}
 
 
     return (
@@ -119,11 +161,22 @@ export default function BookDetailAdmin({ route, navigation }) {
                     {/* Ini buat update status, sama upload foto */}
                     {
                         booking.status === 'booked' ? (
-                            <View style={{ alignItems: 'center', gap: 5 }}>
+                            <View style={{ alignItems: 'center', gap: 5, marginTop: 35 }}>
                                 <Text style={{ fontSize: 20, fontWeight: '500', marginBottom: 12 }}>Pet Photo</Text>
-                                <TextInput mode="outlined" label={'Image Url'} style={{ width: 250, marginBottom: 12 }} onChangeText={(e) => setPetUrl(e)}></TextInput>
+                                <View style={{ flexDirection: 'row', alignItems: "center", gap: 20 }}>
+                                    <TextInput mode="outlined" label={'Please take a picture of the pet to proceed'} style={{ width: 250, marginBottom: 12 }} value={imageUri} disabled></TextInput>
+                                    <TouchableOpacity activeOpacity={0.8} onPress={openCamera}>
+                                        <FontAwesome name="camera" size={25} color="#48034F" />
+                                    </TouchableOpacity>
+                                </View>
+                                
+                                { imageUri && <Image
+                                    style={{ width: "100%", height: 200, objectFit: "contain" }}
+                                    source={{ uri: imageUri }}
+                                ></Image>}
+
                                 {/* dialog untuk done */}
-                                <Button mode="contained" onPress={handleProcessBooking} style={{ borderRadius: 10 }} theme={{ colors: { primary: '#48034F' } }}>Process</Button>
+                                <Button mode="contained" onPress={handleProcessBooking} style={{ borderRadius: 10, marginTop: 45 }} theme={{ colors: { primary: '#48034F' } }}>Process</Button>
                             </View>
                         ) : (
                             <View style={{ alignItems: 'center', gap: 5 }}>
@@ -152,8 +205,8 @@ const styles = StyleSheet.create({
     card: {
         backgroundColor: 'white',
         marginBottom: 10,
-        padding: 10,
-        paddingBottom: 20,
+        padding: 20,
+        paddingBottom: 50,
         flexDirection: 'column',
         borderRadius: 10,
         elevation: 5
