@@ -3,6 +3,7 @@ import { FontAwesome } from '@expo/vector-icons'
 
 
 export default function ReviewCard({ review }) {
+    console.log(review)
     return (
         <TouchableOpacity style={[styles.card, styles.shadowProp]}>
             <View>

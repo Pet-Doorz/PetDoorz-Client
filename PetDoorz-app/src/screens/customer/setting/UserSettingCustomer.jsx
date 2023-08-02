@@ -1,7 +1,7 @@
 import { StatusBar } from 'expo-status-bar'
 import { SafeAreaView, ScrollView, StyleSheet, Text, TouchableHighlight, TouchableOpacity, View, Image } from 'react-native'
 import { ActivityIndicator, Dialog, Portal, PaperProvider, Button } from 'react-native-paper';
-import { FontAwesome } from '@expo/vector-icons';
+import { FontAwesome, Ionicons, MaterialIcons, Entypo } from '@expo/vector-icons';
 import { useDispatch, useSelector } from 'react-redux'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { SET_ROLE } from '../../../store/actions/actionUser';
@@ -35,7 +35,7 @@ export default function UserSettingCustomer({ navigation }) {
 
   useFocusEffect(
     useCallback(() => {
-
+      setLoading(true)
       AsyncStorage.getItem('customer_access_token')
         .then((result) => {
           dispatch(detailCustomer(result))
@@ -101,23 +101,38 @@ export default function UserSettingCustomer({ navigation }) {
           {/* Card container, body */}
           <View style={[card.container, card.shadowProp]}>
             <TouchableOpacity activeOpacity={0.8}>
-              <Text style={styles.menuTitle}>Settings</Text>
+              <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
+                <Ionicons name="settings-sharp" size={26} color="#48034F" />
+                <Text style={styles.menuTitle}>Settings</Text>
+              </View>
               <View style={styles.horizontalMarker}></View>
             </TouchableOpacity>
             <TouchableOpacity activeOpacity={0.8} onPress={() => navigation.navigate('Customer Books')}>
-              <Text style={styles.menuTitle}>Bookings</Text>
+              <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
+                <Ionicons name="receipt" size={26} color="#48034F" />
+                <Text style={styles.menuTitle}>Booking</Text>
+              </View>
               <View style={styles.horizontalMarker}></View>
             </TouchableOpacity>
             <TouchableOpacity activeOpacity={0.8}>
-              <Text style={styles.menuTitle}>Favorites</Text>
+              <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
+                <MaterialIcons name="favorite" size={26} color="#48034F" />
+                <Text style={styles.menuTitle}>Favorites</Text>
+              </View>
               <View style={styles.horizontalMarker}></View>
             </TouchableOpacity>
             <TouchableOpacity activeOpacity={0.8} onPress={() => navigation.navigate('Customer Chat List')}>
-              <Text style={styles.menuTitle}>Chats</Text>
+              <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
+                <Ionicons name="chatbubble-ellipses-sharp" size={26} color="#48034F" />
+                <Text style={styles.menuTitle}>Chats</Text>
+              </View>
               <View style={styles.horizontalMarker}></View>
             </TouchableOpacity>
             <TouchableOpacity activeOpacity={0.8} onPress={showDialog}>
-              <Text style={styles.menuTitle}>Logout</Text>
+              <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
+                <MaterialIcons name="logout" size={26} color="#48034F" />
+                <Text style={styles.menuTitle}>Logout</Text>
+              </View>
             </TouchableOpacity>
           </View>
         </ScrollView>

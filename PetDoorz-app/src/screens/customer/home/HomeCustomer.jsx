@@ -1,7 +1,3 @@
-import { StatusBar } from "expo-status-bar";
-import { useEffect, useState, useCallback } from "react";
-import { useFocusEffect } from "@react-navigation/native";
-import { getFilteredHotel } from "../../../store/actions/actionHotel";
 import { SafeAreaView, ScrollView, StyleSheet, Text, View } from "react-native";
 import { Button } from "react-native-paper";
 

@@ -51,7 +51,7 @@ export default function HomeAdmin({ navigation }) {
       <View style={styles.container}>
         <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
           <Text style={styles.title}>Room List</Text>
-          <Button mode='contained' theme={{ colors: { primary: 'gray' } }} style={{ borderRadius: 5 }} onPress={handleAddFormScreen}>Add Room</Button>
+          <Button mode='contained' theme={{ colors: { primary: '#48034F' } }} style={{ borderRadius: 5 }} onPress={handleAddFormScreen}>Add Room</Button>
         </View>
         <View style={{ marginTop: 12 }}>
           {/* Card room, nanti dibuat component sendiri */}
@@ -65,7 +65,7 @@ export default function HomeAdmin({ navigation }) {
         {/* Card service */}
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 12 }}>
           <Text style={styles.title}>Services List</Text>
-          <Button mode='contained' theme={{ colors: { primary: 'gray' } }} style={{ borderRadius: 5 }} onPress={handleAddServiceFormScreen}>Add Service</Button>
+          <Button mode='contained' theme={{ colors: { primary: '#48034F' } }} style={{ borderRadius: 5 }} onPress={handleAddServiceFormScreen}>Add Service</Button>
         </View>
 
         <View style={{ marginTop: 12 }}>
@@ -90,7 +90,7 @@ const styles = StyleSheet.create({
     marginTop: 12
   },
   title: {
-    fontSize: 20,
+    fontSize: 22,
     fontWeight: 'bold'
   },
   card: {
