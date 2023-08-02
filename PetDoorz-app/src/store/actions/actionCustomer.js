@@ -2,6 +2,7 @@ import {
   BASE_URL,
   SET_CUSTOMER_DATA,
   SET_DETAIL_DATA,
+  SET_CHECKIN_DATA, SET_CHECKOUT_DATA, SET_TOTALPET_DATA
 } from "../actions/actionType";
 import axios from "axios";
 
@@ -18,6 +19,27 @@ const SET_DETAIL = (payload) => {
     payload,
   };
 };
+
+export const SET_CHECKIN = (payload) => {
+  return {
+    type: SET_CHECKIN_DATA,
+    payload
+  }
+}
+
+export const SET_CHECKOUT = (payload) => {
+  return {
+    type: SET_CHECKOUT_DATA,
+    payload
+  }
+}
+
+export const SET_TOTALPET = (payload) => {
+  return {
+    type: SET_TOTALPET_DATA,
+    payload
+  }
+}
 
 const baseUrl = BASE_URL + "/customers";
 
@@ -107,7 +129,28 @@ export const createBooking = (payload) => {
       console.log("Success");
       return data;
     } catch (error) {
-      console.log(error);
+      console.log(error.response.data.message);
+      throw error.response.data.message;
     }
   };
 };
+
+export const updateStatusDone = (payload) => {
+  return async () => {
+    try {
+      const { id, access_token } = payload
+      const { data } = await axios({
+        method: "patch",
+        url: BASE_URL + `/bookings/${id}/done`,
+        headers: {
+            access_token
+        }
+    })
+
+    return data
+    } catch (error) {
+      console.log(error.response.data.message);
+      throw error.response.data.message;
+    }
+  }
+}

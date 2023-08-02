@@ -142,7 +142,7 @@ export const editService = (payload, id) => {
 }
 
 export const deleteService = (id) => {
-    return async(dispatch) => {
+    return async() => {
         try {
             const access_token = await AsyncStorage.getItem('admin_access_token')
             const { data } = await axios({
@@ -150,6 +150,28 @@ export const deleteService = (id) => {
                 url: baseUrl + "/services/" + id,
                 headers: { access_token }
             })
+            return data
+        } catch (error) {
+            throw error
+        }
+    }
+}
+
+export const updateStatusToProcess = (payload) => {
+    return async() => {
+        try {
+            const { id, petImage, access_token } = payload
+            const { data } = await axios({
+                method: "patch",
+                url: BASE_URL + `/bookings/${id}/process`,
+                headers: {
+                    access_token
+                },
+                data: {
+                    petImage
+                }
+            })
+
             return data
         } catch (error) {
             throw error

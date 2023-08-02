@@ -1,19 +1,25 @@
 import { View, Text, ScrollView, StyleSheet, TouchableOpacity } from "react-native"
 import { useSelector } from "react-redux"
-import BookingCard from "../../../components/customer/BookingCard"
+import BookingCardAdmin from "../../../components/admin/BookingCardAdmin"
 
 
-export default function BooksCustomer({ navigation }) {
-    const bookings = useSelector((state) => state.customer.detailCustomer.Bookings)
+export default function BooksAdmin({ navigation }) {
+    // get hotel bookings
+    const detail = useSelector((state) => state.admin.detailAdmin)
+    const bookings = []
+    const data = detail.Rooms.map((e) => e.Bookings)
+    data.forEach((e) => {
+        e.forEach((i) => {
+            bookings.push(i)
+        })
+    })
+
     const handleBookingDetails = (id) => {
-        navigation.navigate('Customer Book Detail', {
+        navigation.navigate('Admin Book Detail Stack', {
             id
         })
     }
 
-    const handleChatHotel = (id) => {
-        console.log('dari parnet', id)
-    }
 
     const handleVidCallHotel = () => {
 
@@ -22,12 +28,13 @@ export default function BooksCustomer({ navigation }) {
     return (
         <ScrollView>
             <View style={styles.container}>
-                <Text style={styles.title}>Books</Text>
+                <Text style={styles.title}>Books Admin</Text>
                 <View style={{ marginTop: 20 }}>
-                    {/* List Booking */}
                     {
                         bookings.map((e) => {
-                            return <BookingCard key={e.id} booking={e} handleBookingDetails={handleBookingDetails} handleChatHotel={handleChatHotel} />
+                            return (
+                                <BookingCardAdmin key={e.id} booking={e} handleBookingDetails={handleBookingDetails} />
+                            )
                         })
                     }
                 </View>

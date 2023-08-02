@@ -16,6 +16,7 @@ export default function AdminSetting({ navigation }) {
 
     const detail = useSelector((state) => state.admin.detailAdmin)
 
+
     const currency = () => {
         return new Intl.NumberFormat('id-Id', { style: 'currency', currency: 'IDR' }).format(detail.balance)
     }
@@ -132,7 +133,9 @@ export default function AdminSetting({ navigation }) {
                             <Text style={styles.menuTitle}>Settings</Text>
                             <View style={styles.horizontalMarker}></View>
                         </TouchableOpacity>
-                        <TouchableOpacity activeOpacity={0.8}>
+                        <TouchableOpacity activeOpacity={0.8} onPress={() => navigation.navigate('Admin Books Stack', {
+
+                        })}>
                             <Text style={styles.menuTitle}>Bookings</Text>
                             <View style={styles.horizontalMarker}></View>
                         </TouchableOpacity>
