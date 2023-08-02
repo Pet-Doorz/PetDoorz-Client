@@ -7,19 +7,24 @@ import {
   TouchableOpacity,
   View,
   Image,
+  Alert
 } from "react-native";
 import {
   Button,
   Checkbox,
   Modal,
   PaperProvider,
-  Portal,
+  Portal
 } from "react-native-paper";
 import RoomCard from "../../../components/customer/RoomCard";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { createBooking } from "../../../store/actions/actionBooking";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function BookHotelCustomer({ navigation, route }) {
   const { id } = route.params;
+
+  const dispatch = useDispatch()
 
   const checkin = useSelector((state) => state.customer.checkin)
   const checkout = useSelector((state) => state.customer.checkout)
@@ -38,6 +43,12 @@ export default function BookHotelCustomer({ navigation, route }) {
   const [selectedId, setSelectedId] = useState(); // room id
   const data = useSelector((state) => state.hotel.data);
   const [hotel] = data.filter((e) => e.id === id);
+
+  // alert berhasil booking
+  const buttonAlert = () =>
+    Alert.alert('Success', 'Successfully Booked', [
+      { text: 'OK', onPress: () => navigation.navigate('User Setting Home') },
+    ]);
 
 
   const [selectedServices, setSelectedServices] = useState({
@@ -121,11 +132,26 @@ export default function BookHotelCustomer({ navigation, route }) {
   };
 
   // hadnle tomobl book
-  const handleBook = () => {
+  const handleBook = async () => {
     const [roomPrice] = hotel.detailRoom.filter((e) => e.id === selectedId);
-
-    console.log(totalPet * roomPrice.price);
+    const grandTotal = totalPet * roomPrice.price * amountDate
+    const access_token = await AsyncStorage.getItem('customer_access_token')
+    dispatch(createBooking({
+      grandTotal,
+      checkIn: checkin,
+      checkOut: checkout,
+      access_token,
+      totalPet,
+      RoomId: selectedId
+    }))
+      .then((result) => {
+        console.log(result)
+        buttonAlert()
+      }).catch((err) => {
+        console.log(err)
+      });
   };
+
   const handleRoomId = (id) => {
     setSelectedId(id);
     const [roomPrice] = hotel.detailRoom.filter((e) => e.id === id);
