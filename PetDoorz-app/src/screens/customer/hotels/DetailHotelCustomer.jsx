@@ -26,7 +26,7 @@ export default function DetailHotelCustomer({ navigation, route }) {
     }
 
     const handleBookScreen = () => {
-        navigation.navigate('Hotel Book', {id})
+        navigation.navigate('Hotel Book', { id })
     }
 
     const location = {
@@ -54,7 +54,10 @@ export default function DetailHotelCustomer({ navigation, route }) {
         <ScrollView style={styles.container}>
             {/* Ini view map */}
             <View>
-                <Text style={styles.title}>{hotel.name}</Text>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 8 }}>
+                    <Text style={styles.title}>{hotel.name}</Text>
+                    <Image source={{ uri: hotel.logoHotel }} style={{ height: 60, width: 60, borderRadius: 100 }} />
+                </View>
                 <ImageView // ini tuh cuman modal doang, jadi harus ditrigger, triggernya lewat touchable opacity dibawah
                     images={newImages} // harus array of object dengan key uri
                     imageIndex={imageIndex}
@@ -98,18 +101,26 @@ export default function DetailHotelCustomer({ navigation, route }) {
             />
 
             {/* Box description, review dll */}
+
+            {/* list reviews */}
             <View style={styles.perContent}>
                 <Text style={styles.cardTitle}>Latest Review</Text>
                 <ScrollView horizontal={true}>
-                    <View style={{ flexDirection: 'row', gap: 15 }}>
-                        {
-                            hotel.reviews.map((e, i) => {
-                                return (
-                                    <ReviewCard key={i} review={e} />
-                                )
-                            })
-                        }
-                    </View>
+                    {
+                        hotel.reviews.length > 0 ? (
+
+                            <View style={{ flexDirection: 'row', gap: 15 }}>
+                                {
+                                    hotel.reviews.map((e, i) => {
+                                        return (
+                                            <ReviewCard key={i} review={e} />
+                                        )
+                                    })
+                                }
+                            </View>
+
+                        ) : <Text style={{ fontSize: 15, marginTop: 10 }}>No review</Text>
+                    }
                 </ScrollView>
             </View>
 
@@ -131,8 +142,8 @@ export default function DetailHotelCustomer({ navigation, route }) {
 
             {/* Button buat jadwal, chat */}
             <View style={{ flexDirection: 'row', paddingBottom: 50, marginTop: 12, gap: 10 }}>
-                <Button mode='contained' theme={{ colors: { primary: '#48034F' } }} onPress={handleBookScreen}>Book Now</Button>
-                <Button mode='contained' theme={{ colors: { primary: '#48034F' } }} onPress={handleChatHotel}>Chat</Button>
+                <Button style={{ flex: 1, borderRadius: 5 }} mode='contained' theme={{ colors: { primary: '#48034F' } }} onPress={handleChatHotel}>Chat</Button>
+                <Button style={{ flex: 1, borderRadius: 5 }} mode='contained' theme={{ colors: { primary: '#48034F' } }} onPress={handleBookScreen}>Book Now</Button>
             </View>
             <StatusBar style="auto" />
         </ScrollView>
@@ -144,6 +155,7 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#fff',
         paddingHorizontal: 15,
+        paddingVertical: 15
     },
     map: {
         width: '100%',
