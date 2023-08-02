@@ -56,7 +56,7 @@ export default function BookDetail({ route }) {
                         <Text>
                             {
                                 detail.BookingServices.length > 0 ? (
-                                    detail.BookingServices.map((e) => e.Service.name)
+                                    detail.BookingServices.map((e) => e.Service.name).join(', ')
                                 ) : ''
                             }
                         </Text>
