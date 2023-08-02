@@ -33,7 +33,7 @@ export default function BookHotelCustomer({ navigation, route }) {
   const checkoutDate = new Date(checkout).toLocaleDateString()
 
   const Difference_In_Time = checkout.getTime() - checkin.getTime();
-  const amountDate = Difference_In_Time / (1000 * 3600 * 24)
+  const amountDate = Math.floor(Difference_In_Time / (1000 * 3600 * 24))
   // date diff
 
   // button alert

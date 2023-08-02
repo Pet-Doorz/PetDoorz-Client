@@ -19,10 +19,13 @@ import { SET_CHECKIN, SET_CHECKOUT, SET_TOTALPET } from "../../../store/actions/
 
 export default function ListHotelCustomer({ navigation }) {
   const date = new Date(); // dapetin tanggal
+  let checkoutDate = new Date()
+  checkoutDate.setDate(date.getDate() + 1)
+
   const [loading, setLoading] = useState(false);
   const [location, setLocation] = useState(null);
   const [checkin, setCheckin] = useState(date); // ini buat tanggal
-  const [checkout, setCheckout] = useState(date); //ini tanggal checkout
+  const [checkout, setCheckout] = useState(checkoutDate); //ini tanggal checkout
   const [totalPet, setTotalPet] = useState("1");
   const hotels = useSelector((state) => state.hotel.data);
   const locations = useSelector((state) => state.user.location);
@@ -37,6 +40,10 @@ export default function ListHotelCustomer({ navigation }) {
       value: checkin,
       onChange: async (_, selectedDate) => {
         setCheckin(selectedDate);
+        let minDate = new Date()
+        minDate.setDate(selectedDate.getDate() + 1)
+        console.log(minDate)
+        setCheckout(minDate)
         await AsyncStorage.setItem(
           "checkin",
           selectedDate.toLocaleDateString("en-GB")
@@ -49,8 +56,10 @@ export default function ListHotelCustomer({ navigation }) {
   };
 
   const handleCheckoutDate = () => {
+    let minDate = new Date()
+    minDate.setDate(checkin.getDate() + 1)
     DateTimePickerAndroid.open({
-      value: checkout,
+      value: checkoutDate,
       onChange: async (_, selectedDate) => {
         setCheckout(selectedDate);
         await AsyncStorage.setItem(
@@ -60,7 +69,7 @@ export default function ListHotelCustomer({ navigation }) {
       },
       mode: "date",
       is24Hour: true,
-      minimumDate: date,
+      minimumDate: minDate,
     });
   };
 
@@ -93,7 +102,7 @@ export default function ListHotelCustomer({ navigation }) {
           totalPet: +totalPet,
         })
       )
-        .then((_) => {})
+        .then((_) => { })
         .catch((err) => {
           throw err;
         });
@@ -172,7 +181,7 @@ export default function ListHotelCustomer({ navigation }) {
               const { reviews } = e
               let temp = 0
               reviews.forEach((e) => {
-                temp+= e.rating
+                temp += e.rating
               })
               let totalReview = (temp / e.reviews.length).toFixed(2)
               return (
@@ -217,7 +226,7 @@ export default function ListHotelCustomer({ navigation }) {
                         }}
                       >
                         {" "}
-                        {isNaN(totalReview)  ? 0 : totalReview} / 5
+                        {isNaN(totalReview) ? 0 : totalReview} / 5
                       </Text>
                     </View>
                   </View>
