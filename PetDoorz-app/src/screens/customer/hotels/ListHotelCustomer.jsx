@@ -15,6 +15,7 @@ import { FontAwesome } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
 import { getFilteredHotel } from "../../../store/actions/actionHotel";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { SET_CHECKIN, SET_CHECKOUT, SET_TOTALPET } from "../../../store/actions/actionCustomer";
 
 export default function ListHotelCustomer({ navigation }) {
   const date = new Date(); // dapetin tanggal
@@ -35,7 +36,7 @@ export default function ListHotelCustomer({ navigation }) {
     DateTimePickerAndroid.open({
       value: checkin,
       onChange: async (_, selectedDate) => {
-        setCheckout(selectedDate);
+        setCheckin(selectedDate);
         await AsyncStorage.setItem(
           "checkin",
           selectedDate.toLocaleDateString("en-GB")
@@ -77,6 +78,10 @@ export default function ListHotelCustomer({ navigation }) {
       const long = await AsyncStorage.getItem("longitude");
       const lat = await AsyncStorage.getItem("latitude");
       await AsyncStorage.setItem("totalPet", totalPet);
+      dispatch(SET_CHECKIN(checkin))
+      dispatch(SET_CHECKOUT(checkout))
+      dispatch(SET_TOTALPET(totalPet))
+
       dispatch(
         //distance, total pet masih hardcode
         getFilteredHotel({
@@ -162,6 +167,14 @@ export default function ListHotelCustomer({ navigation }) {
           <Text style={styles.title}>List Hotel</Text>
           {hotels.length > 0 ? (
             hotels.map((e) => {
+              const room = e.detailRoom
+              const minPrice = (Math.min(...room.map(item => item.price)))
+              const { reviews } = e
+              let temp = 0
+              reviews.forEach((e) => {
+                temp+= e.rating
+              })
+              let totalReview = (temp / e.reviews.length).toFixed(2)
               return (
                 <TouchableOpacity
                   key={e.id}
@@ -182,7 +195,7 @@ export default function ListHotelCustomer({ navigation }) {
                       <Text
                         style={{ fontSize: 13, color: "white", marginTop: 5 }}
                       >
-                        Start From: {"IDR " + e.detailRoom[0].price}
+                        Start From: {"IDR " + minPrice}
                       </Text>
                       <Text
                         style={{
@@ -204,7 +217,7 @@ export default function ListHotelCustomer({ navigation }) {
                         }}
                       >
                         {" "}
-                        4 / 5
+                        {isNaN(totalReview)  ? 0 : totalReview} / 5
                       </Text>
                     </View>
                   </View>
@@ -245,6 +258,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     padding: 10,
     flexDirection: "row",
+    borderRadius: 10
   },
   shadowProp: {
     elevation: 3,

@@ -1,7 +1,7 @@
 import { StatusBar } from 'expo-status-bar'
 import { SafeAreaView, ScrollView, StyleSheet, Text, TouchableHighlight, TouchableOpacity, View, Image } from 'react-native'
 import { Button, Dialog, Portal, PaperProvider, ActivityIndicator } from 'react-native-paper'
-import { FontAwesome } from '@expo/vector-icons'
+import { FontAwesome, Ionicons, MaterialIcons, Entypo } from '@expo/vector-icons'
 import { useDispatch, useSelector } from 'react-redux'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { SET_ROLE } from '../../../store/actions/actionUser'
@@ -15,6 +15,7 @@ export default function AdminSetting({ navigation }) {
     const [loading, setLoading] = useState(true)
 
     const detail = useSelector((state) => state.admin.detailAdmin)
+
 
     const currency = () => {
         return new Intl.NumberFormat('id-Id', { style: 'currency', currency: 'IDR' }).format(detail.balance)
@@ -129,19 +130,33 @@ export default function AdminSetting({ navigation }) {
                     {/* Card container, body */}
                     <View style={[card.container, card.shadowProp]}>
                         <TouchableOpacity activeOpacity={0.8}>
-                            <Text style={styles.menuTitle}>Settings</Text>
+                            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
+                                <Ionicons name="settings-sharp" size={26} color="#48034F" />
+                                <Text style={styles.menuTitle}>Settings</Text>
+                            </View>
                             <View style={styles.horizontalMarker}></View>
                         </TouchableOpacity>
-                        <TouchableOpacity activeOpacity={0.8}>
-                            <Text style={styles.menuTitle}>Bookings</Text>
+                        <TouchableOpacity activeOpacity={0.8} onPress={() => navigation.navigate('Admin Books Stack', {
+
+                        })}>
+                            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
+                                <Ionicons name="receipt" size={26} color="#48034F" />
+                                <Text style={styles.menuTitle}>Bookings</Text>
+                            </View>
                             <View style={styles.horizontalMarker}></View>
                         </TouchableOpacity>
                         <TouchableOpacity activeOpacity={0.8} onPress={() => navigation.navigate('Admin Chat List Stack')}>
-                            <Text style={styles.menuTitle}>Chats</Text>
+                            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
+                                <Ionicons name="chatbubble-ellipses-sharp" size={26} color="#48034F" />
+                                <Text style={styles.menuTitle}>Chats</Text>
+                            </View>
                             <View style={styles.horizontalMarker}></View>
                         </TouchableOpacity>
                         <TouchableOpacity activeOpacity={0.8} onPress={() => showDialog('logout')}>
-                            <Text style={styles.menuTitle}>Logout</Text>
+                            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
+                                <MaterialIcons name="logout" size={26} color="#48034F" />
+                                <Text style={styles.menuTitle}>Logout</Text>
+                            </View>
                         </TouchableOpacity>
                     </View>
                 </ScrollView>

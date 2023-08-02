@@ -8,14 +8,17 @@ import { useFocusEffect } from "@react-navigation/native";
 
 export default function ChatCustomer({ route }) {
   const role = useSelector((state) => state.user.role);
-  const senderId = route.params?.data;
+  const { data } = route.params;
   const photo = route.params?.photo;
   const senderPhoto = route.params?.senderPhoto;
   const [customerEmail, setCustomerEmail] = useState("");
+  const [senderId, setSenderId] = useState("");
 
   useFocusEffect(
     useCallback(() => {
-      console.log(senderId, "<----------");
+      if (data) {
+        setSenderId(data);
+      }
       AsyncStorage.getItem("customer_email")
         .then((result) => {
           const custEmail = result;
@@ -37,8 +40,8 @@ export default function ChatCustomer({ route }) {
   };
 
   const other = {
-    id: `${senderId}`,
-    name: `${senderId}`,
+    id: senderId ? `${senderId}` : "loading",
+    name: senderId ? `${senderId}` : "loading",
     email: `${senderId}@example.com`,
     photoUrl: senderPhoto || "henry.jpeg",
     welcomeMessage: "Hello!",
@@ -52,11 +55,15 @@ export default function ChatCustomer({ route }) {
   conversationBuilder.setParticipant(me);
   conversationBuilder.setParticipant(other);
 
-  return (
-    <TalkRn.Session appId="t15249fa" me={me}>
-      <TalkRn.Chatbox conversationBuilder={conversationBuilder} />
-    </TalkRn.Session>
-  );
+  if (senderId) {
+    return (
+      <TalkRn.Session appId="t15249fa" me={me}>
+        <TalkRn.Chatbox conversationBuilder={conversationBuilder} />
+      </TalkRn.Session>
+    );
+  } else {
+    return <Text>Chat is Loading</Text>;
+  }
 }
 
 const styles = StyleSheet.create({
