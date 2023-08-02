@@ -8,20 +8,25 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { Button, TextInput } from "react-native-paper";
+import { ActivityIndicator, Button, TextInput } from "react-native-paper";
 import { DateTimePickerAndroid } from "@react-native-community/datetimepicker";
 import { useDispatch, useSelector } from "react-redux";
 import { FontAwesome } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
 import { getFilteredHotel } from "../../../store/actions/actionHotel";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { SET_CHECKIN, SET_CHECKOUT, SET_TOTALPET } from "../../../store/actions/actionCustomer";
 
 export default function ListHotelCustomer({ navigation }) {
   const date = new Date(); // dapetin tanggal
   const [loading, setLoading] = useState(false);
   const [location, setLocation] = useState(null);
+
+
   const [checkin, setCheckin] = useState(date); // ini buat tanggal
   const [checkout, setCheckout] = useState(date); //ini tanggal checkout
+  const [totalPet, setTotalPet] = useState(0); // ini untuk set total pet
+
   const hotels = useSelector((state) => state.hotel.data);
   const locations = useSelector((state) => state.user.location);
   const dispatch = useDispatch();
@@ -57,6 +62,11 @@ export default function ListHotelCustomer({ navigation }) {
     try {
       const long = await AsyncStorage.getItem("longitude");
       const lat = await AsyncStorage.getItem("latitude");
+      console.log(checkin, checkout, totalPet)
+      dispatch(SET_CHECKIN(checkin))
+      dispatch(SET_CHECKOUT(checkout))
+      dispatch(SET_TOTALPET(totalPet))
+
       dispatch(
         //distance, total pet masih hardcode
         getFilteredHotel({
@@ -65,7 +75,7 @@ export default function ListHotelCustomer({ navigation }) {
           lat: +long,
           checkin: checkin.toLocaleDateString("en-GB"),
           checkout: checkout.toLocaleDateString("en-GB"),
-          totalPet: 1,
+          totalPet: totalPet,
         })
       )
         .then((_) => {})
@@ -122,6 +132,7 @@ export default function ListHotelCustomer({ navigation }) {
               label={"Total Pet "}
               mode="outlined"
               keyboardType="numeric"
+              onChangeText={(total) => setTotalPet(total)}
             />
           </View>
 
@@ -138,7 +149,10 @@ export default function ListHotelCustomer({ navigation }) {
         <View style={styles.grid}>
           {/* List seluruh hotelnya */}
           <Text style={styles.title}>List Hotel</Text>
-          {hotels.length > 0 ? (
+          { loading ? (
+            <ActivityIndicator></ActivityIndicator>
+          )
+          : hotels.length > 0 ? (
             hotels.map((e) => {
               return (
                 <TouchableOpacity

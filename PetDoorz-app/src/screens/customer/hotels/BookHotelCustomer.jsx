@@ -20,6 +20,17 @@ import { useSelector } from "react-redux";
 
 export default function BookHotelCustomer({ navigation, route }) {
   const { id } = route.params;
+
+  const checkin = useSelector((state) => state.customer.checkin)
+  const checkout = useSelector((state) => state.customer.checkout)
+  const totalPet = useSelector((state) => state.customer.totalPet)
+
+  const checkinDate = new Date(checkin).toLocaleDateString()
+  const checkoutDate = new Date(checkout).toLocaleDateString()
+
+  const Difference_In_Time = checkout.getTime() - checkin.getTime();
+  const amountDate = Difference_In_Time / (1000 * 3600 * 24)
+
   const [groom, setGroom] = useState(false);
   const [vaccine, setVaccine] = useState(false);
   const [pet, setPet] = useState(3); // dapet dari local storage
@@ -27,6 +38,7 @@ export default function BookHotelCustomer({ navigation, route }) {
   const [selectedId, setSelectedId] = useState(); // room id
   const data = useSelector((state) => state.hotel.data);
   const [hotel] = data.filter((e) => e.id === id);
+
 
   const [selectedServices, setSelectedServices] = useState({
     groom: {
@@ -44,8 +56,6 @@ export default function BookHotelCustomer({ navigation, route }) {
   });
   // total2an
 
-  console.log(hotel.services, " < ----- Nigga Mutta Fucka");
-
   const handleServiceCheckboxChange = (serviceName) => {
     setSelectedServices((prevServices) => ({
       ...prevServices,
@@ -60,17 +70,17 @@ export default function BookHotelCustomer({ navigation, route }) {
   };
 
   useEffect(() => {
-    const servicesTotal = Object.values(selectedServices).reduce(
-      (total, service) => total + (service.selected ? service.price : 0),
-      0
-    );
+    // const servicesTotal = Object.values(selectedServices).reduce(
+    //   (total, service) => total + (service.selected ? service.price : 0),
+    //   0
+    // );
 
-    const roomPrice = hotel.detailRoom.find((e) => e.id === selectedId);
-    if (roomPrice) {
-      const newTotal = (roomPrice.price || 0) * pet + servicesTotal;
-      setTotal(newTotal);
-    }
-  }, [selectedServices, selectedId, pet]);
+    // const roomPrice = hotel.detailRoom.find((e) => e.id === selectedId);
+    // if (roomPrice) {
+    //   const newTotal = (roomPrice.price || 0) * totalPet + servicesTotal;
+    //   setTotal(newTotal);
+    // }
+  }, [selectedServices, selectedId, totalPet]);
 
   useEffect(() => {
     setSelectedServices((prev) => ({
@@ -114,23 +124,15 @@ export default function BookHotelCustomer({ navigation, route }) {
   const handleBook = () => {
     const [roomPrice] = hotel.detailRoom.filter((e) => e.id === selectedId);
 
-    console.log(pet * roomPrice.price);
+    console.log(totalPet * roomPrice.price);
   };
   const handleRoomId = (id) => {
     setSelectedId(id);
     const [roomPrice] = hotel.detailRoom.filter((e) => e.id === id);
-    let tempTotal = roomPrice.price * pet;
+    let tempTotal = roomPrice.price * totalPet * +amountDate;
+    console.log(tempTotal)
     setTotal(tempTotal);
   };
-
-  const services = [
-    {
-      name: "Grooming",
-    },
-    {
-      name: "Vaccine",
-    },
-  ];
 
   return (
     <PaperProvider>
@@ -152,20 +154,20 @@ export default function BookHotelCustomer({ navigation, route }) {
         {/* Diatasnya card */}
         <View style={[styles.card, styles.shadowProp]}>
           {/* Title card / nama hotel */}
-          <Text style={styles.bookTitle}>Alpha Pet Hotel</Text>
+          <Text style={styles.bookTitle}>{hotel.name}</Text>
           <View style={styles.horizontalMarker} />
           {/* Printilan */}
           <View style={styles.bookRow}>
             <Text style={styles.bookTextContent}>Date Checkin</Text>
-            <Text style={styles.bookTextContent}>27 / 8 / 2023</Text>
+            <Text style={styles.bookTextContent}>{checkinDate}</Text>
           </View>
           <View style={styles.bookRow}>
             <Text style={styles.bookTextContent}>Date Checkout</Text>
-            <Text style={styles.bookTextContent}>28 / 8 / 2023</Text>
+            <Text style={styles.bookTextContent}>{checkoutDate}</Text>
           </View>
           <View style={styles.bookRow}>
             <Text style={styles.bookTextContent}>Total Pet</Text>
-            <Text style={styles.bookTextContent}>3</Text>
+            <Text style={styles.bookTextContent}>{totalPet}</Text>
           </View>
 
           {/* Choose Room, roomcard bisa jadi component */}
