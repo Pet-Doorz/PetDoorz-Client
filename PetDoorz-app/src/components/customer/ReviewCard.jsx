@@ -10,12 +10,12 @@ export default function ReviewCard({ review }) {
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                     <Text>Rating</Text>
                     <View style={{ flexDirection: 'row' }}>
-                        <Text style={{ fontSize: 16 }}> 4 / 5  </Text>
+                        <Text style={{ fontSize: 16 }}> {review.rating} / 5  </Text>
                         <FontAwesome name="star" size={24} color="yellow" />
                     </View>
                 </View>
                 <View style={{ marginTop: 10, gap: 5 }}>
-                    <Text>Nama reviewer</Text>
+                    <Text>{review.Customer.fullName}</Text>
                     <Text style={{ fontSize: 12, fontWeight: '300' }}>{review.comment}</Text>
                 </View>
             </View>
