@@ -6,6 +6,7 @@ import BookDetail from '../../screens/customer/setting/BookDetail'
 import ChatListCustomer from '../../screens/customer/setting/ChatListCustomer'
 import AddBalanceCustomer from '../../screens/customer/setting/AddBalanceCustomer'
 import PaymentGateway from '../../screens/customer/hotels/PaymentGateway'
+import AddReviewCustomer from '../../screens/customer/setting/AddReviewCustomer'
 
 const Stack = createNativeStackNavigator()
 
@@ -19,6 +20,7 @@ export default function SettingCustomerStack() {
             <Stack.Screen name="Customer Book Detail" component={BookDetail} options={{ headerShown: false }} />
             <Stack.Screen name="Customer Add Balance" component={AddBalanceCustomer} options={{ headerShown: false }} />
             <Stack.Screen name="Payment Gateway" component={PaymentGateway} options={{ headerShown: false }} />
+            <Stack.Screen name="Add Review" component={AddReviewCustomer} options={{ headerShown: false }} />
         </Stack.Navigator>
     )
 }

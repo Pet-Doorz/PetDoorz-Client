@@ -173,3 +173,34 @@ export const getHotelById = async (payload) => {
     throw error.response.data.message;
   }
 };
+
+export const createReview = (payload) => {
+  return async () => {
+    try {
+      const { HotelId,
+        bookingId,
+        rating,
+        comment,
+        access_token } = payload
+
+      let { data } = await axios({
+        method: "post",
+        url: baseUrl + `/reviews`,
+        headers: {
+          access_token,
+        },
+        data: {
+          HotelId,
+          bookingId,
+          rating,
+          comment,
+        }
+      });
+
+      return data
+    } catch (error) {
+      console.log(error)
+      throw error.response.data.message;
+    }
+  }
+}

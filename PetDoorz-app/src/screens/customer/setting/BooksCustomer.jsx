@@ -18,7 +18,7 @@ export default function BooksCustomer({ navigation }) {
   const bookings = useSelector(
     (state) => state.customer.detailCustomer.Bookings
   );
-  const dispatch = useDispatch();
+
   const handleBookingDetails = (id) => {
     navigation.navigate("Customer Book Detail", {
       id,
@@ -58,7 +58,13 @@ export default function BooksCustomer({ navigation }) {
     }
   };
 
-  const handleVidCallHotel = () => {};
+  const handleReview = (bookingId, HotelId, hotelName) => {
+    navigation.navigate('Add Review', {
+      bookingId, HotelId, hotelName
+    })
+  }
+
+  const handleVidCallHotel = () => { };
 
   return (
     <ScrollView>
@@ -73,6 +79,7 @@ export default function BooksCustomer({ navigation }) {
                 booking={e}
                 handleBookingDetails={handleBookingDetails}
                 handleChatHotel={() => handleChatHotel(e.Room.HotelId)}
+                handleReview={handleReview}
               />
             );
           })}
