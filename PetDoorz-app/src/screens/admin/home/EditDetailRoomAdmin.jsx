@@ -150,7 +150,7 @@ export default function EditDetailRoomAdmin({ navigation, route }) {
                 ></Image>}
                 {/* end of image input */}
 
-                <Button mode="contained" style={{ borderRadius: 5, marginTop: 12 }} theme={{ colors: { primary: 'gray' } }} onPress={handleSubmit}>Submit</Button>
+                <Button mode="contained" style={{ borderRadius: 5, marginTop: 12 }} theme={{ colors: { primary: '#48034F' } }} onPress={handleSubmit}>Submit</Button>
             </View>
         </ScrollView>
     )

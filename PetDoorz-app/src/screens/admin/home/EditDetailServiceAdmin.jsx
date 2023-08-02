@@ -61,7 +61,7 @@ export default function EditDetailServiceAdmin({ navigation, route }) {
                     <Picker.Item label="Vaccine" value="Vaccine" />
                 </Picker>
                 <TextInput mode="outlined" label={'Service Price'} inputMode="numeric" onChangeText={val => setPrice(val)} defaultValue={service.price + ""}></TextInput>
-                <Button mode="contained" style={{ borderRadius: 5, marginTop: 12 }} theme={{ colors: { primary: 'gray' } }} onPress={handleSubmit}>Add</Button>
+                <Button mode="contained" style={{ borderRadius: 5, marginTop: 12 }} theme={{ colors: { primary: '#48034F' } }} onPress={handleSubmit}>Add</Button>
             </View>
         </ScrollView>
     )

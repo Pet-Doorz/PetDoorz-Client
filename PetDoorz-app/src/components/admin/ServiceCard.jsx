@@ -22,7 +22,7 @@ export default function ServiceCard({ service }) {
                     <Text style={{ fontSize: 13, color: 'white', marginTop: 5 }}>Price: {currency(service.price)}</Text>
                 </View>
                 <View style={{ flexDirection: 'row', marginTop: 17 }}>
-                    <MaterialIcons name="keyboard-arrow-right" size={30} color="white" />
+                    <MaterialIcons name="keyboard-arrow-right" size={30} color="#91ff77" />
                 </View>
             </View>
         </TouchableOpacity>
@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
     },
     card: {
         height: 80,
-        backgroundColor: 'gray',
+        backgroundColor: '#48034F',
         marginBottom: 10,
         padding: 10,
         flexDirection: 'row'
