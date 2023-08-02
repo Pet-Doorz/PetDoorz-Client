@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar'
 import { SafeAreaView, ScrollView, StyleSheet, Text, TouchableHighlight, TouchableOpacity, View, Image } from 'react-native'
-import { ActivityIndicator, Button } from 'react-native-paper';
+import { ActivityIndicator, Dialog, Portal, PaperProvider, Button } from 'react-native-paper';
 import { FontAwesome } from '@expo/vector-icons';
 import { useDispatch, useSelector } from 'react-redux'
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -21,6 +21,16 @@ export default function UserSettingCustomer({ navigation }) {
   const handleLogout = async () => {
     await AsyncStorage.clear()
     dispatch(SET_ROLE(''))
+  }
+
+  const [logout, setLogout] = useState(false)
+
+  const showDialog = () => {
+    setLogout(true)
+  }
+
+  const hideDialog = () => {
+    setLogout(false)
   }
 
   useFocusEffect(
@@ -45,58 +55,74 @@ export default function UserSettingCustomer({ navigation }) {
   }
 
   return (
-    <SafeAreaView>
-      <ScrollView contentContainerStyle={{ alignItems: 'center' }}>
-        {/* Card container, header */}
-        <View style={[card.container, card.shadowProp]}>
-          <View style={{ flexDirection: 'row', gap: 15, alignItems: 'center', marginTop: 10 }}>
-            <View style={{ flex: 1 }}>
-              <Image source={{ uri: 'https://freewaysocial.com/wp-content/uploads/2020/02/why-good-facebook-profile-picture-matters-1024x656.png' }} style={styles.imageRound} />
-            </View>
-            <View style={{ flex: 3 }}>
-              <Text style={card.title}>{detail.fullName}</Text>
+    <PaperProvider>
+      <SafeAreaView>
+        <ScrollView contentContainerStyle={{ alignItems: 'center' }}>
+          {/* Dialog untuk logout */}
+          <Portal>
+            <Dialog visible={logout} onDismiss={() => hideDialog()}>
+              <Dialog.Title>Alert</Dialog.Title>
+              <Dialog.Content>
+                <Text variant="bodyMedium">Are you sure to Logout?</Text>
+              </Dialog.Content>
+              <Dialog.Actions>
+                <Button onPress={handleLogout}>Ok</Button>
+                <Button onPress={() => hideDialog()}>Cancel</Button>
+              </Dialog.Actions>
+            </Dialog>
+          </Portal>
 
-              <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: '100%', marginTop: 8 }}>
-                <Text style={card.balance}>Balance</Text>
-                <View style={{ flexDirection: 'row' }}>
-                  <Text style={card.balance}>{currency()}</Text>
-                  <TouchableHighlight style={{ height: 23, width: 23, backgroundColor: 'gray', alignItems: 'center', justifyContent: 'center' }}
-                    onPress={() => navigation.navigate('Customer Add Balance')}
-                  >
-                    <FontAwesome name="plus" size={20} color="white" />
-                  </TouchableHighlight>
-                </View>
+          {/* Card container, header */}
+          <View style={[card.container, card.shadowProp]}>
+            <View style={{ flexDirection: 'row', gap: 15, alignItems: 'center', marginTop: 10 }}>
+              <View style={{ flex: 1 }}>
+                <Image source={{ uri: 'https://freewaysocial.com/wp-content/uploads/2020/02/why-good-facebook-profile-picture-matters-1024x656.png' }} style={styles.imageRound} />
               </View>
+              <View style={{ flex: 3 }}>
+                <Text style={card.title}>{detail.fullName}</Text>
 
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: '100%', marginTop: 8 }}>
+                  <Text style={card.balance}>Balance</Text>
+                  <View style={{ flexDirection: 'row' }}>
+                    <Text style={card.balance}>{currency()}</Text>
+                    <TouchableHighlight style={{ height: 23, width: 23, backgroundColor: 'gray', alignItems: 'center', justifyContent: 'center' }}
+                      onPress={() => navigation.navigate('Customer Add Balance')}
+                    >
+                      <FontAwesome name="plus" size={20} color="white" />
+                    </TouchableHighlight>
+                  </View>
+                </View>
+
+              </View>
             </View>
+
           </View>
 
-        </View>
-
-        {/* Card container, body */}
-        <View style={[card.container, card.shadowProp]}>
-          <TouchableOpacity activeOpacity={0.8}>
-            <Text style={styles.menuTitle}>Settings</Text>
-            <View style={styles.horizontalMarker}></View>
-          </TouchableOpacity>
-          <TouchableOpacity activeOpacity={0.8} onPress={() => navigation.navigate('Customer Books')}>
-            <Text style={styles.menuTitle}>Bookings</Text>
-            <View style={styles.horizontalMarker}></View>
-          </TouchableOpacity>
-          <TouchableOpacity activeOpacity={0.8}>
-            <Text style={styles.menuTitle}>Favorites</Text>
-            <View style={styles.horizontalMarker}></View>
-          </TouchableOpacity>
-          <TouchableOpacity activeOpacity={0.8} onPress={() => navigation.navigate('Customer Chat List')}>
-            <Text style={styles.menuTitle}>Chats</Text>
-            <View style={styles.horizontalMarker}></View>
-          </TouchableOpacity>
-          <TouchableOpacity activeOpacity={0.8} onPress={handleLogout}>
-            <Text style={styles.menuTitle}>Logout</Text>
-          </TouchableOpacity>
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+          {/* Card container, body */}
+          <View style={[card.container, card.shadowProp]}>
+            <TouchableOpacity activeOpacity={0.8}>
+              <Text style={styles.menuTitle}>Settings</Text>
+              <View style={styles.horizontalMarker}></View>
+            </TouchableOpacity>
+            <TouchableOpacity activeOpacity={0.8} onPress={() => navigation.navigate('Customer Books')}>
+              <Text style={styles.menuTitle}>Bookings</Text>
+              <View style={styles.horizontalMarker}></View>
+            </TouchableOpacity>
+            <TouchableOpacity activeOpacity={0.8}>
+              <Text style={styles.menuTitle}>Favorites</Text>
+              <View style={styles.horizontalMarker}></View>
+            </TouchableOpacity>
+            <TouchableOpacity activeOpacity={0.8} onPress={() => navigation.navigate('Customer Chat List')}>
+              <Text style={styles.menuTitle}>Chats</Text>
+              <View style={styles.horizontalMarker}></View>
+            </TouchableOpacity>
+            <TouchableOpacity activeOpacity={0.8} onPress={showDialog}>
+              <Text style={styles.menuTitle}>Logout</Text>
+            </TouchableOpacity>
+          </View>
+        </ScrollView>
+      </SafeAreaView>
+    </PaperProvider>
   );
 }
 
