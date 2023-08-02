@@ -22,6 +22,10 @@ export default function RegisterAdmin({ navigation }) {
 
   const [location, setLocation] = useState({})
 
+  const handleSetLocation = (value) => {
+    console.log(value)
+  }
+
   useEffect(() => {
     if (userLocation) {
       setLocation({
@@ -41,36 +45,34 @@ export default function RegisterAdmin({ navigation }) {
     }
   }
 
-  // if (!userLocation.latitude) {
-  //   return (
-  //     <View style={ styles.container }>
-  //       <Text>No Location Detected!</Text>
-  //     </View>
-  //   )
-  // }
+  if (!userLocation.latitude) {
+    return (
+      <View style={ styles.container }>
+        <Text>No Location Detected!</Text>
+      </View>
+    )
+  }
 
   return (
-    <ScrollView style={{ marginTop: 100 }} contentContainerStyle={{ alignContent: 'center', alignItems: 'center' }}>
+    <ScrollView style={{ paddingTop: 50, height: 1000 }} contentContainerStyle={{ alignContent: 'center', alignItems: 'center' }}>
       <Text style={{ fontSize: 20, marginBottom: 10 }}>Hotel Register</Text>
       <TextInput label='Email' style={styles.textInput} onChangeText={email => setEmail(email)}></TextInput>
       <TextInput label='Password' onChangeText={password => setPassword(password)} secureTextEntry={eye ? false : true} style={styles.textInput} right={<TextInput.Icon icon="eye" onPress={handleEye} />}></TextInput>
       <TextInput label='Hotel Name' onChangeText={name => setName(name)} style={styles.textInput}></TextInput>
       <TextInput label='Hotel Logo' onChangeText={logo => setLogo(logo)} style={styles.textInput}></TextInput>
       <TextInput label='Hotel Image' onChangeText={image => setImage(image)} style={styles.textInput}></TextInput>
-      {/* <MapView
+      <MapView
         style={styles.map}
         region={location}
       >
         <Marker draggable
           coordinate={location}
-          onDragEnd={(e) => setLocation(e.nativeEvent.coordinate)}
+          onDragEnd={(e) => handleSetLocation(e.nativeEvent.coordinate)}
         />
-      </MapView> */}
-      <Button mode='contained' theme={{ colors: { primary: '#48034F' } }} onPress={handleRegister}>Register</Button>
-      <View>
+      </MapView>
+      <Button style={{ marginTop: 20 }} mode='contained' theme={{ colors: { primary: '#48034F' } }} onPress={handleRegister}>Register</Button>
         <Text style={{ marginTop: 15 }}>Already sign up?</Text>
         <Button style={{ marginTop: 0 }} onPress={() => navigation.navigate('Admin Login')}>Login</Button>
-      </View>
     </ScrollView>
   );
 }
@@ -79,8 +81,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center'
+    paddingVertical: 20,
+    marginTop: 50,
+    height: '100%'
   },
   textInput: {
     width: 250,

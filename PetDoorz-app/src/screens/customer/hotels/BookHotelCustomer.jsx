@@ -81,16 +81,16 @@ export default function BookHotelCustomer({ navigation, route }) {
   };
 
   useEffect(() => {
-    // const servicesTotal = Object.values(selectedServices).reduce(
-    //   (total, service) => total + (service.selected ? service.price : 0),
-    //   0
-    // );
+    const servicesTotal = Object.values(selectedServices).reduce(
+      (total, service) => total + (service.selected ? service.price : 0),
+      0
+    );
 
-    // const roomPrice = hotel.detailRoom.find((e) => e.id === selectedId);
-    // if (roomPrice) {
-    //   const newTotal = (roomPrice.price || 0) * totalPet + servicesTotal;
-    //   setTotal(newTotal);
-    // }
+    const roomPrice = hotel.detailRoom.find((e) => e.id === selectedId);
+    if (roomPrice) {
+      const newTotal = (roomPrice.price || 0) * totalPet + servicesTotal;
+      setTotal(newTotal);
+    }
   }, [selectedServices, selectedId, totalPet]);
 
   useEffect(() => {
@@ -136,20 +136,22 @@ export default function BookHotelCustomer({ navigation, route }) {
     const [roomPrice] = hotel.detailRoom.filter((e) => e.id === selectedId);
     const grandTotal = totalPet * roomPrice.price * amountDate
     const access_token = await AsyncStorage.getItem('customer_access_token')
-    dispatch(createBooking({
-      grandTotal,
-      checkIn: checkin,
-      checkOut: checkout,
-      access_token,
-      totalPet,
-      RoomId: selectedId
-    }))
-      .then((result) => {
-        console.log(result)
-        buttonAlert()
-      }).catch((err) => {
-        console.log(err)
-      });
+
+    console.log(selectedServices)
+    // dispatch(createBooking({
+    //   grandTotal,
+    //   checkIn: checkin,
+    //   checkOut: checkout,
+    //   access_token,
+    //   totalPet,
+    //   RoomId: selectedId
+    // }))
+    //   .then((result) => {
+    //     console.log(result)
+    //     buttonAlert()
+    //   }).catch((err) => {
+    //     console.log(err)
+    //   });
   };
 
   const handleRoomId = (id) => {
