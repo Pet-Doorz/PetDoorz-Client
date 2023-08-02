@@ -15,6 +15,7 @@ import { FontAwesome } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
 import { getFilteredHotel } from "../../../store/actions/actionHotel";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { SET_CHECKIN, SET_CHECKOUT, SET_TOTALPET } from "../../../store/actions/actionCustomer";
 
 export default function ListHotelCustomer({ navigation }) {
   const date = new Date(); // dapetin tanggal
@@ -35,7 +36,7 @@ export default function ListHotelCustomer({ navigation }) {
     DateTimePickerAndroid.open({
       value: checkin,
       onChange: async (_, selectedDate) => {
-        setCheckout(selectedDate);
+        setCheckin(selectedDate);
         await AsyncStorage.setItem(
           "checkin",
           selectedDate.toLocaleDateString("en-GB")
@@ -77,6 +78,10 @@ export default function ListHotelCustomer({ navigation }) {
       const long = await AsyncStorage.getItem("longitude");
       const lat = await AsyncStorage.getItem("latitude");
       await AsyncStorage.setItem("totalPet", totalPet);
+      dispatch(SET_CHECKIN(checkin))
+      dispatch(SET_CHECKOUT(checkout))
+      dispatch(SET_TOTALPET(totalPet))
+
       dispatch(
         //distance, total pet masih hardcode
         getFilteredHotel({

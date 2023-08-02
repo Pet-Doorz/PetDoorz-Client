@@ -14,13 +14,15 @@ export default function DetailHotelCustomer({ navigation, route }) {
     const [visible, setIsVisible] = useState(false)
     const [imageIndex, setImageIndex] = useState(0)
 
-    console.log(hotel.images)
-
     // loading dulu sebelum dapet detail
     if (!hotel.location) {
         return <View style={{ justifyContent: 'center', flex: 1 }}>
             <ActivityIndicator size={'large'}></ActivityIndicator>
         </View>
+    }
+
+    const handleChatHotel = () => {
+        console.log(hotel.email)
     }
 
     const handleBookScreen = () => {
@@ -75,7 +77,6 @@ export default function DetailHotelCustomer({ navigation, route }) {
                     <View style={{ flexDirection: 'row', gap: 15 }}>
                         {
                             newImages.map((e, i) => { // ini galerinya, yang bisa trigger imageviewnya
-                                console.log(e)
                                 return (
                                     <TouchableOpacity key={e.id} activeOpacity={0.8} onPress={() => onSelect(i)}>
                                         <Image source={e} style={{ width: 100, height: 100 }} />
@@ -131,7 +132,7 @@ export default function DetailHotelCustomer({ navigation, route }) {
             {/* Button buat jadwal, chat */}
             <View style={{ flexDirection: 'row', paddingBottom: 50, marginTop: 12, gap: 10 }}>
                 <Button mode='contained' theme={{ colors: { primary: '#48034F' } }} onPress={handleBookScreen}>Book Now</Button>
-                <Button mode='contained' theme={{ colors: { primary: '#48034F' } }}>Chat</Button>
+                <Button mode='contained' theme={{ colors: { primary: '#48034F' } }} onPress={handleChatHotel}>Chat</Button>
             </View>
             <StatusBar style="auto" />
         </ScrollView>

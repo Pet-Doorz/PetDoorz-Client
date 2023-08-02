@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   View,
   Image,
+  Alert
 } from "react-native";
 import {
   Button,
@@ -22,6 +23,25 @@ import { createBooking } from "../../../store/actions/actionCustomer";
 
 export default function BookHotelCustomer({ navigation, route }) {
   const { id } = route.params;
+
+  // date diff
+  const checkin = useSelector((state) => state.customer.checkin)
+  const checkout = useSelector((state) => state.customer.checkout)
+  const totalPet = useSelector((state) => state.customer.totalPet)
+
+  const checkinDate = new Date(checkin).toLocaleDateString()
+  const checkoutDate = new Date(checkout).toLocaleDateString()
+
+  const Difference_In_Time = checkout.getTime() - checkin.getTime();
+  const amountDate = Difference_In_Time / (1000 * 3600 * 24)
+  // date diff
+
+  // button alert
+  const buttonAlert = () =>
+    Alert.alert('Success', 'Successfully Booked', [
+      { text: 'OK', onPress: () => navigation.navigate('User Setting Home') },
+    ]);
+
   const [groom, setGroom] = useState(false);
   const [vaccine, setVaccine] = useState(false);
   const [pet, setPet] = useState(3); // dapet dari local storage
@@ -68,10 +88,10 @@ export default function BookHotelCustomer({ navigation, route }) {
 
     const roomPrice = hotel.detailRoom.find((e) => e.id === selectedId);
     if (roomPrice) {
-      const newTotal = (roomPrice.price || 0) * pet + servicesTotal;
+      const newTotal = (roomPrice.price || 0) * totalPet * amountDate + (servicesTotal * totalPet);
       setTotal(newTotal);
     }
-  }, [selectedServices, selectedId, pet]);
+  }, [selectedServices]);
 
   useEffect(() => {
     setSelectedServices((prev) => ({
@@ -114,19 +134,11 @@ export default function BookHotelCustomer({ navigation, route }) {
   // hadnle tomobl book
   const handleRoomId = (id) => {
     setSelectedId(id);
+    setSelectedServices({})
     const [roomPrice] = hotel.detailRoom.filter((e) => e.id === id);
-    let tempTotal = roomPrice.price * pet;
+    let tempTotal = roomPrice.price * totalPet * amountDate;
     setTotal(tempTotal);
   };
-
-  const services = [
-    {
-      name: "Grooming",
-    },
-    {
-      name: "Vaccine",
-    },
-  ];
 
   const changeDateFormat = async (inputDate) => {
     if (!inputDate) {
@@ -173,7 +185,13 @@ export default function BookHotelCustomer({ navigation, route }) {
         access_token: token,
       };
 
-      dispatch(createBooking(bookingData));
+      dispatch(createBooking(bookingData))
+        .then((result) => {
+          console.log(result)
+          buttonAlert()
+        }).catch((err) => {
+          console.log(err)
+        });
       setTimeout(() => {}, 1500);
     } catch (error) {
       console.error("Error occurred while booking:", error.message);
@@ -202,20 +220,20 @@ export default function BookHotelCustomer({ navigation, route }) {
         {/* Diatasnya card */}
         <View style={[styles.card, styles.shadowProp]}>
           {/* Title card / nama hotel */}
-          <Text style={styles.bookTitle}>Alpha Pet Hotel</Text>
+          <Text style={styles.bookTitle}>{hotel.name}</Text>
           <View style={styles.horizontalMarker} />
           {/* Printilan */}
           <View style={styles.bookRow}>
             <Text style={styles.bookTextContent}>Date Checkin</Text>
-            <Text style={styles.bookTextContent}>27 / 8 / 2023</Text>
+            <Text style={styles.bookTextContent}>{checkinDate}</Text>
           </View>
           <View style={styles.bookRow}>
             <Text style={styles.bookTextContent}>Date Checkout</Text>
-            <Text style={styles.bookTextContent}>28 / 8 / 2023</Text>
+            <Text style={styles.bookTextContent}>{checkoutDate}</Text>
           </View>
           <View style={styles.bookRow}>
             <Text style={styles.bookTextContent}>Total Pet</Text>
-            <Text style={styles.bookTextContent}>3</Text>
+            <Text style={styles.bookTextContent}>{totalPet}</Text>
           </View>
 
           {/* Choose Room, roomcard bisa jadi component */}
@@ -261,7 +279,7 @@ export default function BookHotelCustomer({ navigation, route }) {
                   </View>
                   <View>
                     {/* Price bisa diganti */}
-                    <Text>Rp {service?.price}</Text>
+                    <Text>Rp {+service?.price * totalPet}</Text>
                   </View>
                 </View>
               );
