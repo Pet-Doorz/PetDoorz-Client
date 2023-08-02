@@ -4,11 +4,11 @@ import { Button, TextInput } from "react-native-paper"
 import { FontAwesome } from '@expo/vector-icons'
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { postNewRoom } from "../../../store/actions/actionAdmin";
+import { detailAdmin, postNewRoom } from "../../../store/actions/actionAdmin";
 import { uploadFile } from "../../../../lib/imagekit"
 import * as ImagePicker from 'expo-image-picker';
 
-export default function AddRoomAdmin() {
+export default function AddRoomAdmin({ navigation }) {
     const dispatch = useDispatch()
 
     const [ name, setName ] = useState("");
@@ -19,14 +19,18 @@ export default function AddRoomAdmin() {
     const [ imageFile, setImageFile ] = useState([]);
 
     async function handleSubmit() {
-        let formData = {
-            name, description, capacity, price
-        }
+        let formData = { name, description, capacity, price }
         try {
             let resUpload = await uploadFileToImagekit(imageFile[0])
             if (!resUpload.url) throw { name: "Upload Error" }
             formData.imageUrl = resUpload.url
             dispatch(postNewRoom(formData))
+            .then(() => {
+                dispatch(detailAdmin())
+            })
+            .then((res) => {
+                navigation.navigate('Home Admin Stack')
+            })
         } catch (error) {
             console.log(error)
         }
@@ -101,10 +105,10 @@ export default function AddRoomAdmin() {
                     <TextInput mode="outlined" label={'Room Image'} style={{ flex: 2 }} disabled value={imageUri}></TextInput>
                     <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', gap: 20, marginStart: 20, justifyContent: "center" }}>
                         <TouchableOpacity activeOpacity={0.8} onPress={openCamera}>
-                            <FontAwesome name="camera" size={30} color="black" />
+                            <FontAwesome name="camera" size={25} color="#48034F" />
                         </TouchableOpacity>
                         <TouchableOpacity activeOpacity={0.8} onPress={openFileSelector}>
-                            <FontAwesome name="upload" size={30} color="black" />
+                            <FontAwesome name="upload" size={25} color="#48034F" />
                         </TouchableOpacity>
                     </View>
                 </View>

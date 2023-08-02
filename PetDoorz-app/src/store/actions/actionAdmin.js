@@ -34,6 +34,9 @@ export const loginAdmin = (payload) => {
 export const detailAdmin = (access_token) => {
     return async (dispatch) => {
         try {
+            if (!access_token) {
+                access_token = await AsyncStorage.getItem('admin_access_token')
+            }
             const { data } = await axios({
                 method: "get",
                 url: baseUrl + '/detail',
@@ -57,6 +60,95 @@ export const postNewRoom = (payload) => {
                 url: baseUrl + "/rooms",
                 headers: { access_token },
                 data: { name, description, capacity, price, imageUrl }
+            })
+            return data
+        } catch (error) {
+            throw error
+        }
+    }
+}
+
+export const editRoom = (payload, id) => {
+    return async(dispatch) => {
+        try {
+            const access_token = await AsyncStorage.getItem('admin_access_token')
+            const { name, description, capacity, price, imageUrl } = payload
+            const { data } = await axios({
+                method: "put",
+                url: baseUrl + "/rooms/" + id,
+                headers: { access_token },
+                data: { name, description, capacity, price, imageUrl }
+            })
+            console.log(data)
+            return data
+        } catch (error) {
+            throw error
+        }
+    }
+}
+
+export const deleteRoom = (id) => {
+    return async(dispatch) => {
+        try {
+            const access_token = await AsyncStorage.getItem('admin_access_token')
+            const { data } = await axios({
+                method: "delete",
+                url: baseUrl + "/rooms/" + id,
+                headers: { access_token },
+            })
+            console.log(data)
+            return data
+        } catch (error) {
+            throw error
+        }
+    }
+}
+
+export const postNewService = (payload) => {
+    return async(dispatch) => {
+        try {
+            const access_token = await AsyncStorage.getItem('admin_access_token')
+            const { name, price } = payload
+            const { data } = await axios({
+                method: "post",
+                url: baseUrl + "/services",
+                headers: { access_token },
+                data: { name, price }
+            })
+            return data
+        } catch (error) {
+            throw error
+        }
+    }
+}
+
+export const editService = (payload, id) => {
+    return async(dispatch) => {
+        try {
+            const access_token = await AsyncStorage.getItem('admin_access_token')
+            const { name, price } = payload
+            const { data } = await axios({
+                method: "put",
+                url: baseUrl + "/services/" + id,
+                headers: { access_token },
+                data: { name, price }
+            })
+            console.log(data)
+            return data
+        } catch (error) {
+            throw error
+        }
+    }
+}
+
+export const deleteService = (id) => {
+    return async(dispatch) => {
+        try {
+            const access_token = await AsyncStorage.getItem('admin_access_token')
+            const { data } = await axios({
+                method: "delete",
+                url: baseUrl + "/services/" + id,
+                headers: { access_token }
             })
             return data
         } catch (error) {

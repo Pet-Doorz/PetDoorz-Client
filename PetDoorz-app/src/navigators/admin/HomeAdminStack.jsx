@@ -3,6 +3,7 @@ import HomeAdmin from '../../screens/admin/home/HomeAdmin'
 import AddRoomAdmin from '../../screens/admin/home/AddRoomAdmin'
 import AddServiceAdmin from '../../screens/admin/home/AddServiceAdmin'
 import EditDetailRoomAdmin from '../../screens/admin/home/EditDetailRoomAdmin'
+import EditDetailServiceAdmin from '../../screens/admin/home/EditDetailServiceAdmin'
 
 const Stack = createNativeStackNavigator()
 
@@ -13,6 +14,7 @@ export default function HomeAdminStack() {
             <Stack.Screen name="Add Room Admin" component={AddRoomAdmin} options={{ headerShown: false }} />
             <Stack.Screen name="Add Service Admin" component={AddServiceAdmin} options={{ headerShown: false }} />
             <Stack.Screen name="Edit Room Admin" component={EditDetailRoomAdmin} options={{ headerShown: false }} />
+            <Stack.Screen name="Edit Service Admin" component={EditDetailServiceAdmin} options={{ headerShown: false }} />
         </Stack.Navigator>
     )
 }
