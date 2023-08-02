@@ -2,7 +2,9 @@ import {
   BASE_URL,
   SET_CUSTOMER_DATA,
   SET_DETAIL_DATA,
-  SET_CHECKIN_DATA, SET_CHECKOUT_DATA, SET_TOTALPET_DATA
+  SET_CHECKIN_DATA,
+  SET_CHECKOUT_DATA,
+  SET_TOTALPET_DATA,
 } from "../actions/actionType";
 import axios from "axios";
 
@@ -23,23 +25,23 @@ const SET_DETAIL = (payload) => {
 export const SET_CHECKIN = (payload) => {
   return {
     type: SET_CHECKIN_DATA,
-    payload
-  }
-}
+    payload,
+  };
+};
 
 export const SET_CHECKOUT = (payload) => {
   return {
     type: SET_CHECKOUT_DATA,
-    payload
-  }
-}
+    payload,
+  };
+};
 
 export const SET_TOTALPET = (payload) => {
   return {
     type: SET_TOTALPET_DATA,
-    payload
-  }
-}
+    payload,
+  };
+};
 
 const baseUrl = BASE_URL + "/customers";
 
@@ -138,19 +140,36 @@ export const createBooking = (payload) => {
 export const updateStatusDone = (payload) => {
   return async () => {
     try {
-      const { id, access_token } = payload
+      const { id, access_token } = payload;
       const { data } = await axios({
         method: "patch",
         url: BASE_URL + `/bookings/${id}/done`,
         headers: {
-            access_token
-        }
-    })
+          access_token,
+        },
+      });
 
-    return data
+      return data;
     } catch (error) {
       console.log(error.response.data.message);
       throw error.response.data.message;
     }
+  };
+};
+
+export const getHotelById = async (payload) => {
+  try {
+    const { access_token, id } = payload;
+    let { data } = await axios({
+      method: "get",
+      url: baseUrl + `/hotel/${id}`,
+      headers: {
+        access_token,
+      },
+    });
+    return data.email;
+  } catch (error) {
+    console.log(error);
+    throw error.response.data.message;
   }
-}
+};
