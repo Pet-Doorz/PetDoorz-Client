@@ -13,4 +13,4 @@ export const SET_ALL_HOTEL = "customer/setAllHotelData";
 
 export const SET_ADMIN_DATA = "admin/setAdminDetailData";
 
-export const BASE_URL = "https://87bd-103-195-58-48.ngrok-free.app";
+export const BASE_URL = "https://d9a5-2001-448a-4001-b897-f552-a173-d26c-b1b5.ngrok-free.app";

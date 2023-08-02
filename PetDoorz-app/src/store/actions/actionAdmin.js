@@ -31,6 +31,25 @@ export const loginAdmin = (payload) => {
     }
 }
 
+export const registerAdmin = (payload) => {
+    return async () => {
+        try {
+            const { email, password, name, location,
+                logoHotel, description, address, phoneNumber, images } = payload;
+                const { data } = await axios({
+                    method: "post",
+                    url: baseUrl + "/register",
+                    data: { email, password, name, location,
+                        logoHotel, description, address, phoneNumber, images }
+                });
+
+                return data;
+        } catch (error) {
+            throw error
+        }
+    }
+}
+
 export const detailAdmin = (access_token) => {
     return async (dispatch) => {
         try {
