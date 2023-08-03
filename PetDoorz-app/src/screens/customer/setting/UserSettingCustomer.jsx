@@ -14,8 +14,9 @@ export default function UserSettingCustomer({ navigation }) {
   const detail = useSelector((state) => state.customer.detailCustomer)
   const [loading, setLoading] = useState(true)
 
-  const currency = () => {
-    return new Intl.NumberFormat('id-Id', { style: 'currency', currency: 'IDR' }).format(detail.balance)
+  const currency = (value) => {
+    const currency = new Intl.NumberFormat('id-Id', { style: 'currency', currency: 'IDR' }).format(value)
+    return currency.split(',')[0]
   }
 
   const handleLogout = async () => {
@@ -91,7 +92,7 @@ export default function UserSettingCustomer({ navigation }) {
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: '100%', marginTop: 8 }}>
                   <Text style={card.balance}>Balance</Text>
                   <View style={{ flexDirection: 'row' }}>
-                    <Text style={card.balance}>{currency()}</Text>
+                    <Text style={card.balance}>{currency(detail.balance)}</Text>
                     <TouchableHighlight style={{ height: 23, width: 23, backgroundColor: 'gray', alignItems: 'center', justifyContent: 'center' }}
                       onPress={() => navigation.navigate('Customer Add Balance')}
                     >

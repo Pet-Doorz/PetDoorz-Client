@@ -42,6 +42,11 @@ export default function BookDetail({ route, navigation }) {
         }
     ]
 
+    const currency = (value) => {
+        const currency = new Intl.NumberFormat('id-Id', { style: 'currency', currency: 'IDR' }).format(value)
+        return currency.split(',')[0]
+    }
+
     return (
         <PaperProvider>
             <ScrollView>
@@ -103,7 +108,7 @@ export default function BookDetail({ route, navigation }) {
                         </View>
                         <View style={styles.contentRow}>
                             <Text>Total: </Text>
-                            <Text>Rp. {detail.grandTotal}</Text>
+                            <Text>{currency(detail.grandTotal)}</Text>
                         </View>
                         <View style={styles.contentRow}>
                             <Text>Status: </Text>

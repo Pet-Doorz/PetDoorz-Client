@@ -113,6 +113,12 @@ export default function ListHotelCustomer({ navigation }) {
     }
   };
 
+  // currency
+  const currency = (value) => {
+    const currency = new Intl.NumberFormat('id-Id', { style: 'currency', currency: 'IDR' }).format(value)
+    return currency.split(',')[0]
+  }
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView>
@@ -204,7 +210,7 @@ export default function ListHotelCustomer({ navigation }) {
                       <Text
                         style={{ fontSize: 13, color: "white", marginTop: 5 }}
                       >
-                        Start From: {"IDR " + minPrice}
+                        Start From: {currency(minPrice)}
                       </Text>
                       <Text
                         style={{

@@ -3,16 +3,22 @@ import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-nati
 import { Button, Modal, PaperProvider, Portal } from 'react-native-paper'
 
 export default function RoomCard({ handleRoomId, selectedId, id, room, showModal }) {
- 
+    const currency = (value) => {
+        const currency = new Intl.NumberFormat('id-Id', { style: 'currency', currency: 'IDR' }).format(value)
+        return currency.split(',')[0]
+    }
 
     return (
         <>
             {/* Modal */}
-            
+
 
             {/* Room card */}
             <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
-                <Button onPress={() => showModal(id)}>See Description</Button>
+                {/* <Button onPress={() => showModal(id)}>See Description</Button> */}
+                <TouchableOpacity style={{ paddingTop:0 }} onPress={() => showModal(id)}>
+                    <Text style={{ fontWeight: '400', fontSize: 15, color: '#48034F' }}>See Description</Text>
+                </TouchableOpacity>
             </View>
             <TouchableOpacity style={[styles.roomCard, selectedId === id ? card.active : '']} activeOpacity={0.87}
                 onPress={() => handleRoomId(id)}
@@ -22,7 +28,7 @@ export default function RoomCard({ handleRoomId, selectedId, id, room, showModal
                     <Text style={card.textContent}>Available: {room.currentCapacity}</Text>
                 </View>
                 <View>
-                    <Text style={card.priceText}>Rp. {room.price}</Text>
+                    <Text style={card.priceText}>{currency(room.price)}</Text>
                 </View>
             </TouchableOpacity>
         </>

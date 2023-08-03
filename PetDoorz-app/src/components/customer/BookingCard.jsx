@@ -7,6 +7,11 @@ export default function BookingCard({ booking, handleBookingDetails, handleChatH
     //     console.log(booking.id, booking.Room.HotelId, booking.Room.Hotel.name)
     // }
 
+    const currency = (value) => {
+        const currency = new Intl.NumberFormat('id-Id', { style: 'currency', currency: 'IDR' }).format(value)
+        return currency.split(',')[0]
+    }
+
     return (
         <TouchableOpacity activeOpacity={0.7} style={styles.shadowProp} onPress={() => { handleBookingDetails(booking.id) }}>
             <View style={[styles.card]}>
@@ -23,21 +28,21 @@ export default function BookingCard({ booking, handleBookingDetails, handleChatH
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                         <View>
                             <Text style={{ fontSize: 13, color: 'black', marginTop: 5, fontWeight: '300' }}>Total Pet: {booking.totalPet}</Text>
-                            <Text style={{ fontSize: 13, color: 'black', fontWeight: '300', marginTop: 3 }}>Rp. {booking.grandTotal}</Text>
+                            <Text style={{ fontSize: 13, color: 'black', fontWeight: '300', marginTop: 3 }}>{currency(booking.grandTotal)}</Text>
                         </View>
                         <View style={{ justifyContent: 'flex-end' }}>
                             <View style={{ flexDirection: 'row', gap: 10 }}>
                                 {
-                                    booking.status === 'process' ? 
-                                    <TouchableOpacity style={styles.buttonCall} activeOpacity={0.5} onPress={() => console.log('vidcall')}>
-                                        <Text>Video Call</Text>
-                                    </TouchableOpacity>  : ''
+                                    booking.status === 'process' ?
+                                        <TouchableOpacity style={styles.buttonCall} activeOpacity={0.5} onPress={() => console.log('vidcall')}>
+                                            <Text>Video Call</Text>
+                                        </TouchableOpacity> : ''
                                 }
                                 {
-                                    booking.status === 'done' && res.length == 0 ? 
-                                    (<TouchableOpacity style={styles.buttonCall} activeOpacity={0.5} onPress={() => handleReview(booking.id, booking.Room.HotelId, booking.Room.Hotel.name)}>
-                                        <Text>Review</Text>
-                                    </TouchableOpacity>) : ''
+                                    booking.status === 'done' && res.length == 0 ?
+                                        (<TouchableOpacity style={styles.buttonCall} activeOpacity={0.5} onPress={() => handleReview(booking.id, booking.Room.HotelId, booking.Room.Hotel.name)}>
+                                            <Text>Review</Text>
+                                        </TouchableOpacity>) : ''
                                 }
                                 <TouchableOpacity style={styles.buttonCall} activeOpacity={0.5} onPress={() => handleChatHotel(booking.Room.HotelId)}>
                                     <Text>Chat</Text>

@@ -15,6 +15,7 @@ import {
   Modal,
   PaperProvider,
   Portal,
+  Dialog
 } from "react-native-paper";
 import RoomCard from "../../../components/customer/RoomCard";
 import { useDispatch, useSelector } from "react-redux";
@@ -23,6 +24,12 @@ import { createBooking } from "../../../store/actions/actionCustomer";
 
 export default function BookHotelCustomer({ navigation, route }) {
   const { id } = route.params;
+
+  // ubah currency
+  const currency = (value) => {
+    const currency = new Intl.NumberFormat('id-Id', { style: 'currency', currency: 'IDR' }).format(value)
+    return currency.split(',')[0]
+  }
 
   // date diff
   const checkin = useSelector((state) => state.customer.checkin)
@@ -51,6 +58,12 @@ export default function BookHotelCustomer({ navigation, route }) {
   const [hotel] = data.filter((e) => e.id === id);
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
+
+  // handle dialog
+  const [dialogVis, setDialogVis] = useState(false)
+
+  const showDialog = () => setDialogVis(true)
+  const hideDialog = () => setDialogVis(false)
 
   const [selectedServices, setSelectedServices] = useState({
     groom: {
@@ -192,7 +205,7 @@ export default function BookHotelCustomer({ navigation, route }) {
         }).catch((err) => {
           console.log(err)
         });
-      setTimeout(() => {}, 1500);
+      setTimeout(() => { }, 1500);
     } catch (error) {
       console.error("Error occurred while booking:", error.message);
     } finally {
@@ -215,7 +228,21 @@ export default function BookHotelCustomer({ navigation, route }) {
           ></Image>
           <Text>{desc.description}</Text>
         </Modal>
+
+        {/* Dialog */}
+        <Dialog visible={dialogVis} onDismiss={hideDialog}>
+          <Dialog.Title>Alert</Dialog.Title>
+          <Dialog.Content>
+            <Text variant="bodyMedium">Proceed checkout with total {currency(total)}</Text>
+          </Dialog.Content>
+          <Dialog.Actions>
+            <Button onPress={handleBooking}>Ok</Button>
+            <Button onPress={hideDialog}>Cancel</Button>
+          </Dialog.Actions>
+        </Dialog>
       </Portal>
+
+
       <ScrollView contentContainerStyle={{ alignItems: "center" }}>
         {/* Diatasnya card */}
         <View style={[styles.card, styles.shadowProp]}>
@@ -279,7 +306,7 @@ export default function BookHotelCustomer({ navigation, route }) {
                   </View>
                   <View>
                     {/* Price bisa diganti */}
-                    <Text>Rp {+service?.price * totalPet}</Text>
+                    <Text>{currency(+service?.price * totalPet)}</Text>
                   </View>
                 </View>
               );
@@ -297,7 +324,7 @@ export default function BookHotelCustomer({ navigation, route }) {
               }}
             >
               <Text style={card.total}>Grand Total</Text>
-              <Text style={card.total}>Rp. {total} </Text>
+              <Text style={card.total}>{currency(total)}</Text>
             </View>
           </View>
 
@@ -305,7 +332,7 @@ export default function BookHotelCustomer({ navigation, route }) {
             mode="contained"
             style={{ marginTop: 15 }}
             theme={{ colors: { primary: "#48034F" } }}
-            onPress={handleBooking}
+            onPress={showDialog}
           >
             Book
           </Button>
