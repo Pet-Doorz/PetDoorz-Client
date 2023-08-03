@@ -17,8 +17,9 @@ export default function AdminSetting({ navigation }) {
     const detail = useSelector((state) => state.admin.detailAdmin)
 
 
-    const currency = () => {
-        return new Intl.NumberFormat('id-Id', { style: 'currency', currency: 'IDR' }).format(detail.balance)
+    const currency = (value) => {
+        const currency = new Intl.NumberFormat('id-Id', { style: 'currency', currency: 'IDR' }).format(value)
+        return currency.split(',')[0]
     }
 
     useFocusEffect(
@@ -107,7 +108,7 @@ export default function AdminSetting({ navigation }) {
                     <View style={[card.container, card.shadowProp]}>
                         <View style={{ flexDirection: 'row', gap: 15, alignItems: 'center', marginTop: 10 }}>
                             <View style={{ flex: 1 }}>
-                                <Image source={{ uri: 'https://freewaysocial.com/wp-content/uploads/2020/02/why-good-facebook-profile-picture-matters-1024x656.png' }} style={styles.imageRound} />
+                                <Image source={{ uri: detail.logoHotel }} style={styles.imageRound} />
                             </View>
                             <View style={{ flex: 3 }}>
                                 <Text style={card.title}>{detail.name}</Text>
@@ -115,7 +116,7 @@ export default function AdminSetting({ navigation }) {
                                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: '100%', marginTop: 8 }}>
                                     <Text style={card.balance}>Balance</Text>
                                     <View style={{ flexDirection: 'row', gap: 10 }}>
-                                        <Text style={card.balance}>{currency()}</Text>
+                                        <Text style={card.balance}>{currency(detail.balance)}</Text>
                                         <TouchableHighlight style={{ height: 23, width: 23, backgroundColor: 'gray', alignItems: 'center', justifyContent: 'center' }}>
                                             <FontAwesome name="minus" size={20} color="white" />
                                         </TouchableHighlight>
@@ -191,7 +192,9 @@ const styles = StyleSheet.create({
     imageRound: {
         width: 68,
         height: 68,
-        borderRadius: 100
+        borderRadius: 100,
+        borderWidth: 2,
+        borderColor: '#48034F'
     },
 })
 
@@ -210,7 +213,8 @@ const card = StyleSheet.create({
     },
     title: {
         fontSize: 20,
-        fontWeight: '600'
+        fontWeight: '600',
+        color: "#48034F"
     },
     balance: {
         fontSize: 16,
