@@ -73,6 +73,23 @@ export const loginCustomer = (payload) => {
   };
 };
 
+export const registerCustomer = (payload) => {
+  return async () => {
+    try {
+      const { email, password, fullName, phoneNumber } = payload;
+      const { data } = await axios({
+        method: "post",
+        url: baseUrl,
+        data: { email, password, fullName, phoneNumber }
+      })
+
+      return data
+    } catch (error) {
+      throw error.response.data.message
+    }
+  }
+}
+
 export const detailCustomer = (access_token) => {
   return async (dispatch) => {
     try {
