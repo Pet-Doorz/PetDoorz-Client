@@ -59,3 +59,22 @@ export const getAllHotel = () => {
     }
   }
 }
+
+export const updateStatusHotel = (access_token) => {
+  return async () => {
+    try {
+      const { data } = await axios({
+        method: "patch",
+        url:
+          baseUrl,
+        headers: {
+          access_token
+        },
+      });
+
+      return data
+    } catch (error) {
+      throw error
+    }
+  }
+}

@@ -53,7 +53,7 @@ export default function RegisterCustomer({ navigation }) {
       <TextInput label='Email' style={styles.textInput} onChangeText={email => setEmail(email)}></TextInput>
       <TextInput label='Password' onChangeText={password => setPassword(password)} secureTextEntry={eye ? false : true} style={styles.textInput} right={<TextInput.Icon icon="eye" onPress={handleEye} />}></TextInput>
       <TextInput label='Full Name' onChangeText={name => setName(name)} style={styles.textInput}></TextInput>
-      <TextInput label='Hotel Phone Number' onChangeText={phoneNumber => setPhoneNumber(phoneNumber)} style={styles.textInput}></TextInput>
+      <TextInput label='Phone Number' onChangeText={phoneNumber => setPhoneNumber(phoneNumber)} style={styles.textInput}></TextInput>
 
       <Button mode='contained' theme={{ colors: { primary: '#48034F' } }} onPress={handleRegister} style={{ marginTop: 40 }}>Register</Button>
       <View style={{marginBottom: 50}}>

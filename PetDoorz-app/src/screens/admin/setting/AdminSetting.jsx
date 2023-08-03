@@ -8,6 +8,7 @@ import { SET_ROLE } from '../../../store/actions/actionUser'
 import { useState, useCallback } from 'react'
 import { useFocusEffect } from '@react-navigation/native'
 import { detailAdmin } from '../../../store/actions/actionAdmin'
+import { updateStatusHotel } from '../../../store/actions/actionHotel'
 
 
 export default function AdminSetting({ navigation }) {
@@ -60,10 +61,22 @@ export default function AdminSetting({ navigation }) {
         }
     }
 
-    const handleStatusHotel = () => {
-        // Logic handleStatus Hotel
-        console.log('Active hotel!')
-        setVisible(false)
+    const handleStatusHotel = async () => {
+        const access_token = await AsyncStorage.getItem('admin_access_token')
+        dispatch(updateStatusHotel(access_token))
+            .then((result) => {
+                console.log(result)
+                return dispatch(detailAdmin(access_token))
+            })
+            .then((result) => {
+                console.log(result)
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+            .finally((_) => {
+                setVisible(false)
+            })
     }
 
     if (loading) {
@@ -81,7 +94,7 @@ export default function AdminSetting({ navigation }) {
                         <Dialog visible={visible} onDismiss={() => hideDialog('status')}>
                             <Dialog.Title>Alert</Dialog.Title>
                             <Dialog.Content>
-                                <Text variant="bodyMedium">Set hotel to Active?</Text>
+                                <Text variant="bodyMedium">Set hotel to {detail.status == 'active' ? 'Inactive' : 'Active'}?</Text>
                             </Dialog.Content>
                             <Dialog.Actions>
                                 <Button onPress={handleStatusHotel}>Ok</Button>
@@ -111,7 +124,12 @@ export default function AdminSetting({ navigation }) {
                                 <Image source={{ uri: detail.logoHotel }} style={styles.imageRound} />
                             </View>
                             <View style={{ flex: 3 }}>
-                                <Text style={card.title}>{detail.name}</Text>
+                                <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 12, alignItems: 'center' }}>
+                                    <Text style={card.title}>{detail.name}</Text>
+                                    <Button onPress={() => showDialog('status')} mode='contained' style={{ borderRadius: 5 }} theme={{ colors: { primary: "#48034F" } }}>{
+                                        detail.status === 'active' ? 'Inactive' : 'Active'
+                                    }</Button>
+                                </View>
 
                                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: '100%', marginTop: 8 }}>
                                     <Text style={card.balance}>Balance</Text>

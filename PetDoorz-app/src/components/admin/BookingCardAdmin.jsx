@@ -84,14 +84,7 @@ export default function BookingCardAdmin({
                   >
                     <Text>Video Call</Text>
                   </TouchableOpacity>
-                ) : booking.status === "done" ? (
-                  <TouchableOpacity
-                    style={styles.buttonCall}
-                    activeOpacity={0.5}
-                  >
-                    <Text>Review</Text>
-                  </TouchableOpacity>
-                ) : (
+                )  : (
                   ""
                 )}
                 <TouchableOpacity
