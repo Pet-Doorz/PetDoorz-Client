@@ -1,7 +1,8 @@
 import { View, Text, ScrollView, StyleSheet, TouchableOpacity } from "react-native"
 import { useSelector } from "react-redux"
 import BookingCardAdmin from "../../../components/admin/BookingCardAdmin"
-
+import { useState } from "react"
+import { Picker } from '@react-native-picker/picker'
 
 export default function BooksAdmin({ navigation }) {
     // get hotel bookings
@@ -25,13 +26,46 @@ export default function BooksAdmin({ navigation }) {
 
     }
 
+    // handle filter
+    const [filter, setFilter] = useState('all')
+    const sortedBook = bookings.sort((a, b) => {
+        return new Date(b.createdAt) - new Date(a.createdAt);
+    })
+    const [filtered, setFiltered] = useState(sortedBook)
+
     return (
         <ScrollView>
             <View style={styles.container}>
-                <Text style={styles.title}>Books Admin</Text>
-                <View style={{ marginTop: 20 }}>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <Text style={[styles.title, { flex: 2 }]}>Books Admin</Text>
+
+                    {/* Picker pake package */}
+                    <Picker
+                        mode="dropdown"
+                        selectedValue={filter}
+                        onValueChange={(itemValue, itemIndex) => {
+                            setFilter(itemValue)
+                            if (itemValue === 'all') {
+                                setFiltered(sortedBook)
+                            } else {
+                                const filtered = sortedBook.filter((e) => e.status === itemValue)
+                                setFiltered(filtered)
+                            }
+                        }
+                        }
+                        style={{ flex: 1 }}
+                    >
+                        {/* Picker Item, pilihan service statis dari kita */}
+                        <Picker.Item label="All" value="all" />
+                        <Picker.Item label="Done" value="done" />
+                        <Picker.Item label="Process" value="process" />
+                        <Picker.Item label="Booked" value="booked" />
+                    </Picker>
+
+                </View>
+                <View style={{ marginTop: 8}}>
                     {
-                        bookings.map((e) => {
+                        filtered.map((e) => {
                             return (
                                 <BookingCardAdmin key={e.id} booking={e} handleBookingDetails={handleBookingDetails} />
                             )

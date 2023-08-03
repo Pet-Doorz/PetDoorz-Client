@@ -5,13 +5,14 @@ import { useNavigation } from '@react-navigation/native';
 export default function ServiceCard({ service }) {
     const navigation = useNavigation()
     const currency = (value) => {
-        return new Intl.NumberFormat('id-Id', { style: 'currency', currency: 'IDR' }).format(value)
+        const currency = new Intl.NumberFormat('id-Id', { style: 'currency', currency: 'IDR' }).format(value)
+        return currency.split(',')[0]
     }
 
     const handleEditFormScreen = () => {
         // harusnya bawa semua detail roomnya atau id aja ge boleh
-        navigation.navigate('Edit Service Admin', {id: service.id})
-      }
+        navigation.navigate('Edit Service Admin', { id: service.id })
+    }
 
     return (
         <TouchableOpacity activeOpacity={0.85} onPress={handleEditFormScreen}>
@@ -44,6 +45,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#48034F',
         marginBottom: 10,
         padding: 10,
-        flexDirection: 'row'
+        flexDirection: 'row',
+        borderRadius: 8
     },
 });

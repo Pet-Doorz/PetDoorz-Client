@@ -101,6 +101,11 @@ export default function BookDetailAdmin({ route, navigation }) {
 		}
 	}
 
+    const currency = (value) => {
+        const currency = new Intl.NumberFormat('id-Id', { style: 'currency', currency: 'IDR' }).format(value)
+        return currency.split(',')[0]
+    }
+
 
     return (
         <ScrollView>
@@ -151,7 +156,7 @@ export default function BookDetailAdmin({ route, navigation }) {
                     </View>
                     <View style={styles.contentRow}>
                         <Text>Total: </Text>
-                        <Text>Rp. {booking.grandTotal}</Text>
+                        <Text>{currency(booking.grandTotal)}</Text>
                     </View>
                     <View style={styles.contentRow}>
                         <Text>Status: </Text>
