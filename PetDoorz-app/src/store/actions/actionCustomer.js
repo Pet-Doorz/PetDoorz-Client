@@ -5,6 +5,7 @@ import {
   SET_CHECKIN_DATA,
   SET_CHECKOUT_DATA,
   SET_TOTALPET_DATA,
+  SET_REVIEW_DATA,
 } from "../actions/actionType";
 import axios from "axios";
 
@@ -42,6 +43,13 @@ export const SET_TOTALPET = (payload) => {
     payload,
   };
 };
+
+const SET_REVIEW_CUSTOMER = (payload) => {
+  return {
+    type: SET_REVIEW_DATA,
+    payload
+  }
+}
 
 const baseUrl = BASE_URL + "/customers";
 
@@ -201,6 +209,25 @@ export const createReview = (payload) => {
     } catch (error) {
       console.log(error)
       throw error.response.data.message;
+    }
+  }
+}
+
+export const getReview = (access_token) => {
+  return async (dispatch) => {
+    try {
+      let { data } = await axios({
+        method: "get",
+        url: baseUrl + `/reviews`,
+        headers: {
+          access_token,
+        }
+      });
+
+      dispatch(SET_REVIEW_CUSTOMER(data))
+    } catch (error) {
+      console.log(error)
+      throw error
     }
   }
 }

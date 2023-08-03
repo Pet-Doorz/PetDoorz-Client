@@ -7,7 +7,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { SET_ROLE } from '../../../store/actions/actionUser';
 import { useFocusEffect } from '@react-navigation/native'
 import { useCallback, useEffect, useState } from 'react';
-import { detailCustomer } from '../../../store/actions/actionCustomer';
+import { detailCustomer, getReview } from '../../../store/actions/actionCustomer';
 
 export default function UserSettingCustomer({ navigation }) {
   const dispatch = useDispatch()
@@ -39,6 +39,13 @@ export default function UserSettingCustomer({ navigation }) {
       AsyncStorage.getItem('customer_access_token')
         .then((result) => {
           dispatch(detailCustomer(result))
+            .catch((err) => {
+              console.log(err, '<<< detail customer')
+            })
+            dispatch(getReview(result))
+            .catch((err) => {
+              console.log(err, '<<< review')
+            });
           setLoading(false)
         })
         .catch((err) => {

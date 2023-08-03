@@ -4,6 +4,7 @@ import {
   SET_DETAIL_DATA,
   SET_TOTALPET_DATA,
   SET_CHECKIN_DATA, SET_CHECKOUT_DATA,
+  SET_REVIEW_DATA
 } from "../actions/actionType";
 
 const initialState = {
@@ -12,7 +13,8 @@ const initialState = {
   booking: {},
   checkin: '',
   checkout: '',
-  totalPet: 0
+  totalPet: 0,
+  reviews: []
 };
 
 export default function userReducer(state = initialState, action) {
@@ -52,6 +54,13 @@ export default function userReducer(state = initialState, action) {
         ...state,
         totalPet: action.payload
       }
+
+    case SET_REVIEW_DATA:
+      return {
+        ...state,
+        reviews: action.payload
+      }
+      
     default:
       return state;
   }

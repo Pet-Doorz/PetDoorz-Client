@@ -1,6 +1,6 @@
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native"
 
-export default function BookingCard({ booking, handleBookingDetails, handleChatHotel, handleReview }) {
+export default function BookingCard({ booking, handleBookingDetails, handleChatHotel, handleReview, res }) {
     const date = new Date(booking.createdAt)
 
     // const handleReview = (bookingId, HotelId, hotelName) => {
@@ -31,7 +31,10 @@ export default function BookingCard({ booking, handleBookingDetails, handleChatH
                                     booking.status === 'process' ? 
                                     <TouchableOpacity style={styles.buttonCall} activeOpacity={0.5} onPress={() => console.log('vidcall')}>
                                         <Text>Video Call</Text>
-                                    </TouchableOpacity> : booking.status === 'done' ? 
+                                    </TouchableOpacity>  : ''
+                                }
+                                {
+                                    booking.status === 'done' && res.length == 0 ? 
                                     (<TouchableOpacity style={styles.buttonCall} activeOpacity={0.5} onPress={() => handleReview(booking.id, booking.Room.HotelId, booking.Room.Hotel.name)}>
                                         <Text>Review</Text>
                                     </TouchableOpacity>) : ''

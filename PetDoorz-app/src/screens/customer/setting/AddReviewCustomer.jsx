@@ -59,9 +59,9 @@ export default function AddReviewCustomer({ route }) {
                     </TouchableOpacity>
                     <View style={{ flexDirection: 'row' }}>
                         {
-                            getTempArray().map((e) => {
+                            getTempArray().map((e, i) => {
                                 return (
-                                    <FontAwesome name="star" size={30} color="#FDCC0D" />
+                                    <FontAwesome key={i} name="star" size={30} color="#FDCC0D" />
                                 )
                             })
                         }
