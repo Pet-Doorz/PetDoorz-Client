@@ -7,6 +7,7 @@ import {
   Text,
   TouchableOpacity,
   View,
+  Image,
 } from "react-native";
 import { Button, TextInput } from "react-native-paper";
 import { DateTimePickerAndroid } from "@react-native-community/datetimepicker";
@@ -15,12 +16,16 @@ import { FontAwesome } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
 import { getFilteredHotel } from "../../../store/actions/actionHotel";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { SET_CHECKIN, SET_CHECKOUT, SET_TOTALPET } from "../../../store/actions/actionCustomer";
+import {
+  SET_CHECKIN,
+  SET_CHECKOUT,
+  SET_TOTALPET,
+} from "../../../store/actions/actionCustomer";
 
 export default function ListHotelCustomer({ navigation }) {
   const date = new Date(); // dapetin tanggal
-  let checkoutDate = new Date()
-  checkoutDate.setDate(date.getDate() + 1)
+  let checkoutDate = new Date();
+  checkoutDate.setDate(date.getDate() + 1);
 
   const [loading, setLoading] = useState(false);
   const [location, setLocation] = useState(null);
@@ -40,10 +45,10 @@ export default function ListHotelCustomer({ navigation }) {
       value: checkin,
       onChange: async (_, selectedDate) => {
         setCheckin(selectedDate);
-        let minDate = new Date()
-        minDate.setDate(selectedDate.getDate() + 1)
-        console.log(minDate)
-        setCheckout(minDate)
+        let minDate = new Date();
+        minDate.setDate(selectedDate.getDate() + 1);
+        console.log(minDate);
+        setCheckout(minDate);
         await AsyncStorage.setItem(
           "checkin",
           selectedDate.toLocaleDateString("en-GB")
@@ -56,8 +61,8 @@ export default function ListHotelCustomer({ navigation }) {
   };
 
   const handleCheckoutDate = () => {
-    let minDate = new Date()
-    minDate.setDate(checkin.getDate() + 1)
+    let minDate = new Date();
+    minDate.setDate(checkin.getDate() + 1);
     DateTimePickerAndroid.open({
       value: checkoutDate,
       onChange: async (_, selectedDate) => {
@@ -87,9 +92,9 @@ export default function ListHotelCustomer({ navigation }) {
       const long = await AsyncStorage.getItem("longitude");
       const lat = await AsyncStorage.getItem("latitude");
       await AsyncStorage.setItem("totalPet", totalPet);
-      dispatch(SET_CHECKIN(checkin))
-      dispatch(SET_CHECKOUT(checkout))
-      dispatch(SET_TOTALPET(totalPet))
+      dispatch(SET_CHECKIN(checkin));
+      dispatch(SET_CHECKOUT(checkout));
+      dispatch(SET_TOTALPET(totalPet));
 
       dispatch(
         //distance, total pet masih hardcode
@@ -102,7 +107,7 @@ export default function ListHotelCustomer({ navigation }) {
           totalPet: +totalPet,
         })
       )
-        .then((_) => { })
+        .then((_) => {})
         .catch((err) => {
           throw err;
         });
@@ -176,14 +181,14 @@ export default function ListHotelCustomer({ navigation }) {
           <Text style={styles.title}>List Hotel</Text>
           {hotels.length > 0 ? (
             hotels.map((e) => {
-              const room = e.detailRoom
-              const minPrice = (Math.min(...room.map(item => item.price)))
-              const { reviews } = e
-              let temp = 0
+              const room = e.detailRoom;
+              const minPrice = Math.min(...room.map((item) => item.price));
+              const { reviews } = e;
+              let temp = 0;
               reviews.forEach((e) => {
-                temp += e.rating
-              })
-              let totalReview = (temp / e.reviews.length).toFixed(2)
+                temp += e.rating;
+              });
+              let totalReview = (temp / e.reviews.length).toFixed(2);
               return (
                 <TouchableOpacity
                   key={e.id}
@@ -234,10 +239,17 @@ export default function ListHotelCustomer({ navigation }) {
               );
             })
           ) : (
-            <Text>
-              No hotels found. Kindly check your checkin and checkout then try
-              again ❤️
-            </Text>
+            <View style={styles.notfound}>
+              <Text style={{ marginBottom: 10 }}>
+                No Hotel Near Your Location
+              </Text>
+              <Image
+                source={{
+                  uri: "https://ahakaraokesongs.s3.ap-southeast-1.amazonaws.com/noHotel.png",
+                }}
+                style={styles.image}
+              />
+            </View>
           )}
         </View>
       </ScrollView>
@@ -267,9 +279,18 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     padding: 10,
     flexDirection: "row",
-    borderRadius: 10
+    borderRadius: 10,
   },
   shadowProp: {
     elevation: 3,
+  },
+  image: {
+    width: 130,
+    height: 130,
+    resizeMode: "contain", // adjust the resizeMode based on your requirement
+  },
+  notfound: {
+    alignItems: "center",
+    marginBottom: 20,
   },
 });
