@@ -169,7 +169,9 @@ const styles = StyleSheet.create({
   imageRound: {
     width: 68,
     height: 68,
-    borderRadius: 100
+    borderRadius: 100,
+    borderWidth: 2,
+    borderColor: '#48034F'
   },
 })
 
@@ -188,7 +190,8 @@ const card = StyleSheet.create({
   },
   title: {
     fontSize: 20,
-    fontWeight: '600'
+    fontWeight: '600',
+    color: '#48034F'
   },
   balance: {
     fontSize: 16,
