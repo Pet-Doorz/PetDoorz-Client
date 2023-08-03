@@ -99,7 +99,7 @@ export default function ListHotelCustomer({ navigation }) {
       dispatch(
         //distance, total pet masih hardcode
         getFilteredHotel({
-          distance: Infinity,
+          distance: 30000,
           long: +lat,
           lat: +long,
           checkin: checkin.toLocaleDateString("en-GB"),
@@ -205,7 +205,7 @@ export default function ListHotelCustomer({ navigation }) {
                     <View style={{ flex: 1 }}>
                       <Text
                         style={{
-                          fontSize: 16,
+                          fontSize: 18,
                           fontWeight: "500",
                           color: "white",
                         }}
@@ -213,15 +213,15 @@ export default function ListHotelCustomer({ navigation }) {
                         {e.name}
                       </Text>
                       <Text
-                        style={{ fontSize: 13, color: "white", marginTop: 5 }}
+                        style={{ fontSize: 15, color: "white", marginTop: 5 }}
                       >
                         Start From: {currency(minPrice)}
                       </Text>
                       <Text
                         style={{
-                          fontSize: 13,
-                          color: "white",
-                          fontWeight: "200",
+                          fontSize: 15,
+                          color: "gray",
+                          fontWeight: "400",
                         }}
                       >
                         Distance: {e.distance} Km
@@ -280,7 +280,7 @@ const styles = StyleSheet.create({
   grid: { paddingHorizontal: 15, marginTop: 20 },
   title: { fontSize: 20, fontWeight: "bold", marginBottom: 20 },
   hotel: {
-    height: 80,
+    height: 100,
     backgroundColor: "#48034F",
     marginBottom: 10,
     padding: 10,

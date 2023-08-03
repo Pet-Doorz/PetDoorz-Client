@@ -33,12 +33,6 @@ export default function BookingCard({ booking, handleBookingDetails, handleChatH
                         <View style={{ justifyContent: 'flex-end' }}>
                             <View style={{ flexDirection: 'row', gap: 10 }}>
                                 {
-                                    booking.status === 'process' ?
-                                        <TouchableOpacity style={styles.buttonCall} activeOpacity={0.5} onPress={() => console.log('vidcall')}>
-                                            <Text style={{ color: '#48034F' }}>Video Call</Text>
-                                        </TouchableOpacity> : ''
-                                }
-                                {
                                     booking.status === 'done' && res.length == 0 ?
                                         (<TouchableOpacity style={styles.buttonCall} activeOpacity={0.5} onPress={() => handleReview(booking.id, booking.Room.HotelId, booking.Room.Hotel.name)}>
                                             <Text style={{ color: '#48034F' }}>Review</Text>
@@ -82,7 +76,8 @@ const styles = StyleSheet.create({
         padding: 3,
         fontSize: 15,
         width: 64,
-        textAlign: 'center'
+        textAlign: 'center',
+        borderRadius: 4
     },
     buttonCall: {
         backgroundColor: 'white',

@@ -7,7 +7,7 @@ import { createReview } from "../../../store/actions/actionCustomer";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
-export default function AddReviewCustomer({ route }) {
+export default function AddReviewCustomer({ route, navigation }) {
     const { HotelId, bookingId, hotelName } = route.params
     const [star, setStar] = useState(1)
     const [comment, setComment] = useState('')
@@ -24,6 +24,7 @@ export default function AddReviewCustomer({ route }) {
         }))
             .then((result) => {
                 console.log(result)
+                navigation.navigate('Customer Books')
             }).catch((err) => {
                 console.log(err)
             });
@@ -72,7 +73,7 @@ export default function AddReviewCustomer({ route }) {
                 </View>
                 <View style={{ gap: 20 }}>
                     <TextInput onChangeText={(e) => setComment(e)} label='Comment' mode="outlined" multiline={true} numberOfLines={5} style={[styles.textInput, { flex: 3 }]}></TextInput>
-                    <Button onPress={handleAddReview} mode="contained" style={{ borderRadius: 8 }} theme={{ colors: { primary: '#48034F' } }}>Pay</Button>
+                    <Button onPress={handleAddReview} mode="contained" style={{ borderRadius: 8 }} theme={{ colors: { primary: '#48034F' } }}>Add</Button>
                 </View>
             </View>
 

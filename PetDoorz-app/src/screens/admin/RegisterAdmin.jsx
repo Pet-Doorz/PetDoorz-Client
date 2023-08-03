@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar'
 import { useEffect, useState } from 'react'
-import { SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View, Alert } from 'react-native'
 import { Button, TextInput } from 'react-native-paper'
 import MapView, { Marker } from 'react-native-maps'
 import { useDispatch, useSelector } from 'react-redux'
@@ -23,6 +23,7 @@ export default function RegisterAdmin({ navigation }) {
   const [images, setImages] = useState('')
   const [imageFiles, setImageFiles] = useState([])
 
+
   // Location
   const userLocation = useSelector((state) => state.user.location)
   const dispatch = useDispatch()
@@ -39,7 +40,7 @@ export default function RegisterAdmin({ navigation }) {
   }, [userLocation])
 
   function formatLongLat() {
-    return `${location.longitude} ${location.latitude}`
+    return `${location.latitude} ${location.longitude}`
   }
   // End of Location
 
@@ -63,104 +64,109 @@ export default function RegisterAdmin({ navigation }) {
   async function handleRegister() {
     // console.log(email, password, name, formatLongLat(),
     //   logo, description, address, phoneNumber, images, imageFiles)
-    
-    let formData = { email, password, name, location: formatLongLat(),
-      logoHotel: "", description, address, phoneNumber, images: [] }
+
+    let formData = {
+      email, password, name, location: formatLongLat(),
+      logoHotel: "", description, address, phoneNumber, images: []
+    }
     try {
+      let resUpload = await uploadFileToImagekit(imageFiles[0])
+      if (!resUpload.url) throw { name: "Upload Error" }
+      formData.logoHotel = resUpload.url
+
+      for (let i = 0; i < imageFiles.length; i++) {
         let resUpload = await uploadFileToImagekit(imageFiles[0])
         if (!resUpload.url) throw { name: "Upload Error" }
-        formData.logoHotel = resUpload.url
+        formData.images.push(resUpload.url)
+      }
 
-        for (let i = 0; i < imageFiles.length; i++) {
-          let resUpload = await uploadFileToImagekit(imageFiles[0])
-          if (!resUpload.url) throw { name: "Upload Error" }
-          formData.images.push(resUpload.url)
-        }
-
-        dispatch(registerAdmin(formData))
+      dispatch(registerAdmin(formData))
         // .then(() => {
         //     dispatch(detailAdmin())
         // })
         .then((res) => {
-            navigation.navigate('Admin Login')
+          Alert.alert('Success', 'Successfully Registered!', [
+            { text: 'OK' },
+          ])
+          navigation.navigate('Admin Login')
         })
     } catch (error) {
-        console.log(error)
+      console.log(error)
     }
   }
 
   async function openFileSelector(i) {
-		try {
-			let res = await ImagePicker.launchImageLibraryAsync({});
-            console.log(res)
-            res = {
-                name: "register-admin",
-                uri: res.assets[0].uri,
-                type: res.assets[0].type + "/jpg"
-            }
-			handleImageChange(res.uri, i)
+    try {
+      let res = await ImagePicker.launchImageLibraryAsync({});
+      console.log(res)
+      res = {
+        name: "register-admin",
+        uri: res.assets[0].uri,
+        type: res.assets[0].type + "/jpg"
+      }
+      handleImageChange(res.uri, i)
       handleImageFileChange(res, i)
-		} catch(err) {
-            console.log(err)
-			// if (DocumentPicker.isCancel(err)) {
-				// User cancelled the picker, exit any dialogs or menus and move on
-			// } else {
-			// 	throw err;
-			// }
-		}
-	}
+    } catch (err) {
+      console.log(err)
+      // if (DocumentPicker.isCancel(err)) {
+      // User cancelled the picker, exit any dialogs or menus and move on
+      // } else {
+      // 	throw err;
+      // }
+    }
+  }
 
   async function openFileSelectorLogo() {
-		try {
-			let res = await ImagePicker.launchImageLibraryAsync({});
-            console.log(res)
-            res = {
-                name: "register-admin",
-                uri: res.assets[0].uri,
-                type: res.assets[0].type + "/jpg"
-            }
-			setLogo(res.uri)
+    try {
+      let res = await ImagePicker.launchImageLibraryAsync({});
+      console.log(res)
+      res = {
+        name: "register-admin",
+        uri: res.assets[0].uri,
+        type: res.assets[0].type + "/jpg"
+      }
+      setLogo(res.uri)
       setLogoFile(res)
-		} catch(err) {
-            console.log(err)
-			// if (DocumentPicker.isCancel(err)) {
-				// User cancelled the picker, exit any dialogs or menus and move on
-			// } else {
-			// 	throw err;
-			// }
-		}
-	}
+    } catch (err) {
+      console.log(err)
+      // if (DocumentPicker.isCancel(err)) {
+      // User cancelled the picker, exit any dialogs or menus and move on
+      // } else {
+      // 	throw err;
+      // }
+    }
+  }
 
   async function openCamera(i) {
-      try{
-    var res = await ImagePicker.launchCameraAsync({});
-          console.log(res)
-          res = {
-              name: "register-admin",
-              uri: res.assets[0].uri,
-              type: res.assets[0].type + "/jpg"
-          }
-          handleImageChange(res.uri, i)
-          handleImageFileChange(res, i)
-  } catch(err) {
-          console.log(err)
-    // if (DocumentPicker.isCancel(err)) {
-    // 	// User cancelled the picker, exit any dialogs or menus and move on
-    // } else {
-    // 	throw err;
-    // }
-  }
+    try {
+      var res = await ImagePicker.launchCameraAsync({});
+      console.log(res)
+      res = {
+        name: "register-admin",
+        uri: res.assets[0].uri,
+        type: res.assets[0].type + "/jpg"
+      }
+      handleImageChange(res.uri, i)
+      handleImageFileChange(res, i)
+    } catch (err) {
+      console.log(err)
+      // if (DocumentPicker.isCancel(err)) {
+      // 	// User cancelled the picker, exit any dialogs or menus and move on
+      // } else {
+      // 	throw err;
+      // }
+    }
   }
 
   async function uploadFileToImagekit(fileData) {
-    try{
-        console.log("fileData", fileData)
-        const uploadedFile = await uploadFile(fileData);
-        return uploadedFile
-            // setUploadFileUrl(uploadedFile.url);
-    }catch(err){
+    try {
+      console.log("fileData", fileData)
+      const uploadedFile = await uploadFile(fileData);
+      return uploadedFile
+      // setUploadFileUrl(uploadedFile.url);
+    } catch (err) {
       //handle error in uploading file
-            console.log(err)
+      console.log(err)
     }
   }
 
@@ -195,18 +201,21 @@ export default function RegisterAdmin({ navigation }) {
       >
         <Marker draggable
           coordinate={location}
-          onDragEnd={(e) => setLocation(e.nativeEvent.coordinate)}
+          onDragEnd={(e) => {
+            console.log(e.nativeEvent.coordinate)
+            setLocation(e.nativeEvent.coordinate)
+          }}
         />
       </MapView>
       <TextInput style={styles.textInput} label={'Hotel Description'} multiline={true} numberOfLines={4} onChangeText={val => setDescription(val)}></TextInput>
-      
+
       <View style={{ flexDirection: 'row', width: "100%", marginBottom: 20 }}>
         <TextInput label='Hotel Logo' value={logo} style={styles.imageInput} disabled></TextInput>
         {/* <TextInput mode="outlined" label={'Room Image'} style={{ flex: 2 }} disabled value={image1}></TextInput> */}
         <View style={{ flex: 1, flexDirection: 'row', alignItems: "center", gap: 20, marginStart: 5, justifyContent: "center" }}>
-            <TouchableOpacity activeOpacity={0.8} onPress={() => openFileSelectorLogo()}>
-                <FontAwesome name="upload" size={25} color="#48034F" />
-            </TouchableOpacity>
+          <TouchableOpacity activeOpacity={0.8} onPress={() => openFileSelectorLogo()}>
+            <FontAwesome name="upload" size={25} color="#48034F" />
+          </TouchableOpacity>
         </View>
       </View>
 
@@ -214,12 +223,12 @@ export default function RegisterAdmin({ navigation }) {
         <TextInput label='Hotel Image' value={images[0]} style={styles.imageInput} disabled></TextInput>
         {/* <TextInput mode="outlined" label={'Room Image'} style={{ flex: 2 }} disabled value={image1}></TextInput> */}
         <View style={{ flex: 1, flexDirection: 'row', alignItems: "center", gap: 20, marginStart: 5, justifyContent: "center" }}>
-            <TouchableOpacity activeOpacity={0.8} onPress={() => openCamera(0)}>
-                <FontAwesome name="camera" size={25} color="#48034F" />
-            </TouchableOpacity>
-            <TouchableOpacity activeOpacity={0.8} onPress={() => openFileSelector(0)}>
-                <FontAwesome name="upload" size={25} color="#48034F" />
-            </TouchableOpacity>
+          <TouchableOpacity activeOpacity={0.8} onPress={() => openCamera(0)}>
+            <FontAwesome name="camera" size={25} color="#48034F" />
+          </TouchableOpacity>
+          <TouchableOpacity activeOpacity={0.8} onPress={() => openFileSelector(0)}>
+            <FontAwesome name="upload" size={25} color="#48034F" />
+          </TouchableOpacity>
         </View>
       </View>
 
@@ -227,12 +236,12 @@ export default function RegisterAdmin({ navigation }) {
         <TextInput label='Hotel Image' value={images[1]} style={styles.imageInput} disabled></TextInput>
         {/* <TextInput mode="outlined" label={'Room Image'} style={{ flex: 2 }} disabled value={image1}></TextInput> */}
         <View style={{ flex: 1, flexDirection: 'row', alignItems: "center", gap: 20, marginStart: 5, justifyContent: "center" }}>
-            <TouchableOpacity activeOpacity={0.8} onPress={() => openCamera(1)}>
-                <FontAwesome name="camera" size={25} color="#48034F" />
-            </TouchableOpacity>
-            <TouchableOpacity activeOpacity={0.8} onPress={() => openFileSelector(1)}>
-                <FontAwesome name="upload" size={25} color="#48034F" />
-            </TouchableOpacity>
+          <TouchableOpacity activeOpacity={0.8} onPress={() => openCamera(1)}>
+            <FontAwesome name="camera" size={25} color="#48034F" />
+          </TouchableOpacity>
+          <TouchableOpacity activeOpacity={0.8} onPress={() => openFileSelector(1)}>
+            <FontAwesome name="upload" size={25} color="#48034F" />
+          </TouchableOpacity>
         </View>
       </View>
 
@@ -240,17 +249,17 @@ export default function RegisterAdmin({ navigation }) {
         <TextInput label='Hotel Image' value={images[2]} style={styles.imageInput} disabled></TextInput>
         {/* <TextInput mode="outlined" label={'Room Image'} style={{ flex: 2 }} disabled value={image1}></TextInput> */}
         <View style={{ flex: 1, flexDirection: 'row', alignItems: "center", gap: 20, marginStart: 5, justifyContent: "center" }}>
-            <TouchableOpacity activeOpacity={0.8} onPress={() => openCamera(2)}>
-                <FontAwesome name="camera" size={25} color="#48034F" />
-            </TouchableOpacity>
-            <TouchableOpacity activeOpacity={0.8} onPress={() => openFileSelector(2)}>
-                <FontAwesome name="upload" size={25} color="#48034F" />
-            </TouchableOpacity>
+          <TouchableOpacity activeOpacity={0.8} onPress={() => openCamera(2)}>
+            <FontAwesome name="camera" size={25} color="#48034F" />
+          </TouchableOpacity>
+          <TouchableOpacity activeOpacity={0.8} onPress={() => openFileSelector(2)}>
+            <FontAwesome name="upload" size={25} color="#48034F" />
+          </TouchableOpacity>
         </View>
       </View>
 
       <Button mode='contained' theme={{ colors: { primary: '#48034F' } }} onPress={handleRegister}>Register</Button>
-      <View style={{marginBottom: 50}}>
+      <View style={{ marginBottom: 50 }}>
         <Text style={{ marginTop: 15 }}>Already sign up?</Text>
         <Button style={{ marginTop: 0 }} onPress={() => navigation.navigate('Admin Login')}>Login</Button>
       </View>

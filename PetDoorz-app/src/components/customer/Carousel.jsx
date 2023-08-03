@@ -44,8 +44,6 @@ const CarouselComp = () => {
         renderItem={renderItem}
         data={DATA}
         loop
-        autoplay
-        autoplayInterval={5000}
       />
     </View>
   );
@@ -69,7 +67,7 @@ const styles = StyleSheet.create({
   card: {
     width: width * 0.9,
     height: width * 0.55,
-    resizeMode: "contain", // Make sure the image covers the entire card area
+    resizeMode: 'cover', // Make sure the image covers the entire card area
     borderRadius: 8
   },
   cornerLabel: {

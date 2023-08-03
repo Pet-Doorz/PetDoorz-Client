@@ -76,17 +76,6 @@ export default function BookingCardAdmin({
             </View>
             <View style={{ justifyContent: "flex-end" }}>
               <View style={{ flexDirection: "row", gap: 10 }}>
-                {booking.status === "process" ? (
-                  <TouchableOpacity
-                    style={styles.buttonCall}
-                    activeOpacity={0.5}
-                    onPress={() => console.log("vidcall")}
-                  >
-                    <Text>Video Call</Text>
-                  </TouchableOpacity>
-                )  : (
-                  ""
-                )}
                 <TouchableOpacity
                   style={styles.buttonCall}
                   activeOpacity={0.5}
@@ -130,6 +119,7 @@ const styles = StyleSheet.create({
     fontSize: 15,
     width: 64,
     textAlign: "center",
+    borderRadius: 4
   },
   buttonCall: {
     backgroundColor: "white",

@@ -125,8 +125,8 @@ export default function AdminSetting({ navigation }) {
                             </View>
                             <View style={{ flex: 3 }}>
                                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 12, alignItems: 'center' }}>
-                                    <Text style={card.title}>{detail.name}</Text>
-                                    <Button onPress={() => showDialog('status')} mode='contained' style={{ borderRadius: 5 }} theme={{ colors: { primary: "#48034F" } }}>{
+                                    <Text style={[card.title, { flex: 4 }]}>{detail.name}</Text>
+                                    <Button onPress={() => showDialog('status')} mode='contained' style={{ borderRadius: 5, flex: 1 }} theme={{ colors: { primary: "#48034F" } }}>{
                                         detail.status === 'active' ? 'Inactive' : 'Active'
                                     }</Button>
                                 </View>

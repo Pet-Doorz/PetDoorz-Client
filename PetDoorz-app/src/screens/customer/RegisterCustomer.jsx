@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar'
 import { useEffect, useState } from 'react'
-import { SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View, Alert } from 'react-native'
 import { Button, TextInput } from 'react-native-paper'
 import MapView, { Marker } from 'react-native-maps'
 import { useDispatch, useSelector } from 'react-redux'
@@ -11,7 +11,7 @@ import { registerCustomer } from '../../store/actions/actionCustomer'
 
 export default function RegisterCustomer({ navigation }) {
   const dispatch = useDispatch()
-  
+
   const [eye, setEye] = useState(false)
 
   const [email, setEmail] = useState('')
@@ -22,20 +22,23 @@ export default function RegisterCustomer({ navigation }) {
   async function handleRegister() {
     // console.log(email, password, name, formatLongLat(),
     //   logo, description, address, phoneNumber, images, imageFiles)
-    
+
     let formData = { email, password, fullName: name, phoneNumber }
     console.log(formData)
 
     dispatch(registerCustomer(formData))
-    // .then(() => {
-    //     dispatch(detailAdmin())
-    // })
-    .then((res) => {
+      // .then(() => {
+      //     dispatch(detailAdmin())
+      // })
+      .then((res) => {
+        Alert.alert('Success', 'Successfully Registered!', [
+          { text: 'OK' },
+        ])
         navigation.navigate('Customer Login')
-    })
-    .catch((error) => {
-      console.log(error)
-    })
+      })
+      .catch((error) => {
+        console.log(error)
+      })
 
   }
 
@@ -56,7 +59,7 @@ export default function RegisterCustomer({ navigation }) {
       <TextInput label='Phone Number' onChangeText={phoneNumber => setPhoneNumber(phoneNumber)} style={styles.textInput}></TextInput>
 
       <Button mode='contained' theme={{ colors: { primary: '#48034F' } }} onPress={handleRegister} style={{ marginTop: 40 }}>Register</Button>
-      <View style={{marginBottom: 50}}>
+      <View style={{ marginBottom: 50 }}>
         <Text style={{ marginTop: 15 }}>Already sign up?</Text>
         <Button style={{ marginTop: 0 }} onPress={() => navigation.navigate('Customer Login')}>Login</Button>
       </View>

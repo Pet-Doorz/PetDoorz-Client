@@ -7,8 +7,11 @@ import { Button } from "react-native-paper"
 import { detailAdmin, updateStatusToProcess } from '../../../store/actions/actionAdmin'
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import { uploadFile } from "../../../../lib/imagekit"
-import * as ImagePicker from 'expo-image-picker';
+import * as ImagePicker from 'expo-image-picker'
 import { FontAwesome } from '@expo/vector-icons'
+import { LogBox } from 'react-native'
+LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
+LogBox.ignoreAllLogs();//Ignore all log notifications
 
 
 export default function BookDetailAdmin({ route, navigation }) {
@@ -65,12 +68,12 @@ export default function BookDetailAdmin({ route, navigation }) {
     }
 
     // IMAGEKIT
-    const [ imageUri, setImageUri ] = useState("");
-    const [ imageFile, setImageFile ] = useState({});
+    const [imageUri, setImageUri] = useState("");
+    const [imageFile, setImageFile] = useState({});
 
     async function openCamera() {
-        try{
-			var res = await ImagePicker.launchCameraAsync({});
+        try {
+            var res = await ImagePicker.launchCameraAsync({});
             console.log(res)
             res = {
                 name: "booking",
@@ -79,27 +82,27 @@ export default function BookDetailAdmin({ route, navigation }) {
             }
             setImageUri(res.uri)
             setImageFile(res)
-		} catch(err) {
+        } catch (err) {
             console.log(err)
-			// if (DocumentPicker.isCancel(err)) {
-			// 	// User cancelled the picker, exit any dialogs or menus and move on
-			// } else {
-			// 	throw err;
-			// }
-		}
+            // if (DocumentPicker.isCancel(err)) {
+            // 	// User cancelled the picker, exit any dialogs or menus and move on
+            // } else {
+            // 	throw err;
+            // }
+        }
     }
 
-	async function uploadFileToImagekit(fileData) {
-		try{
+    async function uploadFileToImagekit(fileData) {
+        try {
             console.log("fileData", fileData)
-			const uploadedFile = await uploadFile(fileData);
-			return uploadedFile
+            const uploadedFile = await uploadFile(fileData);
+            return uploadedFile
             // setUploadFileUrl(uploadedFile.url);
-		}catch(err){
-			//handle error in uploading file
+        } catch (err) {
+            //handle error in uploading file
             console.log(err)
-		}
-	}
+        }
+    }
 
     const currency = (value) => {
         const currency = new Intl.NumberFormat('id-Id', { style: 'currency', currency: 'IDR' }).format(value)
@@ -174,8 +177,8 @@ export default function BookDetailAdmin({ route, navigation }) {
                                         <FontAwesome name="camera" size={25} color="#48034F" />
                                     </TouchableOpacity>
                                 </View>
-                                
-                                { imageUri && <Image
+
+                                {imageUri && <Image
                                     style={{ width: "100%", height: 200, objectFit: "contain" }}
                                     source={{ uri: imageUri }}
                                 ></Image>}
