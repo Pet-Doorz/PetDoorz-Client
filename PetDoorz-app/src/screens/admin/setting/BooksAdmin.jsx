@@ -1,12 +1,13 @@
 import { View, Text, ScrollView, StyleSheet, TouchableOpacity } from "react-native"
 import { useDispatch, useSelector } from "react-redux"
 import BookingCardAdmin from "../../../components/admin/BookingCardAdmin"
-import { useState } from "react"
+import { useCallback, useState } from "react"
 import { Picker } from '@react-native-picker/picker'
 import { FontAwesome } from '@expo/vector-icons'
 import { detailAdmin } from "../../../store/actions/actionAdmin"
 import { ActivityIndicator } from "react-native-paper"
 import AsyncStorage from "@react-native-async-storage/async-storage"
+import { useFocusEffect } from "@react-navigation/core"
 
 export default function BooksAdmin({ navigation }) {
     // get hotel bookings
@@ -28,7 +29,6 @@ export default function BooksAdmin({ navigation }) {
         })
     }
 
-
     const handleVidCallHotel = () => {
 
     }
@@ -44,19 +44,22 @@ export default function BooksAdmin({ navigation }) {
         setLoading(true)
         const access_token = await AsyncStorage.getItem('admin_access_token')
         dispatch(detailAdmin(access_token))
-            .then((_) => {
-                setLoading(false)
+            .then((result) => {
+                setFiltered(sortedBook)
             })
             .catch((err) => {
                 console.log(err, '<<< review')
-            });
+            })
+            .finally((_) => {
+                setLoading(false)
+            })
     }
 
     if (loading) return (
         <View style={styles.container}>
-          <ActivityIndicator size={'large'}></ActivityIndicator>
+            <ActivityIndicator size={'large'}></ActivityIndicator>
         </View>
-      )
+    )
 
     return (
         <ScrollView>

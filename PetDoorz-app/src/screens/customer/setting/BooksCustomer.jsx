@@ -93,6 +93,10 @@ export default function BooksCustomer({ navigation }) {
     setLoading(true)
     const access_token = await AsyncStorage.getItem('customer_access_token')
     dispatch(detailCustomer(access_token))
+      .then((_) => {
+        setFiltered(sortedBook)
+        setLoading(false)
+      })
       .catch((err) => {
         console.log(err, '<<< review')
       });

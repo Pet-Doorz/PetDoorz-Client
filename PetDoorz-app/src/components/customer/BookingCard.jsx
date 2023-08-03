@@ -36,11 +36,12 @@ export default function BookingCard({ booking, handleBookingDetails, handleChatH
                                     booking.status === 'done' && res.length == 0 ?
                                         (<TouchableOpacity style={styles.buttonCall} activeOpacity={0.5} onPress={() => handleReview(booking.id, booking.Room.HotelId, booking.Room.Hotel.name)}>
                                             <Text style={{ color: '#48034F' }}>Review</Text>
-                                        </TouchableOpacity>) : ''
+                                        </TouchableOpacity>) : booking.status === 'process' || booking.status === 'booked' ? (
+                                            <TouchableOpacity style={styles.buttonCall} activeOpacity={0.5} onPress={() => handleChatHotel(booking.Room.HotelId)}>
+                                                <Text style={{ color: '#48034F' }}>Chat</Text>
+                                            </TouchableOpacity>
+                                        ) : ''
                                 }
-                                <TouchableOpacity style={styles.buttonCall} activeOpacity={0.5} onPress={() => handleChatHotel(booking.Room.HotelId)}>
-                                    <Text style={{ color: '#48034F' }}>Chat</Text>
-                                </TouchableOpacity>
                             </View>
                         </View>
                     </View>
