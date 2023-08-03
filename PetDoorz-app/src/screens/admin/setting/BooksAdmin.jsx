@@ -1,14 +1,21 @@
 import { View, Text, ScrollView, StyleSheet, TouchableOpacity } from "react-native"
-import { useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import BookingCardAdmin from "../../../components/admin/BookingCardAdmin"
 import { useState } from "react"
 import { Picker } from '@react-native-picker/picker'
+import { FontAwesome } from '@expo/vector-icons'
+import { detailAdmin } from "../../../store/actions/actionAdmin"
+import { ActivityIndicator } from "react-native-paper"
+import AsyncStorage from "@react-native-async-storage/async-storage"
 
 export default function BooksAdmin({ navigation }) {
     // get hotel bookings
     const detail = useSelector((state) => state.admin.detailAdmin)
     const bookings = []
     const data = detail.Rooms.map((e) => e.Bookings)
+    const [loading, setLoading] = useState(false)
+    const dispatch = useDispatch()
+
     data.forEach((e) => {
         e.forEach((i) => {
             bookings.push(i)
@@ -33,13 +40,34 @@ export default function BooksAdmin({ navigation }) {
     })
     const [filtered, setFiltered] = useState(sortedBook)
 
+    const handleRefresh = async () => {
+        setLoading(true)
+        const access_token = await AsyncStorage.getItem('admin_access_token')
+        dispatch(detailAdmin(access_token))
+            .then((_) => {
+                setLoading(false)
+            })
+            .catch((err) => {
+                console.log(err, '<<< review')
+            });
+    }
+
+    if (loading) return (
+        <View style={styles.container}>
+          <ActivityIndicator size={'large'}></ActivityIndicator>
+        </View>
+      )
+
     return (
         <ScrollView>
             <View style={styles.container}>
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <Text style={[styles.title, { flex: 2 }]}>Books Admin</Text>
+                    <Text style={[styles.title, { flex: 2 }]}>Bookings Admin</Text>
 
                     {/* Picker pake package */}
+                    <TouchableOpacity activeOpacity={0.7} onPress={handleRefresh}>
+                        <FontAwesome name="refresh" size={23} color="#48034F" />
+                    </TouchableOpacity>
                     <Picker
                         mode="dropdown"
                         selectedValue={filter}
@@ -63,7 +91,7 @@ export default function BooksAdmin({ navigation }) {
                     </Picker>
 
                 </View>
-                <View style={{ marginTop: 8}}>
+                <View style={{ marginTop: 8 }}>
                     {
                         filtered.map((e) => {
                             return (
@@ -83,7 +111,7 @@ const styles = StyleSheet.create({
         paddingVertical: 20
     },
     title: {
-        fontSize: 20,
+        fontSize: 23,
         fontWeight: '600'
     },
     card: {

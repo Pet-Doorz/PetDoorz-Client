@@ -35,17 +35,17 @@ export default function BookingCard({ booking, handleBookingDetails, handleChatH
                                 {
                                     booking.status === 'process' ?
                                         <TouchableOpacity style={styles.buttonCall} activeOpacity={0.5} onPress={() => console.log('vidcall')}>
-                                            <Text>Video Call</Text>
+                                            <Text style={{ color: '#48034F' }}>Video Call</Text>
                                         </TouchableOpacity> : ''
                                 }
                                 {
                                     booking.status === 'done' && res.length == 0 ?
                                         (<TouchableOpacity style={styles.buttonCall} activeOpacity={0.5} onPress={() => handleReview(booking.id, booking.Room.HotelId, booking.Room.Hotel.name)}>
-                                            <Text>Review</Text>
+                                            <Text style={{ color: '#48034F' }}>Review</Text>
                                         </TouchableOpacity>) : ''
                                 }
                                 <TouchableOpacity style={styles.buttonCall} activeOpacity={0.5} onPress={() => handleChatHotel(booking.Room.HotelId)}>
-                                    <Text>Chat</Text>
+                                    <Text style={{ color: '#48034F' }}>Chat</Text>
                                 </TouchableOpacity>
                             </View>
                         </View>
@@ -91,6 +91,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         borderRadius: 5,
         borderColor: 'black',
-        borderWidth: 1
+        borderWidth: 1,
+        borderColor: '#48034F'
     }
 })

@@ -118,7 +118,7 @@ export default function UserSettingCustomer({ navigation }) {
             <TouchableOpacity activeOpacity={0.8} onPress={() => navigation.navigate('Customer Books')}>
               <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
                 <Ionicons name="receipt" size={26} color="#48034F" />
-                <Text style={styles.menuTitle}>Booking</Text>
+                <Text style={styles.menuTitle}>Bookings</Text>
               </View>
               <View style={styles.horizontalMarker}></View>
             </TouchableOpacity>

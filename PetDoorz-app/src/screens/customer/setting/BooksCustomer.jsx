@@ -7,12 +7,13 @@ import {
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import BookingCard from "../../../components/customer/BookingCard";
-import { getHotelById, getReview } from "../../../store/actions/actionCustomer";
+import { detailCustomer, getHotelById, getReview } from "../../../store/actions/actionCustomer";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFocusEffect } from "@react-navigation/native";
 import { useCallback, useState } from "react";
 import { ActivityIndicator, Button } from "react-native-paper";
 import { Picker } from '@react-native-picker/picker'
+import { FontAwesome } from '@expo/vector-icons';
 
 
 let perEmail;
@@ -88,6 +89,22 @@ export default function BooksCustomer({ navigation }) {
     })
   }
 
+  const handleRefresh = async () => {
+    setLoading(true)
+    const access_token = await AsyncStorage.getItem('customer_access_token')
+    dispatch(detailCustomer(access_token))
+      .catch((err) => {
+        console.log(err, '<<< review')
+      });
+    dispatch(getReview(access_token))
+      .then((_) => {
+        setLoading(false)
+      })
+      .catch((err) => {
+        console.log(err, '<<< review')
+      });
+  }
+
   const handleVidCallHotel = () => { };
 
   if (loading) return (
@@ -100,8 +117,10 @@ export default function BooksCustomer({ navigation }) {
     <ScrollView>
       <View style={styles.container}>
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-          <Text style={[styles.title, { flex: 2 }]}>Books</Text>
-
+          <Text style={[styles.title, { flex: 2 }]}>Bookings</Text>
+          <TouchableOpacity activeOpacity={0.7} onPress={handleRefresh}>
+            <FontAwesome name="refresh" size={23} color="#48034F" />
+          </TouchableOpacity>
           {/* Picker pake package */}
           <Picker
             mode="dropdown"
@@ -161,7 +180,7 @@ const styles = StyleSheet.create({
     paddingVertical: 20,
   },
   title: {
-    fontSize: 20,
+    fontSize: 23,
     fontWeight: "600",
   },
   card: {
